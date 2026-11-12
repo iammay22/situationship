@@ -1,0 +1,2820 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fde4ec">
+<meta name="description" content="一款約 10 分鐘的戀愛文字冒險。曖昧、交往、爭吵、出軌與分手，每個選擇都會留下痕跡。">
+<title>戀愛沒那麼簡單</title>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://iammay22.github.io/situationship/">
+<meta property="og:title" content="戀愛沒那麼簡單｜你會走到哪一個結局？">
+<meta property="og:description" content="10 分鐘的戀愛文字冒險。曖昧、交往、出軌、分手，29 種結局，每個選擇都會留下痕跡。">
+<meta property="og:image" content="https://iammay22.github.io/situationship/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 8' shape-rendering='crispEdges'%3E%3Cpath fill='%23f7a8c0' d='M1 0h2v1H1zM5 0h2v1H5zM0 1h4v1H0zM4 1h4v1H4zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 馬卡龍色系 */
+  --cream:#fffaf4;
+  --ink:#4a3b55;
+  --ink2:#7a6a86;
+  --rose:#f7a8c0;
+  --rose-d:#e9799f;
+  --lav:#cdbdf3;
+  --mint:#b4e7d1;
+  --lemon:#fde9a6;
+  --peach:#ffcfb3;
+  --sky:#b7dcf7;
+  --gold:#e6c27c;
+  --male:#3f86e8;
+  --female:#ec5a95;
+  --boxH:clamp(122px,21dvh,170px);
+  --safeB:env(safe-area-inset-bottom,0px);
+  --safeT:env(safe-area-inset-top,0px);
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#fde4ec;overflow:hidden}
+body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;touch-action:manipulation}
+.male{color:var(--male);font-weight:700}
+.female{color:var(--female);font-weight:700}
+
+/* ================= 共用按鈕 ================= */
+.btn{font-weight:700;font-size:16px;color:var(--ink);background:var(--cream);border:2px solid var(--ink);border-radius:999px;padding:10px 22px;min-height:46px;cursor:pointer;box-shadow:0 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--ink)}
+.btn.main{background:var(--rose);color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.12)}
+.btn.soft{border-color:transparent;box-shadow:none;background:rgba(74,59,85,.07)}
+.btn[aria-pressed="true"]{background:var(--rose);color:#fff}
+.btn.sm{font-size:14px;min-height:38px;padding:7px 16px}
+
+/* ================= 主頁（標題） ================= */
+#title{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px calc(60px + var(--safeB));overflow:hidden;
+  background:
+    radial-gradient(circle at 12% 18%,#ffe1ea 0 22%,transparent 23%),
+    radial-gradient(circle at 92% 10%,#e7defc 0 18%,transparent 19%),
+    radial-gradient(circle at 88% 78%,#d7f3e6 0 24%,transparent 25%),
+    radial-gradient(circle at 6% 88%,#fff0c4 0 20%,transparent 21%),
+    radial-gradient(circle at 50% 55%,#ffe6d6 0 35%,transparent 60%),
+    linear-gradient(160deg,#fde4ec 0%,#efe6fb 45%,#e3f5ee 100%)}
+#title::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.75) 1.5px,transparent 1.6px);background-size:22px 22px;opacity:.55;pointer-events:none}
+#title.hide{display:none}
+#deco{position:absolute;inset:0;pointer-events:none}
+.mac{position:absolute;width:var(--w);height:calc(var(--w) * .78);animation:drift 7s ease-in-out infinite}
+.mac i{position:absolute;left:0;right:0;height:38%;border-radius:50%/60%;background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.06)}
+.mac i:nth-child(1){top:0}
+.mac i:nth-child(2){top:31%;height:38%;left:6%;right:6%;background:#fffaf4;border-radius:8px;box-shadow:none}
+.mac i:nth-child(3){bottom:0}
+@keyframes drift{50%{transform:translateY(-10px) rotate(4deg)}}
+.ht{position:absolute;bottom:-30px;image-rendering:pixelated;opacity:.8;animation:float linear infinite}
+@keyframes float{to{transform:translateY(-120vh) rotate(12deg)}}
+
+.logo{position:relative;text-align:center;margin-bottom:26px}
+.logo small{display:inline-block;font-size:11px;letter-spacing:.32em;color:var(--ink2);padding:4px 14px;border:1px solid rgba(74,59,85,.25);border-radius:999px;background:rgba(255,255,255,.5);margin-bottom:14px}
+.logo h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,11vw,62px);line-height:1.18;letter-spacing:.06em;color:var(--ink);text-shadow:3px 3px 0 #fff,5px 5px 0 var(--rose)}
+.logo h1 em{font-style:normal;color:var(--rose-d)}
+.logo p{margin-top:16px;font-size:15px;line-height:1.8;color:var(--ink2)}
+.menuWrap{position:relative;width:min(290px,84vw)}
+.menu{position:relative;display:flex;flex-direction:column;gap:14px;width:100%}
+#btnFortune{background:var(--lemon);border-color:var(--ink);box-shadow:0 3px 0 var(--ink);white-space:nowrap}
+.menu .btn{width:100%;font-size:17px;min-height:52px}
+.menu .btn.soft{display:none}
+#btnContinue{line-height:1.3}
+#btnContinue small{display:block;font-size:12px;font-weight:500;opacity:.9;margin-top:2px}
+#progress{position:relative;margin-top:18px;font-size:13px;color:var(--ink2);min-height:1em}
+#progress b{color:var(--rose-d)}
+.credit{position:absolute;left:0;right:0;bottom:calc(14px + var(--safeB));display:flex;justify-content:center;align-items:center;gap:10px;font-size:12px;color:var(--ink2);letter-spacing:.06em}
+.credit .sep{opacity:.4}
+.credit button{background:none;border:none;color:var(--ink2);font-size:12px;text-decoration:underline;cursor:pointer;padding:6px 4px;opacity:.75}
+
+/* ================= 遊戲舞台 ================= */
+#game{position:fixed;inset:0;display:none;overflow:hidden;background:#fde4ec}
+.playing #game{display:block}
+#bg{position:absolute;inset:0;transition:background .6s}
+#bg::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.35) 1.5px,transparent 1.6px);background-size:22px 22px;pointer-events:none}
+
+#chara{position:absolute;left:50%;bottom:calc(var(--boxH) + var(--safeB) - 4px);transform:translateX(-50%);height:min(46dvh,480px);aspect-ratio:20/24;z-index:1;pointer-events:none;transition:opacity .35s,filter .3s;filter:drop-shadow(0 8px 0 rgba(74,59,85,.12))}
+#chara canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+#chara.hide{opacity:0}
+#chara.dim{filter:brightness(.72) saturate(.7)}
+#chara.talk canvas{animation:bob 1.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-1.2%)}}
+
+#top{position:absolute;top:calc(8px + var(--safeT));left:8px;right:8px;z-index:5;display:flex;gap:6px;align-items:flex-start}
+#hud{flex:1;min-width:0;padding:7px 11px;border-radius:14px;background:rgba(255,250,244,.82);border:1px solid #fff;box-shadow:0 4px 14px rgba(74,59,85,.12);font-size:11px;display:flex;flex-wrap:wrap;gap:3px 10px;align-items:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#hudChap{width:100%;font-weight:700;font-size:12px;letter-spacing:.04em;font-family:var(--serif)}
+.stat{display:flex;align-items:center;gap:4px;white-space:nowrap;color:var(--ink2)}
+.bar{position:relative;width:34px;height:6px;border-radius:3px;background:rgba(74,59,85,.1);overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;width:33%;border-radius:3px;transition:width .5s}
+#st-a .bar i{background:var(--rose-d)}
+#st-t .bar i{background:#79b9ec}
+#st-s .bar i{background:#e3b44f}
+#st-p .bar i{background:#6cc9a0}
+.stat b{min-width:14px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+#ctl{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:150px}
+.pill{font-size:11px;font-weight:700;color:var(--ink);background:rgba(255,250,244,.82);border:1px solid #fff;border-radius:999px;padding:6px 10px;min-height:30px;cursor:pointer;letter-spacing:.06em;box-shadow:0 3px 10px rgba(74,59,85,.12)}
+.pill.on{background:var(--rose);color:#fff}
+
+#delta{position:absolute;left:50%;top:calc(80px + var(--safeT));transform:translate(-50%,-6px);z-index:7;padding:6px 16px;border-radius:999px;background:rgba(255,250,244,.95);box-shadow:0 4px 14px rgba(74,59,85,.18);font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap}
+#delta.show{opacity:1;transform:translate(-50%,0)}
+#delta .up{color:#2f9d6c}
+#delta .dn{color:#d2556a}
+
+#chapCard{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;background:rgba(255,245,248,.6);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+#chapCard span{font-family:var(--serif);color:var(--ink);font-size:clamp(22px,6.5vw,32px);font-weight:700;letter-spacing:.14em;padding:12px 30px;background:var(--cream);border-radius:4px;box-shadow:0 6px 20px rgba(74,59,85,.15);outline:1px solid var(--rose);outline-offset:-7px}
+#chapCard.run{animation:chap 1.5s ease forwards}
+@keyframes chap{0%{opacity:0}20%{opacity:1}75%{opacity:1}100%{opacity:0}}
+
+/* 對話框：雙層邊框，名字牌做成緞帶 */
+#box{position:absolute;left:8px;right:8px;bottom:calc(8px + var(--safeB));height:var(--boxH);z-index:4;border-radius:16px;background:rgba(255,250,244,.95);border:2px solid #fff;box-shadow:0 8px 24px rgba(74,59,85,.22),inset 0 0 0 4px var(--cream),inset 0 0 0 5px rgba(247,168,192,.7);cursor:pointer;max-width:860px;margin:0 auto}
+#name{position:absolute;top:-16px;left:16px;z-index:1;padding:4px 18px;border-radius:999px;background:var(--cream);border:2px solid currentColor;font-weight:700;font-size:15px;letter-spacing:.06em;box-shadow:0 3px 8px rgba(74,59,85,.15)}
+#name[hidden]{display:none}
+#textWrap{position:absolute;inset:0;padding:22px 20px 22px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#text{font-size:clamp(15px,4.2vw,18px);line-height:1.85;white-space:pre-wrap}
+#next{position:absolute;right:16px;bottom:8px;display:none;font-size:12px;color:var(--rose-d);animation:blink 1s steps(2) infinite}
+#next.show{display:block}
+@keyframes blink{50%{opacity:0}}
+
+#choices{position:absolute;left:50%;transform:translateX(-50%);top:calc(84px + var(--safeT));bottom:calc(var(--boxH) + var(--safeB) + 30px);width:min(92%,520px);display:none;flex-direction:column;justify-content:flex-end;gap:10px;z-index:6;overflow-y:auto}
+#choices.show{display:flex}
+.chHead{flex:0 0 auto;text-align:center;padding:7px 12px;font-weight:700;font-size:13px;color:var(--ink);letter-spacing:.12em;background:linear-gradient(90deg,rgba(253,233,166,0),var(--lemon) 18%,var(--lemon) 82%,rgba(253,233,166,0))}
+.choice{flex:0 0 auto;font-weight:700;font-size:16px;line-height:1.5;background:rgba(255,250,244,.96);border:2px solid #fff;border-radius:14px;padding:12px 16px;min-height:50px;text-align:center;box-shadow:0 5px 14px rgba(74,59,85,.18),inset 0 0 0 1px rgba(247,168,192,.5);cursor:pointer;animation:rise .25s ease both}
+.choice:nth-child(3){animation-delay:.05s}.choice:nth-child(4){animation-delay:.1s}
+.choice:active{transform:scale(.98);background:#fff0f5}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ================= 視窗 ================= */
+.ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:16px;z-index:50;background:rgba(74,59,85,.35);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.ov.show{display:flex}
+.panel{position:relative;background:var(--cream);border-radius:20px;border:2px solid #fff;box-shadow:0 16px 40px rgba(74,59,85,.25),inset 0 0 0 6px var(--cream),inset 0 0 0 7px rgba(247,168,192,.55);padding:28px 24px 22px;max-width:540px;width:100%;max-height:90%;overflow:auto}
+.ribbon{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;padding:3px 14px;border-radius:999px;background:var(--lemon);margin-bottom:8px}
+.panel h2{font-family:var(--serif);font-size:clamp(21px,5.4vw,27px);margin:2px 0 12px;line-height:1.4}
+.panel p{font-size:clamp(15px,4vw,17px);line-height:1.9;white-space:pre-wrap}
+.foot{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.field{width:100%;font-size:18px;padding:12px 16px;background:#fff;color:var(--ink);border:2px solid var(--ink);border-radius:14px;outline:none;margin-top:6px;font-family:inherit}
+.field:focus{border-color:var(--rose-d)}
+.label{font-weight:700;margin-top:16px;font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.note{font-size:13px!important;color:var(--ink2);margin-top:12px}
+
+#tip .panel{max-width:480px}
+#tip .ribbon{background:var(--mint)}
+
+/* 回顧 */
+.lg{padding:9px 0;border-bottom:1px dashed #ecdccf;font-size:15px;line-height:1.75}
+.lg b{display:block;font-size:13px}
+.lg.pick{color:#a07a2a;font-size:14px}
+
+/* 結局 */
+#end .panel{text-align:center}
+#endText{background:repeating-linear-gradient(transparent 0 calc(1.9em - 1px),#f3e3d4 calc(1.9em - 1px) 1.9em);background-attachment:local}
+#endText{text-align:left;margin-top:6px}
+#endStats{display:flex;justify-content:center;gap:14px;font-size:13px;margin-top:14px;color:var(--ink2)}
+#endFortune{background:var(--lemon)}
+
+/* ================= 結局之書 ================= */
+#bookOv{background:rgba(74,59,85,.45)}
+#book{position:relative;perspective:1800px}
+/* 封面 */
+.cover{position:relative;width:min(80vw,340px);aspect-ratio:3/4;border-radius:6px 14px 14px 6px;cursor:pointer;
+  background:linear-gradient(135deg,#f6b3c8 0%,#e7a0bb 55%,#d98fae 100%);
+  box-shadow:inset 10px 0 0 rgba(0,0,0,.08),inset 13px 0 0 rgba(255,255,255,.25),0 18px 40px rgba(74,59,85,.4),6px 6px 0 #f3e6d8,7px 7px 0 #d9c7b5,10px 10px 0 #f3e6d8,11px 11px 0 #d9c7b5;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fffaf4;padding:30px 26px 30px 36px;transition:transform .5s}
+.cover::before{content:"";position:absolute;inset:16px 14px 16px 26px;border:2px solid rgba(255,240,200,.85);border-radius:4px;box-shadow:inset 0 0 0 4px rgba(255,240,200,.25)}
+.cover .cv-small{font-size:11px;letter-spacing:.3em;opacity:.9}
+.cover h3{font-family:var(--serif);font-size:clamp(26px,8vw,34px);line-height:1.35;margin:14px 0 10px;letter-spacing:.1em;text-shadow:0 2px 0 rgba(0,0,0,.12)}
+.cover .cv-heart{width:44px;height:40px;image-rendering:pixelated;margin:6px 0 14px}
+.cover .cv-prog{font-size:13px;letter-spacing:.1em;background:rgba(255,250,244,.25);padding:4px 14px;border-radius:999px}
+.cover .cv-open{margin-top:22px;font-size:13px;opacity:.9;animation:blink 1.6s steps(2) infinite}
+.cover:active{transform:rotateY(-8deg)}
+/* 翻開後 */
+.spread{display:none;position:relative;width:min(92vw,420px);height:min(76dvh,620px);border-radius:10px;background:#e9d9c6;padding:8px;box-shadow:0 18px 40px rgba(74,59,85,.4)}
+#book.open .cover{display:none}
+#book.open .spread{display:flex}
+.page{position:relative;flex:1;min-width:0;background:#fffaf1;border-radius:4px 10px 10px 4px;padding:30px 24px 46px;overflow:hidden;display:flex;flex-direction:column;
+  background-image:linear-gradient(90deg,rgba(150,110,80,.14),transparent 9%);transform-origin:left center}
+.page.left{border-radius:10px 4px 4px 10px;background-image:linear-gradient(270deg,rgba(150,110,80,.16),transparent 9%);transform-origin:right center}
+.page .pno{font-size:11px;letter-spacing:.24em;color:var(--ink2)}
+.page .ptag{align-self:flex-start;margin-top:8px;font-size:11px;font-weight:700;letter-spacing:.12em;padding:2px 12px;border-radius:999px;background:var(--lemon)}
+.page .ptag.secret{background:var(--lav)}
+.page h3{font-family:var(--serif);font-size:clamp(20px,5.5vw,24px);line-height:1.45;margin:10px 0 8px}
+.page p{font-size:14.5px;line-height:32px;white-space:pre-wrap;color:#56485f;flex:1;overflow:auto;background:repeating-linear-gradient(transparent 0 31px,#f1e2d1 31px 32px);background-attachment:local}
+.page .prec{font-size:12px;color:var(--ink2);margin:8px 0 10px}
+.page .pfoot{position:absolute;left:0;right:0;bottom:14px;text-align:center;font-size:12px;color:#b9a593;font-family:var(--serif)}
+.page.lock h3{color:#b7a8b8}
+.page.lock .q{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#b7a8b8;font-size:14px;text-align:center}
+.page.lock .q canvas{width:46px;height:42px;image-rendering:pixelated;opacity:.4;filter:grayscale(1)}
+.page .stamp{position:absolute;right:18px;top:24px;width:60px;height:60px;border-radius:50%;border:2px solid var(--rose-d);color:var(--rose-d);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;transform:rotate(-14deg);opacity:.75}
+.toc{list-style:none;margin-top:6px}
+.toc li{display:flex;align-items:baseline;gap:8px;padding:6px 2px;font-size:14.5px;line-height:19px;cursor:pointer;border-radius:6px}
+.toc li:active{background:#fdeef3}
+.toc .dots{flex:1;border-bottom:1px dotted #cdb9a6;transform:translateY(-4px)}
+.toc .t-lock{color:#b7a8b8}
+.page .intro{font-size:13px;color:var(--ink2);line-height:1.8;margin-top:6px}
+.page.blank{background-image:linear-gradient(90deg,rgba(150,110,80,.14),transparent 9%)}
+.flip-next .page:last-child{animation:flipN .45s ease}
+.flip-prev .page:first-child{animation:flipP .45s ease}
+@keyframes flipN{from{transform:rotateY(-70deg);opacity:.3}to{transform:none;opacity:1}}
+@keyframes flipP{from{transform:rotateY(70deg);opacity:.3}to{transform:none;opacity:1}}
+.bookNav{display:none;align-items:center;justify-content:center;gap:14px;margin-top:14px}
+#book.open + .bookNav{display:flex}
+.bookNav span{color:#fff;font-size:13px;min-width:70px;text-align:center;font-family:var(--serif)}
+.bookNav .btn{min-width:48px;padding:8px 14px}
+.bookClose{position:absolute;top:calc(12px + var(--safeT));right:12px}
+.bookWrap{display:flex;flex-direction:column;align-items:center}
+
+/* ================= 分享圖卡 ================= */
+#shareOv .panel{max-width:420px;text-align:center}
+#shareImg{width:100%;max-height:56dvh;object-fit:contain;border-radius:12px;box-shadow:0 8px 24px rgba(74,59,85,.2);background:#fff;-webkit-user-select:auto;user-select:auto;-webkit-touch-callout:default}
+
+/* ================= 結局代表畫面與小圖鑑 ================= */
+.art{display:block;width:100%;height:auto;aspect-ratio:3/2;image-rendering:pixelated;border-radius:8px;background:#efe6ef}
+.art.framed{max-width:320px;margin:4px auto 8px;border:4px solid #fff;border-radius:12px;box-shadow:0 6px 18px rgba(74,59,85,.18)}
+.partwrap{position:relative;flex:0 0 auto;margin:8px 0 10px;border:4px solid #fff;border-radius:12px;box-shadow:0 4px 12px rgba(74,59,85,.15)}
+.partwrap .art{border-radius:8px}
+@media (min-width:760px){ .page .partwrap{width:min(100%,300px)} }
+.partwrap .stamp{position:absolute;right:-8px;top:-12px;background:rgba(255,250,241,.9)}
+.page h3{margin:6px 0 4px}
+.page .intro{flex:0 0 auto;background:none;line-height:1.7}
+.toc-page{padding-bottom:40px}
+.tgrid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px;padding:2px 2px 24px;align-content:start;-webkit-overflow-scrolling:touch}
+.tcard{display:flex;flex-direction:column;gap:3px;padding:6px 6px 8px;background:#fff;border:1px solid #efe0cd;border-radius:12px;cursor:pointer;text-align:left;box-shadow:0 2px 8px rgba(74,59,85,.08);transition:transform .1s}
+.tcard:active{transform:scale(.97)}
+.tcard .art{border-radius:8px}
+.tcard.secret:not(.lock){box-shadow:0 0 0 2px var(--lav),0 2px 8px rgba(74,59,85,.08)}
+.tno{margin-top:3px;font-size:10px;letter-spacing:.16em;color:var(--ink2)}
+.tname{font-size:12.5px;font-weight:700;line-height:1.4;color:var(--ink)}
+.tcard.lock .tname{color:#b7a8b8}
+.page.lock .q{flex:1;display:block;color:#a898a9;font-size:14px;text-align:left;line-height:1.8;margin-top:4px}
+#tipSrc:empty{display:none}
+.pbtns{display:flex;gap:8px;flex-wrap:wrap}
+.pbtns .btn.soft{border:2px solid transparent}
+@media (min-width:760px){ .tgrid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
+/* ================= 版面調整 ================= */
+@media (min-width:700px){
+  #hud{font-size:12px;flex:0 1 auto}
+  .bar{width:56px}
+  #ctl{max-width:none}
+  #box{left:24px;right:24px}
+}
+@media (min-width:760px){
+  .spread{width:min(94vw,880px);height:min(78dvh,600px)}
+  .page{padding:34px 34px 48px}
+}
+@media (max-height:520px) and (orientation:landscape){
+  :root{--boxH:clamp(96px,28dvh,128px)}
+  #hudChap{width:auto;margin-right:6px}
+  #hud{flex:0 1 auto}
+  #ctl{max-width:none}
+  #chara{height:62dvh}
+  #text{font-size:15px;line-height:1.6}
+  #textWrap{padding:18px 16px 14px}
+  #choices{top:calc(52px + var(--safeT));bottom:calc(var(--boxH) + var(--safeB) + 26px);width:min(94%,760px);flex-direction:row;flex-wrap:wrap;align-content:flex-end;gap:8px}
+  .chHead{width:100%;padding:4px}
+  .choice{flex:1 1 calc(50% - 8px);min-height:42px;padding:8px 12px;font-size:15px}
+  #delta{top:calc(50px + var(--safeT))}
+  #title{flex-direction:row;gap:40px;padding-bottom:40px}
+  .logo{margin-bottom:0}.logo h1{font-size:40px}.logo p{display:none}
+  .spread{height:84dvh}
+  .cover{width:auto;height:76dvh}
+  .bookNav{margin-top:6px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= 主頁 ================= -->
+<div id="title">
+  <div id="deco"></div>
+  <div class="logo">
+    <small>LOVE IS NOT THAT SIMPLE</small>
+    <h1>戀愛<br><em>沒那麼</em>簡單</h1>
+    <p>一段關係裡的每個選擇，都會留下痕跡。</p>
+  </div>
+  <div class="menuWrap">
+    <div class="menu">
+      <button class="btn main" id="btnContinue" hidden>繼續遊戲<small id="contInfo"></small></button>
+      <button class="btn main" id="btnStart">開始遊戲</button>
+      <button class="btn" id="btnBook">結局之書</button>
+      <button class="btn" id="btnFortune" hidden>🐷 去問問小豬占卜</button>
+    </div>
+    <div id="progress" style="text-align:center"></div>
+  </div>
+  <div class="credit">
+    <span>made by may22</span><span class="sep">｜</span><button id="btnReset">清除紀錄</button>
+  </div>
+</div>
+
+<!-- 角色設定 -->
+<div id="setup" class="ov">
+  <div class="panel">
+    <span class="ribbon">角色設定</span>
+    <h2>你是誰？</h2>
+    <div class="label">名字（最多 8 個字）</div>
+    <input id="nameIn" class="field" maxlength="8" placeholder="輸入名字，或按隨機" autocomplete="off" enterkeyhint="done">
+    <div class="row"><button class="btn sm" id="btnRandom">隨機英文名</button></div>
+    <div class="label">性別</div>
+    <div class="row">
+      <button class="btn sm gbtn" data-g="f" aria-pressed="true">女生</button>
+      <button class="btn sm gbtn" data-g="m" aria-pressed="false">男生</button>
+    </div>
+    <p class="note">對象與其他角色的名字每次都會隨機產生，劇情也有不同的版本。一輪大約 10 分鐘。</p>
+    <p class="note" id="statNote" hidden>遊戲會匿名統計大家的選擇和結局，不會記錄你輸入的名字。</p>
+    <div class="foot">
+      <button class="btn soft" id="btnSetupBack">返回</button>
+      <button class="btn main" id="btnSetupStart">開始</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 遊戲 ================= -->
+<div id="game">
+  <div id="bg"></div>
+  <div id="chara" class="hide"><canvas id="sp" width="20" height="24"></canvas></div>
+  <div id="top">
+    <div id="hud">
+      <div id="hudChap">序章</div>
+      <div class="stat" id="st-a"><span>心動</span><div class="bar"><i id="b-a"></i></div><b id="v-a">0</b></div>
+      <div class="stat" id="st-t"><span>信任</span><div class="bar"><i id="b-t"></i></div><b id="v-t">0</b></div>
+      <div class="stat" id="st-s"><span>自我</span><div class="bar"><i id="b-s"></i></div><b id="v-s">0</b></div>
+      <div class="stat" id="st-p"><span>友情</span><div class="bar"><i id="b-p"></i></div><b id="v-p">0</b></div>
+    </div>
+    <div id="ctl">
+      <button class="pill" id="pLog">LOG</button>
+      <button class="pill" id="pAuto">AUTO</button>
+      <button class="pill" id="pSkip">SKIP</button>
+      <button class="pill" id="pMenu" aria-label="選單">☰</button>
+    </div>
+  </div>
+  <div id="delta"></div>
+  <div id="choices"></div>
+  <div id="box">
+    <div id="name" hidden></div>
+    <div id="textWrap"><div id="text"></div></div>
+    <div id="next">▼</div>
+  </div>
+  <div id="chapCard"><span id="chapText"></span></div>
+</div>
+
+<!-- 小知識 -->
+<div id="tip" class="ov">
+  <div class="panel">
+    <span class="ribbon">心理學小知識</span>
+    <h2 id="tipTitle"></h2>
+    <p id="tipBody"></p>
+    <p id="tipSrc" class="note"></p>
+    <div class="foot"><button class="btn main" id="tipOk">我知道了</button></div>
+  </div>
+</div>
+
+<!-- 回顧 -->
+<div id="logOv" class="ov">
+  <div class="panel">
+    <span class="ribbon">LOG</span>
+    <h2>對話回顧</h2>
+    <div id="logList"></div>
+    <div class="foot"><button class="btn main" id="logBack">返回</button></div>
+  </div>
+</div>
+
+<!-- 選單 -->
+<div id="menuOv" class="ov">
+  <div class="panel" style="max-width:340px;text-align:center">
+    <h2>暫停一下</h2>
+    <div class="foot" style="flex-direction:column">
+      <button class="btn main" id="mResume">繼續遊戲</button>
+      <button class="btn" id="mRestart">重新開始</button>
+      <button class="btn soft" id="mTitle">回到主頁</button>
+    </div>
+  </div>
+</div>
+
+<!-- 結局 -->
+<div id="end" class="ov">
+  <div class="panel">
+    <span class="ribbon" id="endTag">結局</span>
+    <canvas id="endArt" class="art framed" width="96" height="64"></canvas>
+    <h2 id="endTitle"></h2>
+    <p id="endText"></p>
+    <div id="endStats"></div>
+    <p id="endCount" class="note"></p>
+    <div class="foot">
+      <button class="btn main" id="endShare">分享結局圖卡</button>
+      <button class="btn" id="endAgain">再玩一次</button>
+      <button class="btn" id="endBook">結局之書</button>
+      <button class="btn" id="endFortune" hidden>去問問小豬</button>
+      <button class="btn soft" id="endBack">回到主頁</button>
+    </div>
+  </div>
+</div>
+
+<!-- 結局之書 -->
+<div id="bookOv" class="ov">
+  <button class="btn sm bookClose" id="bookBack">闔上</button>
+  <div class="bookWrap">
+    <div id="book">
+      <div class="cover" id="cover">
+        <div class="cv-small">THE BOOK OF ENDINGS</div>
+        <h3>戀愛<br>結局之書</h3>
+        <canvas class="cv-heart" id="cvHeart" width="9" height="8"></canvas>
+        <div class="cv-prog" id="cvProg"></div>
+        <div class="cv-open">點一下翻開</div>
+      </div>
+      <div class="spread" id="spread"></div>
+    </div>
+    <div class="bookNav">
+      <button class="btn sm" id="pgPrev" aria-label="上一頁">‹</button>
+      <span id="pgNum"></span>
+      <button class="btn sm" id="pgNext" aria-label="下一頁">›</button>
+      <button class="btn sm" id="pgToc">目錄</button>
+    </div>
+  </div>
+</div>
+
+<!-- 分享圖卡 -->
+<div id="shareOv" class="ov">
+  <div class="panel">
+    <span class="ribbon">結局圖卡</span>
+    <img id="shareImg" alt="結局分享圖卡">
+    <p class="note">手機也可以長按圖片直接儲存。</p>
+    <div class="foot">
+      <button class="btn main" id="shareDo">分享／儲存圖片</button>
+      <button class="btn soft" id="shareClose">關閉</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   設定
+   ========================================================= */
+const SAVE_KEY = 'love-sim-endings-v1';
+const REC_KEY = 'love-sim-records-v1';
+const PROG_KEY = 'love-sim-progress-v1';
+const TYPE_MS = 30;
+const STAT_MIN = -5, STAT_MAX = 10;
+const AUTO_DELAY = 1500, SKIP_DELAY = 220;
+const AUTHOR = 'may22';
+/* 占卜網站：問問小豬。網址若有變動，改這裡即可；留空則隱藏按鈕 */
+const FORTUNE_URL = 'https://iammay22.github.io/piggy-oracle/';
+/* 本遊戲上線後的網址，會印在分享圖卡底部；留空則不印 */
+const GAME_URL = 'iammay22.github.io/situationship';
+
+/* 背景：馬卡龍色調的漸層。之後換圖片時，改成 'url(檔名) center/cover' 即可 */
+const BG = {
+  campus: 'linear-gradient(180deg,#ffe3ec 0%,#fff3df 55%,#dff5ea 100%)',
+  cafe:   'linear-gradient(180deg,#fff0d9 0%,#ffd9c4 100%)',
+  night:  'linear-gradient(180deg,#bfb3ea 0%,#d9c8f0 55%,#f8cfdc 100%)',
+  rain:   'linear-gradient(180deg,#b9cbe4 0%,#d6e1ef 65%,#eef2f8 100%)'
+};
+
+const POOL = {
+  m: ['阿哲','子軒','承翰','宇辰','柏翔','Leo','Ethan','Ryan','Kevin','Owen','Jay','Daniel'],
+  f: ['小晴','詩涵','語彤','佳穎','思妤','Mia','Lily','Ella','Sophia','Vivian','Ruby','Amy']
+};
+const ENGLISH_PLAYER = {
+  m: ['Alex','Ryan','Leo','Ethan','Kevin','Daniel','Jay','Owen'],
+  f: ['Mia','Amy','Lily','Ella','Sophia','Vivian','Emma','Ruby']
+};
+
+/* =========================================================
+   像素立繪（20 x 24 半身像，左半邊定義後鏡射）
+   之後換成你的立繪：把 drawChara 改成切換 <img> 的 src 即可
+   ========================================================= */
+const HALF = {
+  m: [
+    "......kkkk","....kkhhhh","...khhhhhh","..khhhhhhh","..khhhhhhh",".khhhhhhhh",
+    ".khhhhshhh",".khhssssss",".khsssssss",".ksseessss",".ksseessss","..ksssssss",
+    "..kcssssss","...ksssssm","....kkssss",".....kkkss","......ksss","...kkkkttt",
+    ".kkttttttt","kttttttttp","kttttttttp","kttttttttp","kttttttttt","kttttttttt"
+  ],
+  f: [
+    "......kkkk","....kkhhhh","...khhhhhh","..khhhhhhh",".khhhhhhhh",".khhhhhhhh",
+    "khhhhhhhhh","khhhssshhh","khhsssssss","khsseessss","khsseessss","khssssssss",
+    "khscssssss","khhssssssm","khhkksssss","khhhkkkkss","khhhhhksss","khhhkkkttt",
+    "khhttttttt","khhttttttp","khtttttttp","kttttttttp","kttttttttt","kttttttttt"
+  ]
+};
+const BASE = {k:'#4a3b55', s:'#ffe1cc', e:'#3a2d44', c:'#ffa8bd', m:'#d9708e'};
+const LOOK = {
+  m:  {...BASE, h:'#5b6fa8', t:'#b7dcf7', p:'#ffffff'},
+  f:  {...BASE, h:'#a8695a', t:'#f7c2d4', p:'#ffffff'},
+  fr: {...BASE, h:'#6c9a7d', t:'#c9f0dc', p:'#ffffff'}
+};
+function drawChara(canvas, shape, pal){
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 20, 24);
+  HALF[shape].forEach((half, y) => {
+    const row = half + half.split('').reverse().join('');
+    for (let x = 0; x < 20; x++){
+      const ch = row[x];
+      if (ch === '.') continue;
+      ctx.fillStyle = pal[ch];
+      ctx.fillRect(x, y, 1, 1);
+    }
+  });
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(4, 9, 1, 1); ctx.fillRect(14, 9, 1, 1);
+}
+
+/* 像素愛心 */
+const HEART = ["..xx.xx..",".xxxxxxx.","xxxxxxxxx","xxxxxxxxx",".xxxxxxx.","..xxxxx..","...xxx...","....x...."];
+function drawHeart(canvas, color){
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 9, 8);
+  ctx.fillStyle = color;
+  HEART.forEach((r, y) => [...r].forEach((c, x) => c === 'x' && ctx.fillRect(x, y, 1, 1)));
+  ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.fillRect(2, 1, 1, 1); ctx.fillRect(1, 2, 1, 1);
+}
+
+/* =========================================================
+   角色個性
+   每輪會從這裡隨機分配給不同角色，台詞會跟著個性改變
+   ========================================================= */
+const PERS = {
+  warm:  {label:'溫柔體貼型', desc:'說話慢慢的，會記得你隨口提過的小事。'},
+  cool:  {label:'慢熱寡言型', desc:'話不多，熟了才會開玩笑，很需要自己的空間。'},
+  sunny: {label:'熱情直球型', desc:'想到什麼就說什麼，喜歡一個人就會讓對方知道。'},
+  busy:  {label:'忙碌上進型', desc:'行事曆排得很滿，對未來有很清楚的計畫。'},
+  witty: {label:'幽默搞笑型', desc:'很會逗人笑，碰到認真的話題卻常用玩笑帶過。'},
+  sea:   {label:{m:'海王型', f:'海后型'}, desc:'很會讓你覺得自己很特別，深夜秒回，問到關係卻總是不給答案。'},
+  aircon:{label:'中央空調型', desc:'對每個人都無微不至，不太會拒絕別人，也不太有界線。'}
+};
+/* 對方一開始對你的心動程度（隱藏），依人格不同 */
+const THEM_BASE = {warm:5, cool:3, sunny:6, busy:4, witty:5, sea:6, aircon:3};
+const PERS_KEYS = Object.keys(PERS);
+const LOOK2 = {
+  m: {...BASE, h:'#3b3346', t:'#cdbdf3', p:'#ffffff'},
+  f: {...BASE, h:'#d39a52', t:'#ffd8a8', p:'#ffffff'}
+};
+
+/* =========================================================
+   結局
+   ========================================================= */
+const ENDINGS = {
+  e_pass: {
+    title: '擦肩而過的傳單',
+    text: '你沒有接過那份好意，也沒有說出那句「我叫……」。日子平靜地過去，你們後來都沒再多說幾句話。偶爾在走廊遇到{P}，還是會想起那天的陽光。'
+  },
+  e_juggle: {
+    title: '誰都沒有留下',
+    text: '你以為還沒在一起，就不算傷害誰。直到兩個聊天室同時安靜下來，你才發現，每個人都以為自己是被認真對待的那一個。曖昧本身沒有錯，沒說清楚的曖昧，才會讓每個人都很累。'
+  },
+  e_unsaid: {
+    title: '沒說出口的那句話',
+    text: '你一直想著，等心裡更確定一點再回答。等你終於想好的時候，{P}已經不再問了。後來遇到，{pH}還是會笑著打招呼，你也笑著回。只有你自己知道，那則沒送出去的訊息，在草稿匣裡放了很久。'
+  },
+  e_ambig: {
+    title: '停在朋友這一格',
+    text: '你沒有勉強自己點頭。最初幾次見面有點尷尬，你們都假裝沒事，聊天時刻意繞開某些話題。過了一個學期，你們又能一起吃午餐、互相吐槽了。不是每一次心動都得變成交往，誠實說出「我還沒有那種感覺」，也是一種溫柔。'
+  },
+  e_fishpond: {
+    title: '魚塘裡的其中一條魚',
+    text: '你一直等，等{P}說出那句「我們在一起吧」。{pH}總在你快要放棄的時候，傳來一句剛剛好的話。後來你才看懂，那些剛剛好，從來不只給你一個人。你沒有不夠好，你只是站在一個永遠不會有答案的位置上。'
+  },
+  e_aircon: {
+    title: '對每個人都這麼好',
+    text: '你以為那碗粥是特別的，後來才知道，{pH}也替很多人送過粥。{pH}沒有騙你，{pH}只是對每個人都很好。你需要的是只屬於你的那份在意，而那份在意，{pH}還給不了任何一個人。'
+  },
+  e_youth: {
+    title: '謝謝你曾出現在我青春裡',
+    text: '那份喜歡沒有開花，也沒有變成遺憾。你記得{P}笑起來的樣子，記得那天的展覽，還有那杯沒喝完的奶茶。很多年後想起來，你會感謝那時候的自己，那麼認真地喜歡過一個人。'
+  },
+  e_rebound: {
+    title: '在別人身上找你的影子',
+    text: '你很快開始了一段新的關係。對方很好，可是你總忍不住比較：這個人不記得你不吃香菜，笑起來也沒有那個酒窩。某天約會到一半，你突然發現，自己一直在別人身上，找{P}的影子。'
+  },
+  e_friends: {
+    title: '戀愛會散場，但我們不會',
+    text: '分手那陣子，{C}和朋友們輪流陪你。有人半夜開車載你去海邊吹風，有人幫你把前任送的東西裝箱。你哭得很醜，他們笑得很大聲。後來你常想，戀愛會散場，可是這群人一直都在。'
+  },
+  e_wakeup: {
+    title: '被朋友罵醒的那個夜晚',
+    text: '{C}說的那些話，句句都很難聽，也句句都是真的。那天晚上你哭著刪掉對話框，把{P}設成不再顯示。隔天醒來，眼睛很腫，心裡卻有一種很久沒有的輕鬆。'
+  },
+  e_lostworld: {
+    title: '為了愛情，我弄丟了世界',
+    text: '為了{P}，你推掉一次又一次的聚會，朋友的訊息也越回越慢。後來{pH}還是離開了。你打開群組，最後一則訊息停在三個月前，是{C}問你：「最近還好嗎？」你一直沒有回。'
+  },
+  e_alone_ok: {
+    title: '原來我一個人也很好',
+    secret: true,
+    text: '你一個人去旅行，一個人看完整場電影，一個人在週日早上做了一頓很好吃的早午餐。你不再急著等誰回訊息，空下來的時間也不再可怕。你發現，一個人的日子，本來就可以很完整。'
+  },
+  e_back: {
+    title: '轉身才看見一直在的人',
+    secret: true,
+    text: '分手後，{F}一直都在。陪你吃飯，聽你把同一件事講了第十遍，從來沒有不耐煩。某天晚上送你回家，{F}在樓下停了一下：「其實我一直都……」你沒讓{F}說完，因為這一次，你想先說。'
+  },
+  e_long: {
+    title: '把日常過成答案',
+    text: '你們沒有一夕之間變好。還是會吵架，還是會有一方先冷下來，但吵完之後，總有人先開口說「我們再聊聊」。某個普通的晚上，{P}把熱好的湯推到你面前，你突然覺得，長久大概就是願意一次又一次地修補。'
+  },
+  e_proud: {
+    title: '在陽光下牽手',
+    text: '你們不再在街角放開彼此的手。偶爾有人多看一眼，你們就笑著把手牽得更緊一點。不是每個人都能理解，有些話還是得一次又一次地解釋。可是{P}在你身邊，你也在{pH}身邊，這樣就夠了。'
+  },
+  e_distance: {
+    title: '隔著時差的晚安',
+    text: '你們排好每週固定的視訊時間，也約好每三個月一定要見一次面。有時候你這邊天亮了，{pH}那邊才剛要睡。距離還在，只是你們學會了在距離裡把話說清楚，想念的時候也不再假裝沒事。'
+  },
+  e_anxious: {
+    title: '黏住的愛，耗盡的人',
+    text: '你害怕失去，所以一直確認；{pH}覺得被管住，於是越來越少開口。你們都很努力，卻像在拉同一條繩子的兩端。等終於停下來，才發現彼此都累了。依附風格沒有誰對誰錯，看懂它，至少能少走一點彎路。'
+  },
+  e_cycle: {
+    title: '分分合合的第三次',
+    text: '這是你們第三次復合。每一次都覺得這次會不一樣，每一次卻又卡在同一個地方。某天你翻到以前的日記，上面寫的煩惱，跟今天一模一樣。你終於明白，光是回到彼此身邊，什麼都不會自己改變。'
+  },
+  e_friend: {
+    title: '退回朋友的位置',
+    text: '分開半年後，你們在共同朋友的生日聚會上遇到。{pH}問你最近好不好，你說還不錯，這次是真的。後來你們偶爾傳訊息，聊的都是生活瑣事。把一段戀情慢慢放成一段友情，需要時間，也需要兩個人都願意。'
+  },
+  e_growth: {
+    title: '好聚好散，各自成長',
+    text: '那段時間你哭過很多次，也後悔過很多次。某天早上醒來，你發現第一個想到的不是{pH}，而是今天要穿哪件衣服。你沒有忘記那段感情，它只是慢慢變成了過去的一部分。下一次，你會更清楚自己要什麼。'
+  },
+  e_balance: {
+    title: '週末的大桌子',
+    text: '週末的聚餐，{P}和你的朋友們已經熟到會互相吐槽。{C}偷偷跟你說：「還好你沒有交了對象就消失。」你看著一桌子吵吵鬧鬧的人，覺得愛情和友情不用二選一，只是要多花一點力氣，把大家都放在心上。'
+  },
+  e_affair_repair: {
+    title: '坦白之後',
+    text: '你把每一則訊息都攤開給{P}看，回答每一個不想回答的問題。有好幾個晚上，{pH}半夜醒來，只是需要確認你還在。信任碎掉以後，黏回去的過程很慢，也會留下痕跡。你們都知道，所以才決定再走走看。'
+  },
+  e_affair_caught: {
+    title: '被發現的那一晚',
+    text: '{P}沒有大吼，只是很安靜地收拾東西。你想解釋，卻發現每一句話聽起來都像藉口。門關上的聲音很輕，你卻記了很久。比起被發現的那一刻，更難受的是看著{pH}眼裡的光，一點一點暗下去。'
+  },
+  e_affair_leave: {
+    title: '換了一個人，問題還在',
+    text: '你離開了{P}，和{O}在一起。剛開始一切都很新鮮，聊不完的話，說不完的晚安。半年後，你們也開始為了晚回訊息吵架。某個晚上你坐在沙發的一端，突然發現，換了一個人，那些問題還在原地等你。'
+  },
+  e_airport: {
+    title: '機場的擁抱',
+    text: '半年後，{P}要出發了。你猶豫了很久，還是去了機場。你們聊了幾句近況，像老朋友一樣。最後一個擁抱很長，誰都沒有說「等我」。有些人很好，只是想要的未來不在同一個城市。'
+  },
+  e_lonely: {
+    title: '身邊只剩下自己',
+    text: '那段感情佔滿了你的生活，等它離開，你才發現留下的空位比想像中大。你一個人吃飯、一個人看電影，假裝這樣也很好。某天經過以前常和朋友去的那家店，你在門口站了很久，終於拿出手機，打了一句「好久不見」。'
+  },
+  e_self: {
+    title: '先愛自己的人',
+    secret: true,
+    text: '你重新開始畫畫，週末一個人去看展，學會一個人吃火鍋。悲傷沒有突然消失，它只是不再佔滿你的每一天。你開始相信，下一段感情來的時候，你不會因為一句「我在」，就忘了自己是誰。'
+  },
+  e_truth: {
+    title: '不再替心找藉口',
+    secret: true,
+    text: '分開以後，你終於有空間好好想一想那次對{F}的心動。你沒有急著替自己貼標籤，只是不再假裝那份感覺不存在。某天你跟{F}說了，{F}只回你一句：「謝謝你願意告訴我。」那天晚上，你睡得特別好。'
+  },
+  e_wedding: {
+    title: '說好一起變老',
+    secret: true,
+    text: '交往的第五年，{P}在你們第一次見面的地方，拿出一個小盒子。{pH}的手在抖，說話也結結巴巴的。你們吵過、冷戰過、差點放棄過，可是每一次，都有人先伸出手。你點了點頭，眼淚掉在{pH}的手背上。'
+  }
+};
+const ORDER = ['e_pass','e_juggle','e_unsaid','e_ambig','e_fishpond','e_aircon','e_youth','e_long','e_balance','e_proud','e_distance','e_affair_repair','e_anxious','e_cycle','e_affair_caught','e_affair_leave','e_airport','e_friend','e_growth','e_rebound','e_friends','e_wakeup','e_lostworld','e_lonely','e_self','e_alone_ok','e_truth','e_back','e_wedding'];
+
+/* =========================================================
+   心理學小知識（附研究出處）
+   ========================================================= */
+const TIPS = {
+  halo: {title:'月暈效應', body:'第一印象好，之後看對方的其他特質也會跟著加分。一個順手的小幫忙，常常比想像中更有分量。', src:'心理學家桑代克在 1920 年的研究中命名了這個現象'},
+  zeig: {title:'蔡格尼克效應', body:'人對還沒完成的事，記得比已經完成的事更清楚。曖昧之所以讓人一直惦記，就是因為它還懸在那裡。', src:'蔡格尼克，1927 年的記憶實驗'},
+  choice: {title:'選擇太多的時候', body:'一項交友網站的研究讓受試者從 6 個或 24 個人裡挑一個約會對象。從 24 個人裡挑的人，一週後對自己的選擇比較不滿意，也比較常反悔。選擇多看起來是好事，有時候反而讓人更難定下來。', src:'丹傑羅與托馬，2017 年'},
+  intermittent: {title:'間歇增強', body:'獎勵如果時有時無，行為反而最難戒掉。忽冷忽熱的回應會讓人更放不下，這不代表你特別喜歡對方，可能只是大腦被這種節奏抓住了。', src:'史金納的操作制約研究'},
+  disclose: {title:'自我揭露與親密感', body:'心理學家亞倫做過一個實驗：讓兩個陌生人輪流回答一組越來越私密的問題，45 分鐘後，他們的親近感明顯高於只聊閒話的組別。被聽見，是靠近的開始。', src:'亞倫等人，1997 年「36 個問題」研究'},
+  script: {title:'誰該先開口？', body:'研究異性戀約會的學者發現，很多人心裡都有一套「約會劇本」：男生要主動邀約、告白、付錢，女生要等待和回應。這套劇本讓男生承受被拒絕的壓力，也讓女生想主動時有所顧忌。劇本不是規則，誰先開口都可以。', src:'羅斯與弗雷茲的約會腳本研究，1993 年'},
+  explore: {title:'探索自己', body:'目前多數研究認為，性傾向是內在而相對穩定的特質，但很多人是在某次心動之後才開始認真思考。探索的過程中感到困惑很常見，不需要急著替自己下結論。', src:'美國心理學會的相關說明'},
+  attach: {title:'依附理論', body:'每個人在親密關係裡都有習慣的模式：安全型比較能自在地靠近，焦慮型容易擔心被丟下，逃避型在太靠近時會想退開。知道自己是哪一種，比較不會被情緒推著走。', src:'鮑比的依附理論，後由哈贊與謝弗延伸到成人戀愛'},
+  triangle: {title:'愛情三角理論', body:'愛情可以拆成三個成分：激情、親密、承諾。熱戀時激情最旺，日子久了，激情通常會慢慢降下來，關係能不能走下去，要看親密和承諾有沒有跟上。', src:'史坦伯格，1986 年'},
+  minority: {title:'少數壓力', body:'研究者發現，同志伴侶除了一般情侶會遇到的事，還多了一層壓力：要不要在別人面前牽手、該不該出櫃、會不會被投以異樣眼光。這些壓力不是來自關係本身，而是來自環境。', src:'梅爾的少數壓力模式，2003 年'},
+  family: {title:'家人的接納', body:'一項追蹤同志年輕人的研究發現，在青少年時期被家人接納的人，成年後的自尊和心理健康都比較好。接納不一定是一次到位，有時候是一句「我知道了」，再慢慢學著理解。', src:'瑞安等人的家庭接納計畫，2010 年'},
+  horsemen: {title:'戈特曼四騎士', body:'研究伴侶多年的戈特曼發現，批評、輕蔑、防衛、築牆這四種反應，最能預測關係會走向破裂。其中「輕蔑」的殺傷力最大。吵架本身不可怕，可怕的是用攻擊代替理解。', src:'戈特曼的伴侶觀察研究'},
+  bids: {title:'轉向回應', body:'伴侶之間常會丟出小小的「邀請」，例如分享一件事、嘆一口氣。研究追蹤新婚夫妻六年後發現，還在一起的伴侶，大約 86% 的時候會轉向回應對方；已經離婚的，只有大約 33%。', src:'戈特曼與德賴弗的新婚夫妻研究'},
+  jealousy: {title:'在意的事不一樣嗎？', body:'演化心理學家巴斯問受試者：伴侶跟別人發生關係，和伴侶愛上別人，哪個比較難受？平均來說，男性比較在意前者，女性比較在意後者。不過後續研究發現差異沒有那麼大，個人經驗的影響常常比性別更明顯。', src:'巴斯等人，1992 年；哈里斯等人的後續研究'},
+  betray: {title:'被背叛之後', body:'研究外遇的伴侶治療師發現，被背叛的一方常出現反覆想起細節、失眠、對手機通知特別敏感等反應，跟創傷後的壓力反應很像。這不是你太脆弱，是大腦在努力保護你。', src:'戈登、鮑科姆與斯奈德的外遇修復研究'},
+  distance: {title:'遠距離的親密', body:'一項研究比較遠距離與近距離的情侶，發現遠距離的人反而更常說出心裡話，也更容易把對方理想化，所以親密感不一定比較低。但理想化有時也會讓見面時的落差變大。', src:'江與漢考克，2013 年'},
+  pain: {title:'心痛不只是比喻', body:'研究者請剛被分手的人看前任的照片，大腦裡和身體疼痛有關的區域也跟著活躍起來。所以「心好痛」不是誇張，你的身體真的在痛。', src:'克羅斯等人，2011 年'},
+  crave: {title:'像戒斷一樣的想念', body:'人類學家費雪的團隊掃描了被分手者的大腦，發現他們看到前任照片時，和獎賞、渴求有關的區域特別活躍，跟戒斷某些成癮物時有相似之處。好想{pH}，是真的很難忍。', src:'費雪等人，2010 年'},
+  stalk: {title:'一直看前任的動態', body:'一項針對臉書使用者的研究發現，分手後越常查看前任動態的人，越難放下，痛苦和思念也越多，自我成長則比較少。取消追蹤不是小氣，是給自己一點復原的空間。', src:'馬歇爾，2012 年'},
+  shoulder: {title:'肩並肩的陪伴', body:'研究友誼的學者發現，男生的友誼比較常是「肩並肩」，一起打球、打電動，在做事情的時候順便聊；女生的友誼比較常是「面對面」，直接把感受說出來。兩種都是陪伴，沒有哪一種比較好。', src:'賴特，1982 年的友誼研究'},
+  withdraw: {title:'交了對象就消失？', body:'研究者追蹤情侶發現，關係越認真，兩個人跟朋友見面的次數就越少，研究者把這叫做「雙人退縮」。這很常見，只是如果朋友圈縮得太小，等到關係出問題時，身邊可能就沒有人接得住你。', src:'米拉多等人，1983 年'},
+  network: {title:'朋友的看法重要嗎？', body:'大家常說「越反對越相愛」，也就是羅密歐與茱麗葉效應。不過後來的大型研究發現剛好相反：朋友和家人越支持這段關係，兩個人的愛和承諾通常越穩定。', src:'辛克萊等人，2014 年'},
+  emotional: {title:'「只是朋友」', body:'研究外遇多年的心理學家葛拉斯發現，很多外遇不是從一夜情開始，而是從「只是朋友」開始。當你開始對伴侶隱瞞聊天內容、把心事先說給另一個人聽，界線其實已經在移動了。', src:'葛拉斯《不只是朋友》，2003 年'},
+  breadcrumb: {title:'麵包屑效應', body:'有些人不給承諾，卻會在你快放棄時丟一點甜頭，像撒麵包屑一樣讓你留下來。研究發現，常被這樣對待的人，對生活的滿意度比較低，也比較容易覺得無助和孤單。', src:'納瓦羅等人，2020 年'},
+  dissonance: {title:'認知失調', body:'當事實和我們想相信的不一致，心裡會很不舒服，於是我們常會改變解釋，而不是改變想法。「{pH}只是人太好了」這句話，有時候是在保護自己的期待。', src:'費斯廷格，1957 年'},
+  confirm: {title:'確認偏誤', body:'我們很容易只注意到支持自己期待的訊號，把對方的禮貌、順手的幫忙都解讀成喜歡，卻忽略那些說「不是」的線索。喜歡一個人時，這種偏誤會特別明顯。', src:'尼克森，1998 年的回顧研究'},
+  control: {title:'愛還是控制？', body:'交換密碼、開即時定位，常被說成「有安全感」。研究伴侶間數位監控的學者發現，越常查看伴侶手機的人，關係中的嫉妒和不安往往也越多，查看並沒有讓人比較安心。', src:'伴侶數位監控的相關研究'},
+  rebound: {title:'反彈關係', body:'很多人以為分手後馬上談新戀愛一定不好。研究其實發現，快速開始新關係的人，自信心不一定比較差。關鍵在於你是在認識新的人，還是在找前任的替代品。', src:'布倫博與弗雷利，2015 年'},
+  dual: {title:'雙軌歷程', body:'走出失落不是一條直線。人會在「面對悲傷」和「重新生活」之間來回擺盪，今天好一點、明天又崩潰，都很正常，兩邊都需要。', src:'史特羅貝與舒特的悲傷雙軌歷程模式'},
+  writing: {title:'表達性書寫', body:'心理學家潘尼貝克發現，連續幾天把心裡最深的感受寫下來，對身心都有幫助。後來也有研究請分手的人寫下這段關係裡的正面收穫，他們的情緒恢復得比較好。', src:'潘尼貝克的書寫研究；路易斯基，2009 年'},
+  cycle: {title:'分分合合', body:'研究分分合合關係的學者發現，這類伴侶回報的滿意度比較低、不確定感比較高，而且常常沒有好好討論「這次要改什麼」就復合了。復合本身沒有錯，沒解決的問題才是。', src:'戴利等人的研究'},
+  selfc: {title:'分手後的「我是誰」', body:'研究發現，分手後很多人會覺得自己變得模糊，因為兩個人的生活早就交織在一起。重新找回只屬於自己的興趣和朋友，能幫你把「我」一點一點拼回來。', src:'斯洛特、加德納與芬克爾，2010 年'}
+};
+
+/* =========================================================
+   劇情
+   人物代號：{P} 目前的對象　{A}{B} 兩位異性　{F} 同性朋友　{C} 另一位朋友　{X} 第三者　{N} 你
+   代號後加 H 是他／她（{pH} 等於 {PH}），加 t 是個性名稱，加 d 是個性描述
+   台詞可以寫成物件，依序比對：same（同性伴侶）→ 說話者的個性 → 你的性別（m／f）→ def
+   pick 隨機挑一個節點；branch 依數值分流；set 設定旗標；setP 決定對象是誰
+   ========================================================= */
+const SCENES = {
+  /* ---------- 第一章：相遇 ---------- */
+  start: {setP:'A', pick:['iA','iB','iC']},
+
+  iA: {bg:'campus', chap:'第一章・相遇', speaker:null,
+    text:'社團迎新的第一天。你抱著一疊傳單站在走廊上，人來人往，沒有人停下來。',
+    next:'iA2'},
+  iA2: {speaker:'{P}',
+    text:{def:'需要幫忙嗎？我看你快被傳單淹沒了。', cool:'……這疊給我吧，你拿不動了。', sunny:'哇，你拿好多！我幫你一半！', witty:'你是在搬家，還是在發傳單？我幫你吧。'},
+    tip:'halo',
+    choices:[
+      {label:'好啊，謝謝你', to:'s3', fx:{a:2,h:1}},
+      {label:'不用，我自己可以', to:'s4', fx:{s:1}}
+    ]},
+
+  iB: {bg:'cafe', chap:'第一章・相遇', speaker:null,
+    text:'期中前的圖書館，靠窗的位子只剩一個。你的筆記本滑下桌，攤開的那頁散了一地。',
+    next:'iB2'},
+  iB2: {speaker:'{P}',
+    text:{def:'你的筆記掉了。……字好漂亮，這是你自己整理的嗎？', busy:'你的筆記掉了。這份整理得很好，我可以拍一下嗎？我下週也要考這科。', cool:'……掉了。', sunny:'筆記掉了！哇，你的重點畫得好可愛！'},
+    tip:'halo',
+    choices:[
+      {label:'嗯，謝謝你幫我撿', to:'s3', fx:{a:2}},
+      {label:'不用了，我自己來', to:'s4', fx:{s:1}}
+    ]},
+
+  iC: {bg:'rain', chap:'第一章・相遇', speaker:null,
+    text:'傍晚突然下起大雨，公車站只剩你一個人。一把傘從旁邊伸過來，停在你頭頂。',
+    next:'iC2'},
+  iC2: {speaker:'{P}',
+    text:{def:'我的傘夠大，要一起走到捷運站嗎？', f:'我的傘夠大，要一起走到捷運站嗎？……啊，我不是怪人，你可以先看一下我的學生證。', witty:'這把傘有兩人座，目前還有一個空位。', cool:'……一起走？'},
+    tip:'halo',
+    choices:[
+      {label:'好啊，那麻煩你了', to:'s3', fx:{a:2}},
+      {label:'不用，我等雨停就好', to:'s4', fx:{s:1}}
+    ]},
+
+  s3: {speaker:'{P}',
+    text:{def:'我叫{P}。你呢？', sea:'我叫{P}。你呢？……嗯，名字跟人一樣好聽。', aircon:'我叫{P}！有需要幫忙隨時找我喔，我很閒的。', cool:'……我是{P}。', sunny:'我叫{P}！你叫什麼名字？', busy:'我是{P}，等一下還要趕去打工。你呢？', witty:'我叫{P}，今天的日行一善額度剛好用完。你呢？'},
+    next:'s3a'},
+  s3a: {speaker:null, text:'你報上自己的名字。{P}跟著念了一遍，好像在確認發音。', next:'s3b'},
+  s3b: {speaker:'{P}', text:{def:'{N}，好，我記住了。', cool:'{N}。……嗯。', sunny:'{N}！好好聽的名字，我記住了！'}, next:'s5'},
+  s4: {speaker:'{P}', text:'好，那我先走了。', next:'e_pass'},
+
+  /* ---------- 第二章：曖昧（同時認識好幾個人） ---------- */
+  s5: {bg:'cafe', chap:'第二章・曖昧', speaker:null,
+    text:'兩週後，你的生活熱鬧了起來。手機裡常常亮起的名字，不只一個。',
+    next:'m1'},
+  m1: {speaker:'{A}', text:'【{At}】{A}\n就是那天幫了你的人。{Ad}', next:'m2'},
+  m2: {speaker:'{B}', text:'【{Bt}】{B}\n社團學長姐介紹認識的。{Bd}', next:'m3'},
+  m3: {speaker:'{F}', text:'【{Ft}】{F}\n最近總跟你一起吃午餐的朋友。{Fd}', next:'m4'},
+  m4: {speaker:null,
+    text:'一顆心，可以同時裝著好幾個人嗎？還是應該先專心認識一個？',
+    choices:[
+      {label:'先專心認識{A}', to:'pbPick', setP:'A', fx:{t:1}},
+      {label:'我比較想多了解{B}', to:'pbPick', setP:'B', fx:{t:1}},
+      {label:'我想跟{F}多相處一點', to:'fr1', setP:'A'},
+      {label:'還沒在一起嘛，大家都聊聊看', to:'j1', flag:'juggle', fx:{a:1}}
+    ]},
+
+  /* 多線曖昧 */
+  j1: {speaker:null,
+    text:'你同時跟三個人聊天。{A}傳早安，{B}約你週末看電影，{F}半夜傳來一首歌。你開始得記住，哪個笑話跟誰說過。',
+    choices:[
+      {label:'答應{B}週末去看電影', to:'j2', fx:{a:1}},
+      {label:'每個人都回，誰也不得罪', to:'j2', fx:{s:-1}}
+    ]},
+  j2: {bg:'night', speaker:null,
+    text:'週末，你和{B}在電影院門口撞見了{A}。{A}看看你，又看看{B}。',
+    next:'j3'},
+  j3: {speaker:'{A}',
+    text:{def:'……你們在約會嗎？', warm:'我是不是打擾到你們了？', cool:'……原來你有約。', sunny:'欸？你們兩個……在約會喔？', busy:'我剛好經過。你們……？', witty:'哇，這個劇情發展我沒有預料到。'},
+    choices:[
+      {label:'「我們還沒在一起，我也還在認識別人。抱歉沒早點說。」', to:'j4h', fx:{t:1,s:1}},
+      {label:'「{B}只是朋友啦。」', to:'j4l', fx:{t:-3}}
+    ]},
+  j4h: {speaker:null, text:'那天晚上，{A}傳來一則訊息。你盯著螢幕，深吸了一口氣才點開。', next:'j5h'},
+  j5h: {speaker:'{A}',
+    text:{def:'謝謝你老實說。我還是想讓你知道，我是認真的。', cool:'我需要想一想。我不太擅長跟別人比較。', sunny:'好！那我會努力讓你選我！', busy:'我理解。只是我不想花時間在不確定的事上，想清楚再跟我說。', witty:'好吧，那我要開始認真了。不開玩笑的那種。'},
+    next:'j6'},
+  j6: {speaker:null,
+    text:'你知道，該為自己的心做一個決定了。',
+    tip:'choice',
+    choices:[
+      {label:'「我想認真跟{A}在一起。」', to:'s9', setP:'A', fx:{t:1}},
+      {label:'「我想認真跟{B}在一起。」', to:'s9', setP:'B', fx:{t:1}},
+      {label:'其實我最在意的，是{F}', to:'s9', setP:'F', flag:'explore', fx:{s:1}},
+      {label:'「我誰都還沒準備好。」', to:'e_ambig', fx:{s:1}}
+    ]},
+  j4l: {speaker:null,
+    text:'幾天後，{A}和{B}在社團活動上聊起你，兩個人都安靜了。那天晚上，兩個聊天室同時沒有再亮起來。',
+    next:'j5l'},
+  j5l: {speaker:null, text:'你打開和{F}的對話框，打了一句「在嗎」，最後還是刪掉了。', next:'e_juggle'},
+
+  /* 和同性朋友：心動與猶豫 */
+  fr1: {speaker:null,
+    text:'{F}端著餐盤坐到你對面，聊起社團的事。你很自然地笑了，一頓飯吃了快兩個小時。',
+    next:'fr2'},
+  fr2: {speaker:'{F}',
+    text:{def:'你笑起來很好看，你自己知道嗎？', cool:'……你笑的時候，比較好看。', sunny:'欸你笑起來超好看的！真的！', witty:'你笑起來很好看，建議多笑，這是醫生的建議。'},
+    choices:[
+      {label:'「謝謝，你也是。」', to:'fr3', fx:{s:1}},
+      {label:'（愣了一下，轉移話題）', to:'fr3', fx:{a:-1}}
+    ]},
+  fr3: {speaker:null,
+    text:'回家的路上，你一直想起{F}說那句話的樣子，心跳漏了一拍。你停下腳步，不太確定那是什麼。',
+    choices:[
+      {label:'大概只是太久沒有人這樣稱讚我了', to:'fr4', fx:{s:1}},
+      {label:'我需要想一想，我到底是怎麼了', to:'fr5'},
+      {label:'我想再多認識{F}一點', to:'fr5', fx:{a:1}}
+    ]},
+  fr4: {speaker:null,
+    text:'隔天中午，你還是去了那個老位子。那點說不清楚的心動，被你收進心裡某個角落。這陣子比較常找你的，是{A}。',
+    next:'pbPick'},
+  fr5: {speaker:null,
+    text:'你第一次認真地問自己：這種感覺，和以前喜歡一個人的感覺一樣嗎？',
+    tip:'explore',
+    choices:[
+      {label:'還不知道，但我不想逃避', to:'fr6', fx:{s:2}, flag:'explore'},
+      {label:'我現在不想想這個', to:'fr4', fx:{s:-1}}
+    ]},
+  fr6: {speaker:null,
+    text:'你決定不急著給答案，只是不再刻意躲開。週末，{F}約你去看海。',
+    choices:[
+      {label:'「好，我去。」', to:'pbPick', setP:'F', fx:{a:2}},
+      {label:'「下次吧。」先跟{F}保持距離', to:'fr4', fx:{s:1}}
+    ]},
+
+  /* 跟對象的曖昧（三選一） */
+  pbPick: {pick:['pb1','pb2','pb3']},
+  pb1: {speaker:'{P}',
+    text:{def:'你上次隨口說想看的那本書，我在舊書攤找到了。借你？', cool:'……這本，你上次說想看的。', sunny:'我找到你說想看的那本書了！快誇我！', busy:'你上次說想看的書，我剛好在書店看到，順手買了。', witty:'我在舊書攤跟老闆殺價殺了十分鐘，就為了這本。借你。'},
+    choices:[
+      {label:'「你還真的記得？」', to:'s6', fx:{a:2,t:1,h:1}},
+      {label:'「謝謝，我看完還你。」', to:'s6', fx:{a:1}},
+      {label:'「其實我最近在想一些事情……」', to:'s7', fx:{t:2}}
+    ]},
+  pb2: {speaker:'{P}',
+    text:{def:'下週有一場插畫展，我本來想找別人，後來想想，還是想跟你去。', busy:'我下週只有週四晚上有空，有一場插畫展，你要一起嗎？', cool:'……下週的插畫展，要一起去嗎？', sunny:'下週有插畫展！一起去一起去！'},
+    choices:[
+      {label:'「好啊，我很想去。」', to:'s6', fx:{a:2,t:1,h:1}},
+      {label:'「我看看那天有沒有空。」', to:'s6', fx:{a:1}},
+      {label:'「其實我最近在想一些事情……」', to:'s7', fx:{t:2}}
+    ]},
+  pb3: {speaker:'{P}',
+    text:{def:'今天天氣好好。吃完要不要陪我去河堤走走？我請你喝飲料。', same:'今天天氣好好。吃完要不要一起去河堤走走？就……我們兩個。', witty:'今天的天氣適合散步，不散步會被天氣罰款。要一起去嗎？'},
+    choices:[
+      {label:'「好啊，走走也好。」', to:'s6', fx:{a:2,t:1,h:1}},
+      {label:'「今天有點累，下次吧。」', to:'s6', fx:{s:1}},
+      {label:'「其實我最近在想一些事情……」', to:'s7', fx:{t:2}}
+    ]},
+
+  s6: {speaker:'{P}',
+    text:{def:'你剛剛是不是……有點在意我？', sea:'你知道嗎，跟你聊天的時候，我都不太想看別人的訊息。', aircon:'你最近還好嗎？有什麼事都可以跟我說喔！', cool:'……你今天好像一直在看我。', sunny:'欸，你是不是有點喜歡我？我猜對了吧！', witty:'你一直看我，我臉上有飯粒嗎？還是……', busy:'我想確認一件事。你對我，是不是也有一點不一樣？', same:'我問你一件事，你不想回答也沒關係……你對我，是朋友的那種在意嗎？'},
+    tip:'zeig',
+    choices:[
+      {label:'「才沒有。」', to:'gp1', fx:{a:-1,h:-1}},
+      {label:'「嗯，有一點。」', to:'gp1', fx:{a:3,t:2,h:1}}
+    ]},
+  s7: {speaker:'{P}',
+    text:{def:'你願意說，我很高興。不用一次說完，想說多少都可以。', cool:'……嗯。我在聽。', sunny:'你說！我都聽！', witty:'好，我把手機蓋起來了。你說，我很認真在聽。'},
+    choices:[
+      {label:'「那我們慢慢來。」', to:'gp1', fx:{t:2}},
+      {label:'「我其實很怕受傷。」', to:'gp1', fx:{t:3,s:1}}
+    ]},
+
+  s8Pick: {branch:[{when:st => st.cast.pk === 'F', to:'s8PickF'}, {to:'s8PickO'}]},
+  s8a: {speaker:null,
+    text:{
+      m:'你們還沒有確定關係。你想主動約{pH}，又怕太急顯得輕浮；不約，又怕{pH}覺得你不夠積極。',
+      f:'你們還沒有確定關係。你想主動約{pH}，又怕被說太主動；不約，又怕{pH}以為你沒興趣。',
+      same:'你們還沒有確定關係。你不確定{P}對你的好，是朋友的那種，還是不只是朋友。'
+    },
+    tip:{same:'', def:'script'},
+    choices:[
+      {label:'主動約{P}看電影', to:'s9', fx:{a:2,s:1}},
+      {label:'等{P}先開口', to:'s9', fx:{a:1}}
+    ]},
+  s8b: {speaker:null,
+    text:{def:'那個週末，{P}整整兩天沒有回訊息。週一一早，{pH}又像什麼事都沒發生，傳來一張早餐的照片。', busy:'{P}忙起來就會消失，一整個週末都沒回訊息。週一一早，{pH}傳來：「抱歉，比賽前在趕報告。」', cool:'{P}整整兩天沒有回訊息。週一一早，只傳來一張早餐照，一個字都沒有。'},
+    tip:'intermittent',
+    choices:[
+      {label:'若無其事地回一張自己的早餐', to:'s9', fx:{a:1,s:-1}},
+      {label:'「你週末怎麼了？我有點擔心。」', to:'s9', fx:{t:1,s:1}},
+      {label:'也晾{pH}兩天', to:'s9', fx:{a:-1,t:-1,h:-1}}
+    ]},
+  s8c: {bg:'night', speaker:null,
+    text:{def:'凌晨一點，你們從喜歡的歌聊到小時候怕黑。你說了一件從來沒跟別人說過的事，{P}安靜了一下，說：「謝謝你告訴我。」', witty:'凌晨一點，{P}難得沒有開玩笑。你們從喜歡的歌聊到小時候怕黑，{pH}說了一件從來沒跟別人說過的事。'},
+    tip:'disclose',
+    choices:[
+      {label:'「換你說一件。」', to:'s9', fx:{a:2,t:2,h:2}},
+      {label:'「當我沒說吧，太晚了。」', to:'s9', fx:{t:-1}}
+    ]},
+
+  s9c: {bg:'night', speaker:'{P}',
+    text:{
+      def:'我想了很久要怎麼說……我喜歡你。你願意跟我在一起嗎？',
+      cool:'……我不太會說這種話。我喜歡你。要不要在一起？',
+      sunny:'我忍不住了！我喜歡你，超級喜歡。跟我在一起好不好？',
+      busy:'我這學期很忙，可是我還是想把你排進我的未來。我喜歡你，願意跟我在一起嗎？',
+      witty:'我本來準備了一個很好笑的開場，現在腦袋一片空白……我喜歡你，是認真的。',
+      same:'我想了很久要不要說……我怕說了，連朋友都當不成。可是我喜歡你。'
+    },
+    choices:[
+      {label:'「好，我也喜歡你。」', to:'s10', fx:{a:4,t:1}},
+      {label:'「我需要想一想。」', to:'s9w', fx:{t:1,s:1}}
+    ]},
+
+  s9w: {speaker:'{P}',
+    text:{def:'嗯，不急。你想清楚再告訴我就好，不管答案是什麼。', sunny:'好！我等你！……不過不要讓我等太久喔。', cool:'……好。', busy:'好，我等你。不過下個月我可能要開始實習了。'},
+    next:'s9w2'},
+  s9w2: {bg:'cafe', speaker:null,
+    text:'接下來一週，你們還是會見面，只是話少了一點。晚上你常盯著聊天框，打了一段字，又一個字一個字刪掉。',
+    choices:[
+      {label:'「我想好了，我想跟你試試看。」', to:'s9y', fx:{a:2,t:2}},
+      {label:'「我想了很久，還是比較想當朋友。」', to:'s9n', fx:{s:1}},
+      {label:'再拖一下，等心裡更確定', to:'s9d', fx:{t:-2}}
+    ]},
+  s9y: {speaker:'{P}', text:{def:'……真的嗎？謝謝你認真想過。我會好好珍惜這個答案。', sunny:'真的嗎！太好了！我可以跳起來嗎？', cool:'……嗯。謝謝你。'}, next:'s10'},
+  s9n: {speaker:'{P}', text:{def:'嗯，我懂。謝謝你沒有讓我一直猜。', sunny:'好……那我們還是好朋友喔！說好了！', cool:'……好。', witty:'好，那我收回剛剛那段告白，假裝它是開玩笑的。……我開玩笑的，謝謝你老實說。'}, next:'s9n2'},
+  s9n2: {speaker:null, text:'{pH}笑得有點勉強，還是把手上的飲料分了一半給你。', next:'e_ambig'},
+  s9d: {speaker:null,
+    text:'你一直沒有回。兩週後，你看到{P}跟別人有說有笑。原來有些話不說，對方也會自己找到答案。',
+    next:'e_unsaid'},
+
+  /* ---------- 第三章：交往 ---------- */
+  s10: {bg:'night', chap:'第三章・交往', speaker:null,
+    text:'交往的第一個月，每一天都像在發光。可是你也發現，自己開始很在意{pH}在不在。',
+    tip:'attach',
+    choices:[
+      {label:'「你今天在哪？跟誰在一起？」', to:'s11', fx:{t:-2,a:1}},
+      {label:'「晚上想見面嗎？」', to:'s12', fx:{a:2}}
+    ]},
+  s11: {speaker:'{P}',
+    text:{def:'……你是在查勤嗎？', sea:'在外面啦，跟朋友。你想我了喔？', aircon:'在幫學妹搬東西！她一個人搬不動。', cool:'我需要一點自己的空間，可以嗎？', sunny:'在宿舍啦！我拍給你看～不過你今天好像有點不安？', warm:'在圖書館。你如果會擔心，我以後都先跟你說。', busy:'在開會，晚點說。', witty:'報告長官，人在宿舍，身邊只有一包洋芋片。'},
+    choices:[
+      {label:'「對不起，我只是太在意你了。」', to:'dayPick', fx:{t:2,s:-1}},
+      {label:'「我就是想知道。」', to:'dayPick', fx:{t:-2,h:-2}}
+    ]},
+  s12: {speaker:'{P}',
+    text:{def:'好啊。那我把週末也空下來給你。', busy:'今天要趕報告……週六晚上可以嗎？我一定空下來。', cool:'……好。去你上次說的那家？', sunny:'好啊好啊！我週末也都給你！'},
+    choices:[
+      {label:'「週末我想跟朋友聚，我們週日見？」', to:'dayPick', fx:{s:2,t:1,p:1}},
+      {label:'「好，那我們就一起過。」', to:'dayPick', fx:{a:2,p:-1}}
+    ]},
+
+  dayPick: {branch:[
+    {when:st => isSame(), to:'dayPickS'},
+    {to:'dayPickO'}
+  ]},
+  dayPickO: {pick:['dy1','dy2','dy3']},
+  dayPickS: {pick:['dyS1','dyS2','dy1']},
+  dy1: {bg:'campus', speaker:null,
+    text:{def:'你感冒請假那天，{P}下課後拎著一袋粥出現在你家樓下。袋子裡塞了一張紙條：「喝完再睡，不准滑手機。」', busy:'你感冒請假那天，{P}在兩場會議中間抽空，叫了一份粥送到你家，附上一句：「晚上忙完去看你。」', cool:'你感冒請假那天，門口多了一袋粥和一盒藥，沒有紙條。你知道是誰。'},
+    choices:[
+      {label:'傳訊息：「你怎麼這麼好。」', to:'fpPick', fx:{a:2,t:1}},
+      {label:'「你不用這樣啦，我會不好意思。」', to:'fpPick', fx:{s:1}}
+    ]},
+  dy2: {bg:'cafe', speaker:null,
+    text:{
+      m:'第一次跟{P}的朋友吃飯。她們輪流問你問題，像在面試。回家路上，{P}挽著你的手：「她們說你很體貼，過關了。」',
+      f:'第一次跟{P}的朋友吃飯。他們一直開{P}玩笑，你努力跟上。回家路上，{P}牽起你的手：「他們都說你很好相處。」'
+    },
+    choices:[
+      {label:'「其實我緊張死了。」', to:'fpPick', fx:{t:2}},
+      {label:'「那當然。」（假裝很輕鬆）', to:'fpPick', fx:{a:1}}
+    ]},
+  dy3: {bg:'campus', speaker:null,
+    text:'你發現{P}的手機桌布換成了你們的合照，而且是你覺得自己拍得很醜的那張。',
+    tip:'triangle',
+    choices:[
+      {label:'「換掉啦！這張好醜！」（但其實很開心）', to:'fpPick', fx:{a:2}},
+      {label:'假裝沒看到，偷偷開心了一整天', to:'fpPick', fx:{a:1,s:1}}
+    ]},
+  dyS1: {bg:'campus', speaker:null,
+    text:'第一次在街上牽手。你下意識看了一下四周，{P}好像感覺到了，手稍微鬆開了一點。',
+    tip:'minority',
+    choices:[
+      {label:'把手牽回來：「沒事，我想牽著。」', to:'fpPick', fx:{a:2,t:2,s:1}},
+      {label:'把手放回口袋', to:'fpPick', fx:{t:-1,s:-1}},
+      {label:'「我們回家再牽好不好？」', to:'fpPick', fx:{t:1}}
+    ]},
+  dyS2: {bg:'cafe', speaker:null,
+    text:'週末回家吃飯，媽媽夾了一塊肉給你，順口問：「有沒有交{GF}啊？」桌上突然安靜下來。',
+    tip:'family',
+    choices:[
+      {label:'「有一個在交往的人，叫{P}。改天想帶來給你們認識。」', to:'fpPick', fx:{s:2,t:2}, flag:'out'},
+      {label:'「還沒啦。」', to:'fpPick', fx:{s:-1}},
+      {label:'「等我準備好，再跟你們說。」', to:'fpPick', fx:{s:1}}
+    ]},
+
+  /* ---------- 第四章：裂縫（四種起因） ---------- */
+  cPick: {bg:'rain', chap:'第四章・裂縫', pick:['c1','c2','c3','c4']},
+  c1: {speaker:null,
+    text:'為了晚回訊息的事，你們吵了起來。{P}說：「你每次都要把話講到底。」你脫口而出：「那你呢？每次都裝沒事。」',
+    tip:'horsemen',
+    choices:[
+      {label:'「對不起，我剛剛說話太重了。」', to:'s14', fx:{t:3,a:1}},
+      {label:'「我又沒說錯！」', to:'s14', fx:{t:-3,s:1,h:-2}},
+      {label:'（沉默，轉身離開）', to:'s15', fx:{a:-2,t:-2,h:-1}}
+    ]},
+  c2: {speaker:null,
+    text:'週末的聚會，{P}沒有找你一起去。你問起，{pH}只說：「我以為你不喜歡那種場合。」你的語氣一下就硬了。',
+    tip:'horsemen',
+    choices:[
+      {label:'「我只是希望你先問我。」', to:'s14', fx:{t:3,a:1}},
+      {label:{def:'「你根本不想讓我認識你朋友吧。」', same:'「你是不是不想讓朋友知道我們的事？」'}, to:'s14', fx:{t:-3,s:1}},
+      {label:'（沉默，轉身離開）', to:'s15', fx:{a:-2,t:-2,h:-1}}
+    ]},
+  c3: {speaker:null,
+    text:{
+      m:'結帳時你又搶著付錢，{P}有點不高興：「你每次都要付，好像我一直在被照顧。」那天回家的路上，兩個人都沒說話。',
+      f:'結帳時，{P}隨口說了一句：「你不用每次都算得那麼清楚。」你愣了一下，那天回家的路上，兩個人都沒說話。',
+      same:'結帳時，你們又為了誰付錢推來推去。{P}突然說：「我們可不可以不要每次都算得這麼清楚？」那天回家的路上，兩個人都沒說話。'
+    },
+    choices:[
+      {label:{m:'「我只是想對你好。我們聊聊好嗎？」', def:'「我只是不想欠你。我們聊聊好嗎？」'}, to:'s14', fx:{t:3,a:1}},
+      {label:{m:'「那以後都你付啊。」', def:'「那你以後都自己付啊。」'}, to:'s14', fx:{t:-3,s:1}},
+      {label:'（什麼都不說，假裝沒事）', to:'s15', fx:{a:-2,t:-2}}
+    ]},
+  c4: {speaker:null,
+    text:'你興奮地分享今天報告拿了高分，{P}的眼睛沒有離開手機，只回了一聲「嗯」。你把剩下的話吞了回去。',
+    tip:'bids',
+    choices:[
+      {label:'「我剛剛說的事，對我很重要。」', to:'s14', fx:{t:2,s:1}},
+      {label:'「你每次都這樣！」', to:'s14', fx:{t:-2,a:-1,h:-2}},
+      {label:'「算了，沒事。」', to:'s15', fx:{t:-2}}
+    ]},
+  s14: {speaker:'{P}',
+    text:{def:'……我也有不對的地方。我們都還在學，好好說就好。', cool:'……我先冷靜一下。明天再說，好嗎？', sunny:'好啦，我們不要吵了。抱一下？', busy:'我最近壓力太大了，不是針對你。對不起。', witty:'好，暫停。我們重來一次，這次我先道歉。'},
+    next:'crisisPick'},
+  s15: {speaker:null, text:{def:'接下來三天，你們的對話只剩下「吃飯了嗎」「嗯」。', sunny:'{P}傳了好幾則訊息想和好，你都只回了一個「嗯」。', cool:'接下來三天，{P}一則訊息都沒傳。你也沒有。'}, next:'crisisPick'},
+
+  /* ---------- 第五章：三種不同的危機 ---------- */
+  crisisPick: {pick:['dPick','ld1','fdPick','tm1','ct1']},
+  fdPick: {bg:'campus', chap:'第五章・平淡', set:{crisis:'fade'}, pick:['fd1','fd1p']},
+
+  /* A. 出軌 */
+  dPick: {bg:'cafe', chap:'第五章・訊號', set:{crisis:'cheat'}, branch:[{when:st => st.p >= 4, to:'d4'}, {to:'dPick2'}]},
+  dPick2: {pick:['d1','d2','d3']},
+  d1: {speaker:null,
+    text:'週五晚上，{P}說要加班。你在{pH}的社群看到一張合照，照片裡的人叫{X}，是{pH}以前的同事。',
+    choices:[
+      {label:'直接問{pH}', to:'s17', fx:{t:1}},
+      {label:'先裝作沒看到', to:'s18', fx:{s:-1}},
+      {label:'晚點偷偷看{pH}的手機', to:'s19', fx:{t:-2,s:-1}}
+    ]},
+  d2: {speaker:null,
+    text:'朋友在群組裡隨口問了一句：「你看到{P}跟{X}的照片了嗎？」你的手指停在螢幕上，半天按不下去。',
+    choices:[
+      {label:'直接問{pH}', to:'s17', fx:{t:1}},
+      {label:'先裝作沒看到', to:'s18', fx:{s:-1}},
+      {label:'晚點偷偷看{pH}的手機', to:'s19', fx:{t:-2,s:-1}}
+    ]},
+  d3: {speaker:null,
+    text:'{X}突然傳來一則私訊：「抱歉，我不知道你們在一起。」你盯著那行字，好幾分鐘沒有動。',
+    choices:[
+      {label:'直接問{pH}', to:'s17', fx:{t:1}},
+      {label:'先裝作沒看到', to:'s18', fx:{s:-1}},
+      {label:'晚點偷偷看{pH}的手機', to:'s19', fx:{t:-2,s:-1}}
+    ]},
+  s17: {speaker:'{P}',
+    text:{def:'{X}只是朋友，我以為不用特別跟你說。', cool:'{X}是同事。我不覺得這需要報備。', sunny:'{X}喔？就朋友啊！你吃醋了嗎？', busy:'那是工作上的聚餐。我真的沒時間想那麼多。'},
+    choices:[
+      {label:'「我需要你坦白，不是只說沒事。」', to:'s19b', fx:{t:3}},
+      {label:'「……好，我相信你。」', to:'s18', fx:{t:1,s:-1}}
+    ]},
+  s18: {speaker:null, text:'你告訴自己沒事，可是那個晚上，你睡得很淺，手機一震就醒。', next:'s19'},
+  s19: {speaker:null,
+    text:'一週後，你在{pH}的手機通知裡看到{X}的名字，時間正好是那個週五的深夜。',
+    choices:[
+      {label:'把手機放回去，等{pH}自己說', to:'s19b', fx:{t:1}},
+      {label:'直接點開對話紀錄', to:'s19b', fx:{t:-2,s:-2}}
+    ]},
+  s19b: {speaker:null,
+    text:{
+      m:'你的腦子裡一直重複同一個問題：他們到底做到哪一步了？',
+      f:'你的腦子裡一直重複同一個問題：{pH}是不是已經不愛你了？',
+      same:'你的腦子裡一直重複同一個問題：你們之間，到底是哪裡開始不對的？'
+    },
+    tip:'jealousy',
+    next:'xPick'},
+  xPick: {bg:'rain', chap:'第六章・坦白', pick:['s20a','s20b']},
+  s20a: {speaker:'{P}',
+    text:{def:'那天我喝醉了，跟{X}親了一下。之後我一直很後悔，每天都想跟你說，又不知道怎麼開口。', cool:'……那天我喝醉了，跟{X}親了一下。我不知道該怎麼說，所以一直沒說。對不起。', sunny:'對不起，對不起……那天我喝醉了，跟{X}親了一下。我真的很後悔，我每天都好想跟你說。'},
+    tip:'betray',
+    choices:[
+      {label:'「我需要時間，先不要聯絡我。」', to:'s22', fx:{t:-2,s:2}},
+      {label:'「我想給你機會，但我們要一起面對。」', to:'s23', fx:{t:2,a:1}},
+      {label:'「你怎麼可以這樣！」', to:'s22', fx:{t:-3,s:-1}}
+    ]},
+  s20b: {speaker:'{P}',
+    text:{def:'那陣子我們一直吵架，{X}剛好在。我沒有拒絕，那是我的錯，我不會替自己找藉口。', busy:'那陣子我壓力很大，我們又一直吵架，{X}剛好在。我沒有拒絕。這是我的錯，跟壓力無關。'},
+    tip:'betray',
+    choices:[
+      {label:'「我需要時間，先不要聯絡我。」', to:'s22', fx:{t:-2,s:2}},
+      {label:'「我想給你機會，但我們要一起面對。」', to:'s23', fx:{t:2,a:1}},
+      {label:'「所以是我的錯嗎？」', to:'s22', fx:{t:-3,s:-1}}
+    ]},
+  s22: {speaker:'{P}', text:{def:'……好。我尊重你的決定。', sunny:'……好。可是我會等你，不管多久。', cool:'……嗯。'}, next:'s24'},
+  s23: {speaker:'{P}', text:'謝謝你。不管要多久，我都會把話說清楚。', next:'s24'},
+
+  /* B. 遠距離 */
+  ld1: {bg:'night', chap:'第五章・距離', set:{crisis:'distance'}, speaker:null,
+    text:'{P}拿到外地的實習，要去半年。出發前一晚，{pH}把一串備用鑰匙放進你手心。',
+    next:'ld1b'},
+  ld1b: {speaker:'{P}',
+    text:{def:'我每天都會打給你。真的。', busy:'這是很難得的機會。我會把時間排好，每天打給你。', cool:'我會打給你。……大概不會每天，但我會打。', sunny:'我每天都會打給你！一天三次！', witty:'我已經設好鬧鐘了，每天晚上十點，提醒我想你。'},
+    choices:[
+      {label:'「好，我等你。」', to:'ld2', fx:{a:1,t:1}},
+      {label:'「半年……很長耶。」', to:'ld2', fx:{s:1}}
+    ]},
+  ld2: {speaker:null,
+    text:'第一個月，你們每天視訊到睡著。第三個月，通話變成十分鐘，有時候只有一句：「今天好累，先睡了。」',
+    tip:'distance',
+    choices:[
+      {label:'「我們排個固定時間，好好聊天好不好？」', to:'ld3', fx:{t:2,s:1}},
+      {label:'默默把手機調成靜音', to:'ld3', fx:{t:-2}},
+      {label:'「你是不是有別人了？」', to:'ld3b', fx:{t:-3,h:-2}}
+    ]},
+  ld3: {speaker:'{P}',
+    text:{def:'對不起……最近真的被工作壓垮了。我不是不想你，是不知道怎麼說我很累。', cool:'我只是不習慣一直報告自己的狀況。不是不想你。', busy:'對不起，我把你排到最後了。這不應該。', sunny:'對不起！我最近好累，可是我好想你，真的。'},
+    next:'ld4'},
+  ld3b: {speaker:null, text:'電話那頭安靜了很久。久到你以為斷線了，才聽到{pH}輕輕地說：「……你為什麼會這樣想？」', next:'ld4'},
+  ld4: {bg:'cafe', chap:'第六章・坦白', speaker:null,
+    text:'{P}放假回來那天，你們坐在常去的那家店。{pH}攪著咖啡，說：「那邊的主管問我，畢業後要不要留下來。」',
+    choices:[
+      {label:'「那你想留嗎？」', to:'ld5', fx:{t:2}},
+      {label:'「那我呢？」', to:'ld5', fx:{a:1,s:-1}},
+      {label:'「你早就決定了，對吧？」', to:'ld5', fx:{t:-2}}
+    ]},
+  ld5: {speaker:'{P}', text:{def:'我還沒答應。我想先聽你怎麼想，這不是我一個人的事。', busy:'老實說，我很想留。可是我想先聽你怎麼想，這不是我一個人的事。'}, next:'s24'},
+
+  /* C. 平淡與疏離 */
+  fd1: {bg:'campus', speaker:null,
+    text:'交往一年。週末你們各自滑手機，坐在同一張沙發的兩端。你突然想不起來，上一次認真看著對方說話是什麼時候。',
+    tip:'triangle',
+    choices:[
+      {label:'「我們好久沒出去走走了。」', to:'fd2', fx:{t:1,a:1}},
+      {label:'什麼也沒說', to:'fd2b', fx:{a:-1}},
+      {label:'自己出門找朋友', to:'fd2b', fx:{s:1,a:-1,p:1}}
+    ]},
+  fd2: {speaker:null,
+    text:'你們回到第一次約會的河堤。{P}笑著說起那天你緊張到打翻飲料，你才知道，{pH}一直都記得。',
+    next:'fd3'},
+  fd2b: {speaker:null,
+    text:'日子照舊。某天晚上，你在共用的平板上看到{P}的備忘錄，只有一行字：「我們是不是只剩下習慣？」',
+    next:'fd3'},
+  fd3: {bg:'night', chap:'第六章・坦白', speaker:'{P}',
+    text:{def:'我最近一直在想，我們是不是太習慣彼此了。我不是不喜歡你，只是……好像忘了要怎麼靠近。', cool:'我覺得我們好像……只是住在一起的室友。', sunny:'我好想念以前的我們喔。你不會嗎？', witty:'我最近發現，我們上一次一起大笑，是三個月前。我有算。'},
+    choices:[
+      {label:'「我也有這種感覺。我們一起想辦法？」', to:'fd4', fx:{t:2,a:1}},
+      {label:'「你想分手就直說。」', to:'fd4', fx:{t:-2,s:1,h:-2}},
+      {label:'（眼淚比話先掉下來）', to:'fd4', fx:{a:1,s:-1}}
+    ]},
+  fd4: {speaker:'{P}', text:'我不想就這樣放掉。可是我也不想再假裝沒事了。', next:'s24'},
+
+  /* ---------- 朋友與伴侶（交往期抽一段） ---------- */
+  fpPick: {pick:['fp1','fp2','fp3','fp4']},
+  fp1: {bg:'cafe', speaker:null,
+    text:'週六是{C}的生日聚會，你早就答應要去。前一天晚上，{P}卻說：「我訂了你一直想去的那家餐廳，就週六。」',
+    choices:[
+      {label:'「對不起，我先答應{C}了。我們改週日好不好？」', to:'fp1a', fx:{p:2,a:-1}},
+      {label:'跟{C}說臨時有事，不去了', to:'fp1b', fx:{a:1,p:-2}},
+      {label:'「要不要一起去{C}的生日？」', to:'fp1c', fx:{p:1,a:1}}
+    ]},
+  fp1a: {speaker:'{P}', text:{def:'……好吧。那週日我要你一整天。', cool:'嗯，好。', sunny:'好啦～那週日你是我的！', busy:'好，那我週六剛好可以加班。', witty:'好，我去跟餐廳說，我們的愛情延期一天。'}, next:'cPick'},
+  fp1b: {speaker:null, text:'晚餐很好吃。只是你一直看手機，群組裡大家在唱生日快樂歌，{C}傳了一句：「沒關係啦，下次。」', next:'cPick'},
+  fp1c: {speaker:'{P}',
+    text:{def:'好啊，我也想認識你的朋友。', cool:'……我不太會應付人多的場合。不過，為了你，我去。', sunny:'好啊！我最喜歡熱鬧了！', busy:'我可能會晚一點到，但我會去。', witty:'好，我負責講冷笑話炒熱氣氛。'},
+    next:'cPick'},
+  fp2: {bg:'cafe', speaker:'{C}',
+    text:{m:'欸，你最近都不見人影耶。交了對象就不用兄弟了喔？', f:'你最近都不回群組耶。交了對象就忘了我們喔？', def:'你最近都不見人影耶。交了對象就忘了我們喔？'},
+    tip:'withdraw',
+    choices:[
+      {label:'「對不起！這週末約，我請客。」', to:'cPick', fx:{p:2}},
+      {label:'「你不懂啦，談戀愛就是這樣。」', to:'cPick', fx:{p:-2,a:1}},
+      {label:'「我也覺得……我好像有點消失了。」', to:'cPick', fx:{p:1,s:1}}
+    ]},
+  fp3: {bg:'campus', speaker:'{P}',
+    text:{def:'你跟{C}……是不是太親近了一點？', cool:'……你跟{C}很常聊天。', sunny:'我可以問嗎？你跟{C}真的只是朋友喔？', busy:'我最近比較忙，但看到你跟{C}那麼常出去，有點不舒服。', witty:'我沒有吃醋。我只是剛好路過你們的合照，看了十分鐘。'},
+    tip:'network',
+    choices:[
+      {label:'「那下次我們三個一起吃飯，你認識{C}就知道了。」', to:'cPick', fx:{t:1,p:1}},
+      {label:'「好，我以後少跟{C}見面。」', to:'cPick', fx:{t:1,p:-2,s:-1}},
+      {label:'「我的朋友，你不用管。」', to:'cPick', fx:{t:-2,p:1}}
+    ]},
+
+  /* ---------- 第五章 D：動搖（你自己的出軌） ---------- */
+  tm1: {bg:'night', chap:'第五章・動搖', set:{crisis:'tempt'}, speaker:null,
+    text:'你和{P}最近常常為了小事吵架。某天深夜，很久沒聯絡的{O}突然傳來一則訊息：「睡了嗎？最近好嗎？」',
+    choices:[
+      {label:'「還沒耶。還不錯啊，你呢？」', to:'tm2', fx:{a:-1}},
+      {label:'「我有對象了，我們不適合常常聊。」', to:'tm2b', fx:{t:2,s:1}},
+      {label:'跟{P}說：「{O}剛剛傳訊息給我。」', to:'tm2c', fx:{t:3}}
+    ]},
+  tm2: {speaker:null,
+    text:'你們一聊就聊到半夜。{O}記得你喜歡的歌，會問你今天過得好不好。都是{P}最近沒有問過的問題。',
+    tip:'emotional',
+    choices:[
+      {label:'把對話刪掉，把心思放回{P}身上', to:'tmStop', fx:{t:1,s:1}},
+      {label:'答應{O}週末出來吃飯', to:'tm3', fx:{a:-1}}
+    ]},
+  tm3: {speaker:null,
+    text:'吃完飯，{O}送你到樓下。分開前，{OH}抱了你一下，久到你知道，那已經不是朋友的擁抱。',
+    choices:[
+      {label:'推開：「對不起，我不能。」', to:'tmStop', fx:{s:2}},
+      {label:'沒有推開', to:'tm4', fx:{a:-2}, flag:'affair'}
+    ]},
+  tm4: {speaker:null,
+    text:'那之後，你開始把手機螢幕朝下放。{P}問你最近怎麼了，你說只是累了。每次說謊，心裡都像被什麼刮了一下。',
+    choices:[
+      {label:'主動跟{P}坦白', to:'tm5c', fx:{t:1,s:1}, flag:'confessed'},
+      {label:'繼續瞞著，也許時間久了就沒事', to:'tm5f', fx:{t:-2}},
+      {label:'跟{P}分手，和{O}在一起', to:'tmLeave', fx:{a:-3}}
+    ]},
+  tm5c: {bg:'rain', chap:'第六章・坦白', speaker:'{P}',
+    text:{def:'……謝謝你自己說出來。可是我現在，不知道該怎麼看你。', cool:'……我需要一個人靜一靜。不要跟過來。', sunny:'為什麼……我們不是說好了嗎？我哪裡做得不夠好？', busy:'我一直以為，我們只是都太忙了。', witty:'……這次，我真的一點都笑不出來。'},
+    tip:'betray',
+    next:'s24t'},
+  tm5f: {bg:'rain', chap:'第六章・坦白', speaker:null,
+    text:'某天晚上，{P}拿著你的手機坐在床邊，螢幕上是{O}傳來的訊息。{pH}的手在發抖。',
+    next:'tm5f2'},
+  tm5f2: {speaker:'{P}', text:{def:'你要跟我解釋嗎？還是……我不用聽了？', cool:'……多久了？', sunny:'告訴我這是誤會。拜託。', busy:'我只想知道一件事：你打算瞞我到什麼時候？'},
+    choices:[
+      {label:'「對不起。我不會找藉口。」', to:'s24t', fx:{t:-1}},
+      {label:'「你偷看我手機？」', to:'e_affair_caught', fx:{t:-4}}
+    ]},
+  s24t: {bg:'night', chap:'第七章・選擇', speaker:null,
+    text:'那晚之後，你們談了很久。{P}說：「我不知道，我還能不能相信你。」',
+    choices:[
+      {label:'「我會用時間證明。你想知道什麼，我都說。」', to:'bT', fx:{t:1}},
+      {label:'「……我們分開吧。你值得更好的人。」', to:'s26', fx:{s:1}, flag:'guilt'}
+    ]},
+  bT: {branch:[
+    {when:st => st.flags.confessed && st.t >= -1, to:'e_affair_repair'},
+    {to:'e_affair_caught'}
+  ]},
+  tmLeave: {bg:'cafe', chap:'第六章・離開', speaker:null,
+    text:'你跟{P}說了分手。{pH}沒有哭，只問了一句：「是因為{O}嗎？」你沒有回答，因為你們都知道答案。',
+    next:'e_affair_leave'},
+  tmStop: {speaker:null,
+    text:'你封鎖了{O}。那晚你看著睡著的{P}，突然覺得，自己差一點就弄丟了很重要的東西。',
+    next:'fd3'},
+  tm2b: {speaker:null,
+    text:'{O}回了一句：「好，祝福你。」你把對話封存，回頭發現{P}正看著你，問你在笑什麼。',
+    next:'fd3'},
+  tm2c: {speaker:'{P}',
+    text:{def:'謝謝你跟我說。……其實我最近也覺得，我們好像卡住了。', cool:'……嗯。謝謝你告訴我。', sunny:'哇，謝謝你跟我說！不過……我們最近是不是怪怪的？', witty:'我要不要去跟{O}握個手，謝謝{OH}讓我們好好聊一次？'},
+    next:'fd3'},
+
+  /* ---------- 分手後：如果把朋友都弄丟了 ---------- */
+  g4b: {branch:[
+    {when:st => st.p <= 0, to:'g4L'},
+    {to:'g4'}
+  ]},
+  g4L: {bg:'night', speaker:null,
+    text:'一個月後，你想找人說說話，翻遍通訊錄，卻不知道可以打給誰。上一次跟{C}好好聊天，已經是半年前的事了。',
+    choices:[
+      {label:'傳訊息給{C}：「好久不見，最近好嗎？」', to:'g4Lr', fx:{p:2,s:1}},
+      {label:'算了，一個人撐著就好', to:'g5', fx:{s:-1}, flag:'lonely'}
+    ]},
+  g4Lr: {speaker:'{C}',
+    text:{def:'……你終於找我了。我一直在等你。要不要出來吃個飯？', m:'……你終於出現了。走，去吃宵夜，我請。', cool:'……嗯。我在。'},
+    next:'g5'},
+
+  /* ======== v10：曖昧期新事件 ======== */
+  /* 軍師群組：朋友會依「對方的隱藏心動值」和人格給出判斷 */
+  gp1: {bg:'cafe', speaker:null,
+    text:'晚上，你把和{P}的聊天截圖丟進朋友群組：「幫我看一下，這是什麼意思？」',
+    next:'gp2'},
+  gp2: {speaker:'{C}',
+    text: st => {
+      const p = who('P'), h = st.them[st.cast.pk];
+      if (p.pers === 'sea') return '這個人我聽過，超會撩，對誰都這樣回。你小心一點，不要暈。';
+      if (p.pers === 'aircon') return '欸……{pH}對大家都這樣啦。上次我感冒，{pH}也傳了一大串關心給我。';
+      if (h >= 6) return '秒回、還會主動問你的事，{pH}對你絕對有意思。衝啊！';
+      if (h <= 3) return '我講真的，這比較像禮貌耶。你先不要想太多。';
+      return '看不太出來耶。{pH}有在聊，但也還沒有很積極。再觀察一下？';
+    },
+    choices:[
+      {label:'「好，我再觀察看看。」', to:'s8Pick', fx:{p:1,s:1}},
+      {label:'「你們不懂啦。」', to:'s8Pick', fx:{p:-1,a:1}}
+    ]},
+
+  s8PickO: {pick:['s8a','s8b','s8c','s8d']},
+  s8PickF: {pick:['s8a','s8b','s8c']},
+  /* 同性好友喜歡上同一個人 */
+  s8d: {speaker:'{F}',
+    text:'我想跟你說一件事……我好像喜歡上{P}了。你應該不會介意吧？',
+    choices:[
+      {label:'「其實我也喜歡{pH}。那我們公平競爭？」', to:'s9', fx:{p:-1,s:1}},
+      {label:'「……沒關係，你加油。」把機會讓給{F}', to:'s8dQuit', fx:{p:2,a:-2}},
+      {label:'「不介意啊。」然後偷偷約{P}出去', to:'s9', fx:{p:-3,h:1}}
+    ]},
+  s8dQuit: {speaker:null,
+    text:'你沒有再主動找{P}。一個月後，{F}興奮地告訴你，他們在一起了。你笑著說恭喜，回家的路上走得很慢。',
+    next:'e_youth'},
+
+  /* 告白前的關卡：海王、中央空調、單戀 */
+  s9: {branch:[
+    {when:st => who('P').pers === 'sea', to:'sit1'},
+    {when:st => who('P').pers === 'aircon' && !st.flags.acDone, to:'ac1'},
+    {when:st => st.me[st.cast.pk] >= 7 && st.them[st.cast.pk] < 4, to:'uq1'},
+    {to:'s9c'}
+  ]},
+
+  /* 無限期曖昧（海王／海后） */
+  sit1: {bg:'night', chap:'第三章・告白', speaker:null,
+    text:'你們像情侶一樣看電影、牽手、聊到天亮。有天晚上你終於問：「我們現在，算什麼？」',
+    next:'sit1b'},
+  sit1b: {speaker:'{P}',
+    text:'現在這樣很自在啊。幹嘛要被一個標籤綁住？',
+    tip:'breadcrumb',
+    choices:[
+      {label:'「好，那就先這樣。」', to:'sit2', fx:{s:-2,a:1}},
+      {label:'「我要的是確定的關係。給不了的話，我們就到這裡。」', to:'sitGate', fx:{s:3}}
+    ]},
+  sit2: {speaker:null,
+    text:'幾個月過去，{pH}的限動裡從來沒有你。某天，你在{pH}的貼文底下看到另一個人留言：「昨天謝謝你送我回家。」',
+    next:'sit3'},
+  sit3: {speaker:'{C}',
+    text:{m:'兄弟，我早就跟你說過了，{pH}就是在養魚。你還要等嗎？', def:'我早就跟你說過了，{pH}就是在養魚。你還要等嗎？'},
+    choices:[
+      {label:'刪掉對話框，封鎖', to:'e_wakeup', fx:{s:2,p:1}},
+      {label:'「再等等，也許{pH}會變。」', to:'e_fishpond', fx:{s:-2}}
+    ]},
+  sitGate: {branch:[
+    {when:st => st.them[st.cast.pk] >= 8, to:'sitYes'},
+    {to:'sitNo'}
+  ]},
+  sitYes: {speaker:'{P}', text:'……好啦，我認輸。我們在一起。這次我是認真的。', next:'s10'},
+  sitNo: {speaker:null,
+    text:'{P}沒有再回訊息。你難過了一陣子，某天早上醒來，發現自己反而鬆了一口氣。',
+    next:'sitEnd'},
+  sitEnd: {branch:[
+    {when:st => st.s >= 9, to:'e_alone_ok'},
+    {to:'e_youth'}
+  ]},
+
+  /* 中央空調 */
+  ac1: {bg:'campus', chap:'第三章・告白', speaker:null,
+    text:'你感冒那天，{P}送了粥來。隔天在社團，你聽說{pH}也幫生病的學弟妹送了粥，還陪{F}跑了一趟醫院。',
+    tip:'dissonance',
+    choices:[
+      {label:'替{pH}找理由：{pH}只是人太好了', to:'ac2', fx:{s:-1}},
+      {label:'直接問{pH}', to:'ac3', fx:{s:1}}
+    ]},
+  ac2: {speaker:null,
+    text:'你鼓起勇氣跟{P}告白。{pH}愣了一下，笑著說：「你很重要啊。大家對我來說都很重要。」',
+    next:'e_aircon'},
+  ac3: {speaker:'{P}',
+    text:'我對你不好嗎？大家都是好朋友啊。',
+    choices:[
+      {label:'「我想要的，是只對我的那種好。」', to:'ac4', fx:{s:2}},
+      {label:'「……嗯，也是。」', to:'e_aircon', fx:{s:-1}}
+    ]},
+  ac4: {branch:[
+    {when:st => st.them[st.cast.pk] >= 6, to:'ac5'},
+    {to:'ac6'}
+  ]},
+  ac5: {speaker:'{P}', text:'……其實，你對我也不一樣。我只是不知道怎麼拒絕別人，也不知道怎麼對一個人特別好。我可以學。', next:'ac7'},
+  ac7: {speaker:null, set:{acDone:true}, text:'那天之後，{pH}開始會說「我今天先陪你」，也開始學著對別人說「這次我不方便」。', next:'s9c'},
+  ac6: {speaker:'{P}', text:'對不起……我好像給了你錯的期待。', next:'e_aircon'},
+
+  /* 單戀無果 */
+  uq1: {bg:'cafe', chap:'第三章・告白', speaker:null,
+    text:'你鼓起勇氣約{P}單獨去看展。{pH}看了訊息很久，才回：「好啊！要不要順便約社團其他人？人多比較好玩。」',
+    tip:'confirm',
+    choices:[
+      {label:'「好啊，大家一起。」繼續默默喜歡', to:'uq2', fx:{s:-2}},
+      {label:'「其實我想跟你兩個人去。我喜歡你。」', to:'uq3', fx:{s:2}},
+      {label:'「那我這次先不去了。」慢慢退開', to:'uq4', fx:{s:2}}
+    ]},
+  uq2: {speaker:null,
+    text:'那個學期，你幫{P}佔位、借筆記、陪{pH}熬夜做報告。{pH}總是說：「你人真的好好喔。」',
+    next:'uq2c'},
+  uq2c: {speaker:'{C}',
+    text:{m:'你醒醒好不好？{pH}有把你當成對象嗎？你就是工具人啊。', def:'你醒醒好不好？{pH}有把你當成對象嗎？你在當工具人耶。'},
+    choices:[
+      {label:'聽進去了。今晚就停下來', to:'e_wakeup', fx:{s:2,p:1}},
+      {label:'「你不懂啦。」', to:'uq5', fx:{p:-2}}
+    ]},
+  uq5: {speaker:null, text:'直到某天，{P}興奮地傳訊息給你：「我有對象了！你是第一個知道的喔！」', next:'e_youth'},
+  uq3: {speaker:'{P}', text:'……謝謝你喜歡我。可是我對你，比較像朋友。對不起，我不想騙你。', next:'e_youth'},
+  uq4: {speaker:null, text:'你沒有再約{P}。偶爾在走廊遇到，你們還是笑著打招呼。那份喜歡，你自己收好了。', next:'e_youth'},
+
+  /* ======== v10：交往與危機 ======== */
+  fp4: {bg:'cafe', speaker:null,
+    text:'你帶{P}參加{C}他們的聚會。整晚{P}幾乎都在滑手機，回家路上還說：「你朋友有點吵耶。」',
+    choices:[
+      {label:'「他們是我很重要的人。」', to:'cPick', fx:{p:1,t:-1}},
+      {label:'「對啊，真的很吵。」附和{pH}', to:'cPick', fx:{p:-2,s:-1}, flag:'submit'},
+      {label:'「你今天怎麼了？是不是不太自在？」', to:'cPick', fx:{t:1,h:1}}
+    ]},
+
+  /* 出軌：友情夠高，朋友會私下提醒你 */
+  d4: {speaker:'{C}',
+    text:'我本來在想要不要跟你說……我昨天看到{P}跟{X}在一起，看起來很親密。我覺得你應該知道。',
+    choices:[
+      {label:'直接問{P}', to:'s17', fx:{t:1}},
+      {label:'「你看錯了吧。」', to:'s18', fx:{s:-1,p:-1}},
+      {label:'晚點偷偷看{pH}的手機', to:'s19', fx:{t:-2,s:-1}}
+    ]},
+
+  /* 步調不一致 */
+  fd1p: {speaker:null,
+    text:'{P}開始準備出國，每天泡在圖書館背單字；你忙社團和實習，回家只想倒頭就睡。你們的對話，越來越像在交換行程表。',
+    tip:'triangle',
+    choices:[
+      {label:'「我們每週留一個晚上，只聊彼此好不好？」', to:'fd2', fx:{t:1,a:1}},
+      {label:'各忙各的，等忙完再說', to:'fd2b', fx:{a:-1}},
+      {label:'「你出國之後，我們怎麼辦？」', to:'fd2b', fx:{t:-1}}
+    ]},
+
+  /* 社群控制欲 */
+  ct1: {bg:'night', chap:'第五章・透明', set:{crisis:'control'}, speaker:'{P}',
+    text:{def:'我們交換帳號密碼好不好？還有開即時定位。情侶不是都這樣嗎？', sunny:'我們來開即時定位嘛！這樣我隨時都知道你在哪，好有安全感喔！', cool:'……我想要你的密碼。不是不信任你，是我會一直想。', busy:'我最近很忙，沒辦法常常問你在哪。開定位比較省事。'},
+    tip:'control',
+    choices:[
+      {label:'「好，給你。」', to:'ct2a', fx:{t:1,s:-2}},
+      {label:'「我可以讓你安心，但不想把全部都交出去。」', to:'ct2b', fx:{s:1,t:1}},
+      {label:'「這不是愛，這是控制。」', to:'ct2c', fx:{s:1,t:-2}}
+    ]},
+  ct2a: {speaker:'{P}', text:'你昨天為什麼在{C}家待到十一點？定位顯示你十一點才離開。', next:'ct3'},
+  ct3: {speaker:null,
+    text:'你突然發現，自己出門前會先想：這個地方，要怎麼跟{pH}解釋？',
+    choices:[
+      {label:'「我們把定位關掉吧。有不安，直接問我。」', to:'s24', fx:{s:2,t:1}},
+      {label:'以後少去{C}家', to:'s24', fx:{p:-2,s:-2}, flag:'submit'}
+    ]},
+  ct2b: {speaker:'{P}', text:{def:'……好。那你可以答應我，有什麼事都先跟我說嗎？', sunny:'好吧……那你要常常傳照片給我喔！', cool:'……嗯。我會試著不要一直想。'}, next:'s24'},
+  ct2c: {speaker:'{P}', text:{def:'我只是怕失去你。你為什麼要說得這麼難聽？', cool:'……', sunny:'我只是太喜歡你了啊！'}, next:'s24'},
+
+  /* 第七章入口：對方可能先開口分手 */
+  s24: {branch:[
+    {when:st => st.them[st.cast.pk] <= 1, to:'s24d'},
+    {to:'s24c'}
+  ]},
+  s24d: {bg:'night', chap:'第七章・選擇', set:{dumped:true}, speaker:'{P}',
+    text:{def:'我們分手吧。我想了很久，不是因為哪一件事，是我已經……沒有那種感覺了。', cool:'……我們分手吧。', sunny:'對不起……我真的很努力了，可是我好像沒辦法再喜歡你了。', busy:'我們分手吧。我沒辦法再把時間花在一段我不確定的關係上。', witty:'我想了很多種說法，但好像怎麼說都很爛。我們分手吧。', sea:'我覺得我們不太適合。你值得更好的人。'},
+    choices:[
+      {label:'「……為什麼？」', to:'g1', fx:{a:1}},
+      {label:'點點頭，說不出話', to:'g1', fx:{s:-1}}
+    ]},
+  s25k: {speaker:'{P}', text:'那我們說好，不查手機、不開定位。我不安的時候，就直接告訴你。', next:'b1'},
+
+  /* ======== v10：分手後的四條路 ======== */
+  gRoute: {bg:'night', speaker:null,
+    text:'第一個月，晚上總是特別長。你怎麼度過那些晚上？',
+    choices:[
+      {label:'下載交友軟體，讓每個晚上都有人聊', to:'rA1', fx:{a:1,s:-1}},
+      {label:'用小帳，偷看{P}的動態', to:'g3'},
+      {label:'把時間塞滿課業和運動', to:'rC1', fx:{s:2}},
+      {label:'打給{C}', to:'g4b'}
+    ]},
+  rA1: {bg:'cafe', speaker:null,
+    text:'你一週約了三個人。對方都很好，可是聊天時你總忍不住想：如果是{P}，會怎麼回？',
+    tip:'rebound',
+    choices:[
+      {label:'不管了，先在一起再說', to:'rA2', fx:{s:-2}, flag:'rebound'},
+      {label:'「對不起，我好像還沒準備好。」', to:'g5', fx:{s:2}}
+    ]},
+  rA2: {speaker:null, text:'你們很快就在一起了。第一次約會，對方點了{P}最愛吃的那道菜，你突然吃不下。', next:'g5'},
+  rC1: {bg:'campus', speaker:null,
+    text:'你每天早上去跑步，晚上泡在圖書館。某天在咖啡廳排隊，前面的人轉過頭來，是{P}。你發現自己的心跳，比想像中平靜。',
+    choices:[
+      {label:'點點頭，說聲「嗨」', to:'g5', fx:{s:2}},
+      {label:'假裝沒看到，轉身離開', to:'g5', fx:{s:-1}}
+    ]},
+  g4rb: {branch:[
+    {when:st => st.p >= 5, to:'g4r'},
+    {to:'g5'}
+  ]},
+  g4r: {speaker:'{C}',
+    text:{m:'走，現在去海邊吹風。不准說不要，車已經在樓下了。', def:'來，把{pH}送的東西都裝進這個箱子。今天是丟棄儀式，我負責拍照。'},
+    next:'g4r2'},
+  g4r2: {speaker:null, set:{ritual:true}, text:'那天你哭得很醜，{C}笑得很大聲。回家的時候，你發現自己已經很久沒有這樣笑了。', next:'g5'},
+
+  /* ---------- 第七章：選擇 ---------- */
+  s24c: {bg:'night', chap:'第七章・選擇', speaker:null,
+    text:'路燈下，你們站了很久。這一次，誰都沒有先移開視線。',
+    choices:[
+      {label:'「我想再試一次，但我們要說好怎麼改。」', to:'b25', fx:{t:1}},
+      {label:'「我們先分開，好好想想。」', to:'s26', fx:{s:1}},
+      {label:'「我想先把自己找回來。」', to:'s26', fx:{s:2}}
+    ]},
+  b25: {branch:[
+    {when:st => st.flags.crisis === 'distance', to:'s25d'},
+    {when:st => st.flags.crisis === 'fade' || st.flags.crisis === 'tempt', to:'s25f'},
+    {when:st => st.flags.crisis === 'control', to:'s25k'},
+    {to:'s25c'}
+  ]},
+  s25c: {speaker:'{P}', text:'手機密碼給你，我也會跟{X}說清楚。不是要你監督我，是我想讓你安心。', next:'b1'},
+  s25d: {speaker:'{P}', text:'那我們一起排一個見面的計畫。不管我留不留，都先說好，不要讓對方一個人猜。', next:'b1'},
+  s25f: {speaker:'{P}', text:'那從這個週末開始，手機收起來，我們好好約一次會。像第一次那樣。', next:'b1'},
+  s26: {speaker:'{P}', text:{def:'……好。你要照顧好自己。', cool:'……好。', sunny:'好……我會想你的。真的。', witty:'好。……這次我真的笑不出來了。', busy:'好。如果需要什麼，還是可以找我。'}, next:'g1'},
+
+  /* ---------- 第八章：分手之後 ---------- */
+  g1: {bg:'night', chap:'第八章・之後', speaker:null,
+    text: st => st.flags.dumped
+      ? '被分手的第一個晚上。你一直想不通，是從哪一天開始不對的。你把聊天紀錄從最上面滑到最下面，想找出那個轉折點，天快亮了，還是找不到。'
+      : '分開的第一個晚上。你把聊天紀錄從最上面滑到最下面，又從最下面滑回最上面。天快亮了，你還是睡不著。',
+    tip:'pain',
+    choices:[
+      {label:'把對話紀錄封存起來', to:'g2', fx:{s:1}},
+      {label:'再看一遍就好', to:'g2', fx:{a:1,s:-1}}
+    ]},
+  g2: {bg:'cafe', speaker:null,
+    text:{
+      def:'第二週。你在便利商店看到{pH}最常買的那款飲料，站在冰櫃前，眼淚突然就掉下來了。',
+      m:'第二週。你一向不太在別人面前哭，那天卻在便利商店的冰櫃前紅了眼眶，因為看到{pH}最常買的那款飲料。'
+    },
+    tip:'crave',
+    next:'gRoute'},
+  g3: {bg:'night', speaker:null,
+    text:'第三週。你發現自己每天睡前都會點開{P}的社群，看{pH}今天去了哪裡、跟誰在一起、有沒有難過。',
+    tip:'stalk',
+    choices:[
+      {label:'取消追蹤。不是封鎖，只是先不看', to:'g4b', fx:{s:2}},
+      {label:'再看一下就好', to:'g4b', fx:{a:1,s:-1}},
+      {label:'傳訊息：「你最近好嗎？」', to:'g4b', fx:{a:1,s:-1}}
+    ]},
+  g4: {bg:'cafe', speaker:null,
+    text:{
+      m:'一個月後，{C}約你去打球。整場你們沒聊什麼，最後坐在場邊喝水時，{C}只說了一句：「想說的時候再說，我都在。」',
+      f:'一個月後，{C}約你吃飯，什麼都沒問，只是一直幫你夾菜。回家的路上，你第一次覺得肚子是飽的。'
+    },
+    tip:{m:'shoulder', def:'dual'},
+    choices:[
+      {label:'跟{C}說出這陣子的感受', to:'g4rb', fx:{s:1,t:1,p:1}},
+      {label:'回家把心情寫進日記', to:'g4w', fx:{s:1}},
+      {label:'笑著說「我早就沒事了」', to:'g5', fx:{s:-1}}
+    ]},
+  g4w: {bg:'night', speaker:null,
+    text:'你寫了三頁。最後一行是：「我想念的，也許不只是{pH}，還有那時候的自己。」',
+    tip:'writing',
+    next:'g5'},
+  g5: {bg:'night', speaker:null,
+    text:{def:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}：「睡了嗎？」', sunny:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}：「睡了嗎？我好想你。」', cool:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}，只有兩個字：「在嗎」。', witty:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}：「我剛剛夢到你在罵我，所以醒了。」'},
+    choices:[
+      {label:'回覆：「還沒。」', to:'g6r', fx:{a:2,s:-2}},
+      {label:'看著訊息，沒有回', to:'g6n', fx:{s:2}},
+      {label:'回覆：「我們說好先不要聯絡的。」', to:'g6n', fx:{s:1,t:1}}
+    ]},
+  g6r: {speaker:null,
+    text:'你們聊到天亮，好像什麼都沒變。一週後，你們復合了。一個月後，你們又在同一件事上吵了起來。',
+    tip:'cycle',
+    next:'e_cycle'},
+  g6n: {speaker:null,
+    text:'你把手機蓋在枕頭上。那晚還是很難睡，但隔天醒來，你發現自己沒有後悔。',
+    next:'g7'},
+  g7: {bg:'campus', speaker:null,
+    text:'三個月後。某天在街上聽到你們以前常聽的歌，心還是揪了一下。可是這一次，你沒有轉身逃開，而是把歌聽完了。',
+    tip:'selfc',
+    next:'b2'},
+
+  /* ---------- 分流 ---------- */
+  b1: {branch:[
+    {when:st => st.flags.crisis === 'distance' && st.t >= 3, to:'e_distance'},
+    {when:st => st.t >= 8 && st.a >= 9 && st.p >= 3, to:'e_wedding'},
+    {when:st => isSame() && st.t >= 4, to:'e_proud'},
+    {when:st => st.t >= 4 && st.p >= 4, to:'e_balance'},
+    {when:st => st.t >= 4,  to:'e_long'},
+    {when:st => st.t <= -2, to:'e_anxious'},
+    {to:'e_cycle'}
+  ]},
+  b2: {branch:[
+    {when:st => st.flags.explore && st.cast.pk !== 'F' && st.p >= 4 && st.s >= 6, to:'e_back'},
+    {when:st => st.flags.explore && st.cast.pk !== 'F', to:'e_truth'},
+    {when:st => st.flags.dumped && st.p <= 0, to:'e_lostworld'},
+    {when:st => st.flags.lonely, to:'e_lonely'},
+    {when:st => st.flags.rebound && st.s < 5, to:'e_rebound'},
+    {when:st => st.flags.crisis === 'distance' && st.t >= 1, to:'e_airport'},
+    {when:st => st.s >= 10 && st.flags.dumped, to:'e_alone_ok'},
+    {when:st => st.s >= 7,        to:'e_self'},
+    {when:st => st.p >= 7 || (st.flags.ritual && st.p >= 5), to:'e_friends'},
+    {when:st => st.a >= 6 && st.t >= 3, to:'e_friend'},
+    {to:'e_growth'}
+  ]},
+
+  /* ---------- 結局節點 ---------- */
+  e_pass:{end:'e_pass'}, e_juggle:{end:'e_juggle'}, e_unsaid:{end:'e_unsaid'}, e_ambig:{end:'e_ambig'},
+  e_long:{end:'e_long'}, e_proud:{end:'e_proud'}, e_distance:{end:'e_distance'}, e_anxious:{end:'e_anxious'},
+  e_cycle:{end:'e_cycle'}, e_friend:{end:'e_friend'}, e_growth:{end:'e_growth'},
+  e_self:{end:'e_self'}, e_truth:{end:'e_truth'},
+  e_fishpond:{end:'e_fishpond'}, e_aircon:{end:'e_aircon'}, e_youth:{end:'e_youth'}, e_rebound:{end:'e_rebound'}, e_friends:{end:'e_friends'},
+  e_wakeup:{end:'e_wakeup'}, e_lostworld:{end:'e_lostworld'}, e_alone_ok:{end:'e_alone_ok'}, e_back:{end:'e_back'},
+  e_balance:{end:'e_balance'}, e_affair_repair:{end:'e_affair_repair'}, e_affair_caught:{end:'e_affair_caught'},
+  e_affair_leave:{end:'e_affair_leave'}, e_airport:{end:'e_airport'}, e_lonely:{end:'e_lonely'}, e_wedding:{end:'e_wedding'}
+};
+
+/* =========================================================
+   結局代表畫面（96 x 64 像素場景，用程式畫）
+   之後若要換成插圖，把 paintScene 改成畫 <img> 即可
+   ========================================================= */
+const ART_W = 96, ART_H = 64;
+const PPL = {
+  front: ["..hhh..",".hhhhh.",".hsssh.",".seses.","..sss..",".ttttt.","ttttttt","ttttttt","s.ttt.s","..ttt..","..b.b..","..b.b..","..b.b..",".kk.kk."],
+  frontL:["..hhh..",".hhhhh.","hhssshh","hsesesh","hhssshh","hhttthh","ttttttt","ttttttt","s.ttt.s","..ttt..","..b.b..","..b.b..","..b.b..",".kk.kk."],
+  back:  ["..hhh..",".hhhhh.",".hhhhh.",".hhhhh.","..sss..",".ttttt.","ttttttt","ttttttt","s.ttt.s","..ttt..","..b.b..","..b.b..","..b.b..",".kk.kk."],
+  backL: ["..hhh..",".hhhhh.","hhhhhhh","hhhhhhh","hhhhhhh","hhttthh","ttttttt","ttttttt","s.ttt.s","..ttt..","..b.b..","..b.b..","..b.b..",".kk.kk."]
+};
+const PA = {h:'#5b6fa8', t:'#9fcdf2', s:'#ffe1cc', e:'#3a2d44', b:'#6b5a7a', k:'#4a3b55'};
+const PB = {h:'#a8695a', t:'#f7b6c9', s:'#ffe1cc', e:'#3a2d44', b:'#8a7398', k:'#4a3b55'};
+const PC = {h:'#6c9a7d', t:'#bfeccf', s:'#ffe1cc', e:'#3a2d44', b:'#6b5a7a', k:'#4a3b55'};
+const HEART5 = [".x.x.","xxxxx","xxxxx",".xxx.","..x.."];
+
+function paintScene(cv, id, locked){
+  const c = cv.getContext('2d');
+  const R = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w, h); };
+  const sky = cols => { const bh = Math.ceil(ART_H / cols.length); cols.forEach((col, i) => R(0, i * bh, ART_W, bh, col)); };
+  const circ = (cx, cy, r, col) => { for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r + r * .6) R(cx + x, cy + y, 1, 1, col); };
+  const spr = (rows, x, y, pal) => rows.forEach((row, j) => [...row].forEach((ch, i) => { if (ch !== '.' && pal[ch]) R(x + i, y + j, 1, 1, pal[ch]); }));
+  const heart = (x, y, col) => spr(HEART5, x, y, {x: col});
+  const stars = (n, maxY, col, seed) => { let s = seed; for (let i = 0; i < n; i++){ s = (s * 9301 + 49297) % 233280; const x = s % ART_W; s = (s * 9301 + 49297) % 233280; R(x, s % maxY, 1, 1, col); } };
+  const phone = (x, y, w, h, scr) => { R(x, y, w, h, '#4a3b55'); R(x + 1, y + 2, w - 2, h - 4, scr); };
+  const cup = (x, y, col) => { R(x, y, 4, 4, col); R(x + 4, y + 1, 1, 2, col); R(x + 1, y - 3, 1, 2, 'rgba(255,255,255,.7)'); R(x + 2, y - 4, 1, 2, 'rgba(255,255,255,.7)'); };
+  const win = (x, y, w, h, glass) => { R(x - 1, y - 1, w + 2, h + 2, '#c9a88a'); R(x, y, w, h, glass); R(x + (w >> 1), y, 1, h, '#c9a88a'); R(x, y + (h >> 1), w, 1, '#c9a88a'); };
+  c.clearRect(0, 0, ART_W, ART_H);
+
+  if (locked){
+    sky(['#eee6ee', '#e8dfe8', '#e2d8e2', '#ddd2dd']);
+    const Q = ["..xxxx..",".xx..xx.","......xx",".....xx.","....xx..","...xx...","........","...xx...","...xx..."];
+    spr(Q, 44, 27, {x: '#c7b8c7'});
+    stars(22, 64, '#f5eff5', 7);
+    return;
+  }
+
+  switch (id){
+    case 'e_pass':
+      R(0, 0, 96, 42, '#fff1e0'); R(0, 40, 96, 3, '#f0cdb2');
+      R(0, 43, 96, 21, '#ecc9a6'); for (let x = 0; x < 96; x += 8) R(x, 43, 1, 21, '#ddb791');
+      win(10, 8, 18, 22, '#d6ecfb'); win(52, 8, 18, 22, '#d6ecfb');
+      for (let i = 0; i < 14; i++){ R(12 + i, 44 + (i >> 1), 10, 1, 'rgba(255,247,214,.8)'); R(54 + i, 44 + (i >> 1), 10, 1, 'rgba(255,247,214,.8)'); }
+      [[30,52],[36,57],[42,50],[47,56],[24,58],[52,60]].forEach(([x, y]) => { R(x, y, 6, 4, '#ffffff'); R(x + 1, y + 1, 4, 1, '#f7a8c0'); R(x + 1, y + 2, 3, 1, '#d8cbd8'); });
+      spr(PPL.back, 80, 30, PA);
+      break;
+
+    case 'e_unsaid':
+      sky(['#3d3466', '#4a3f78', '#57498a', '#62549a']);
+      stars(30, 40, '#fff6d6', 3);
+      win(8, 8, 20, 18, '#2c2650'); circ(14, 13, 3, '#fff3c4');
+      R(0, 50, 96, 14, '#7a6aa8');
+      phone(34, 10, 28, 46, '#fdf6ff');
+      R(37, 15, 14, 4, '#e8dff0'); R(45, 22, 14, 4, '#f7b6c9'); R(37, 29, 10, 4, '#e8dff0');
+      R(37, 46, 22, 6, '#ffffff'); R(38, 48, 14, 1, '#bdb0c8'); R(38, 50, 9, 1, '#bdb0c8'); R(53, 47, 1, 4, '#e9799f');
+      break;
+
+    case 'e_ambig':
+      sky(['#ffd9b0', '#ffc9bd', '#f9b8c9', '#ecbfe2']);
+      circ(78, 34, 7, '#fff0c8');
+      R(0, 46, 96, 18, '#cdeedd'); R(0, 46, 96, 1, '#b4e2cb');
+      R(10, 18, 3, 28, '#a07a62'); circ(11, 14, 9, '#f7b6c9'); circ(18, 18, 6, '#f9c5d4'); circ(5, 19, 5, '#f4a9bf');
+      R(26, 40, 46, 3, '#b98a6a'); R(28, 43, 2, 6, '#8e6a52'); R(68, 43, 2, 6, '#8e6a52'); R(26, 34, 46, 2, '#c99a7a');
+      spr(PPL.front, 31, 27, PA); spr(PPL.frontL, 59, 27, PB);
+      [[22,10],[40,8],[50,20],[70,12],[86,22],[34,30],[62,6],[90,8]].forEach(([x, y]) => R(x, y, 2, 1, '#ffb3c9'));
+      break;
+
+    case 'e_long':
+      R(0, 0, 96, 64, '#fff4e4');
+      win(36, 6, 24, 18, '#ffd2b0'); circ(48, 18, 4, '#fff0c8');
+      R(40, 12, 6, 2, '#ffe9dc');
+      spr(PPL.front, 34, 26, PA); spr(PPL.frontL, 54, 26, PB);
+      R(14, 40, 68, 4, '#c99a7a'); R(14, 44, 68, 2, '#a97f63'); R(18, 46, 3, 18, '#a97f63'); R(75, 46, 3, 18, '#a97f63');
+      cup(36, 36, '#ffffff'); cup(55, 36, '#ffffff'); R(38, 41, 18, 1, '#f3d9c4');
+      R(44, 34, 8, 6, '#f7c9a8'); R(45, 33, 6, 1, '#fde9a6');
+      heart(46, 20, '#f39bb8');
+      break;
+
+    case 'e_distance':
+      R(0, 0, 48, 64, '#2f2b5a'); R(0, 0, 48, 20, '#26224d'); stars(26, 40, '#fff6d6', 11); circ(12, 10, 4, '#fff3c4'); circ(14, 9, 3, '#2f2b5a');
+      R(48, 0, 48, 64, '#bfe3ff'); R(48, 0, 48, 16, '#d6eeff'); circ(84, 10, 5, '#fff0a8');
+      R(60, 14, 12, 3, '#ffffff'); R(62, 12, 7, 2, '#ffffff');
+      R(0, 50, 48, 14, '#4a4380'); R(48, 50, 48, 14, '#cdeedd');
+      R(47, 0, 2, 64, '#fffaf4');
+      spr(PPL.front, 18, 36, PA); R(23, 41, 2, 3, '#4a3b55');
+      spr(PPL.frontL, 68, 36, PB); R(72, 41, 2, 3, '#4a3b55');
+      for (let i = 0; i < 9; i++){ const x = 26 + i * 5; const y = 30 - Math.round(Math.sin(i / 8 * Math.PI) * 12); R(x, y, 2, 1, '#f7a8c0'); }
+      heart(45, 15, '#f7a8c0');
+      break;
+
+    case 'e_anxious':
+      sky(['#4d4277', '#584b85', '#625594', '#6b5e9e']);
+      R(0, 48, 96, 16, '#806fb0');
+      spr(PPL.frontL, 20, 34, PB);
+      R(26, 40, 4, 6, '#4a3b55'); R(27, 41, 2, 4, '#fff7ea');
+      [[40,8,22],[48,15,16],[38,22,26],[52,29,14],[42,36,20],[56,43,12]].forEach(([x, y, w]) => { R(x, y, w, 5, '#f7b6c9'); R(x + 2, y + 2, w - 6, 1, '#fff3f7'); });
+      [[70,10],[76,22],[72,36]].forEach(([x, y]) => { R(x, y, 7, 4, '#e8dff0'); R(x + 1, y + 1, 1, 2, '#9a8fb5'); R(x + 3, y + 1, 1, 2, '#9a8fb5'); });
+      break;
+
+    case 'e_cycle':
+      sky(['#2a2f55', '#323866', '#3b4277', '#454c86']);
+      R(0, 52, 96, 12, '#3a3f66'); R(20, 56, 30, 2, '#5d6596');
+      R(78, 12, 2, 40, '#252845'); R(74, 10, 10, 3, '#252845'); circ(79, 15, 6, 'rgba(255,240,190,.25)'); R(76, 13, 6, 2, '#fff0bd');
+      for (let i = 0; i < 40; i++){ const x = (i * 23) % 96, y = (i * 17) % 52; R(x, y, 1, 3, '#8c9ad0'); }
+      phone(30, 14, 26, 38, '#fdf6ff');
+      R(33, 22, 18, 7, '#e8dff0'); R(36, 25, 2, 2, '#9a8fb5'); R(40, 25, 2, 2, '#9a8fb5'); R(44, 25, 2, 2, '#9a8fb5');
+      R(33, 18, 8, 2, '#c7bdd8');
+      heart(36, 38, '#f7a8c0'); heart(45, 38, '#f7a8c0'); R(45, 38, 1, 5, '#fdf6ff');
+      break;
+
+    case 'e_friend':
+      R(0, 0, 96, 64, '#ffe9d6'); R(0, 0, 96, 6, '#f6d3b8');
+      R(8, 14, 26, 2, '#c99a7a'); R(10, 9, 3, 5, '#b4e7d1'); R(15, 10, 4, 4, '#f7b6c9'); R(22, 8, 3, 6, '#fde9a6'); R(27, 10, 4, 4, '#cdbdf3');
+      win(62, 8, 24, 18, '#d6ecfb');
+      spr(PPL.front, 24, 28, PA); spr(PPL.frontL, 65, 28, PB);
+      R(14, 42, 68, 3, '#c99a7a'); R(46, 45, 4, 19, '#a97f63'); R(38, 62, 20, 2, '#a97f63');
+      cup(30, 38, '#fde9a6'); cup(64, 38, '#cdbdf3');
+      break;
+
+    case 'e_growth':
+      sky(['#e7defc', '#ffe1e8', '#ffd7c4', '#ffe9b8']);
+      circ(48, 30, 9, '#fff4cf');
+      R(0, 34, 96, 30, '#d3f0e1');
+      for (let y = 34; y < 64; y++){ const k = (y - 34) / 30; const w = 2 + Math.round(k * 10); R(48 - 2 - Math.round(k * 34) - w / 2, y, w, 1, '#f4e3cf'); R(48 + Math.round(k * 34) - w / 2, y, w, 1, '#f4e3cf'); }
+      spr(PPL.back, 30, 38, PA); spr(PPL.backL, 59, 38, PB);
+      [[12,40],[84,44],[20,56],[76,58]].forEach(([x, y]) => { R(x, y, 2, 2, '#f7b6c9'); R(x + 1, y + 2, 1, 2, '#7fbf9a'); });
+      break;
+
+    case 'e_self':
+      R(0, 0, 96, 64, '#eaf7f0'); R(0, 48, 96, 16, '#f6e7d4');
+      win(8, 8, 22, 20, '#fff2c9'); circ(18, 16, 4, '#ffe08a');
+      R(58, 14, 26, 22, '#ffffff'); R(57, 13, 28, 1, '#c99a7a'); R(57, 36, 28, 1, '#c99a7a');
+      circ(66, 22, 4, '#f7b6c9'); circ(75, 27, 5, '#b4e7d1'); circ(70, 31, 3, '#fde9a6'); R(62, 18, 4, 2, '#cdbdf3');
+      R(60, 37, 2, 22, '#a97f63'); R(80, 37, 2, 22, '#a97f63'); R(70, 37, 2, 18, '#a97f63');
+      spr(PPL.frontL, 40, 34, PB); R(47, 40, 6, 1, '#a97f63'); R(53, 39, 2, 2, '#f39bb8');
+      R(16, 46, 8, 8, '#e7a07a'); R(17, 42, 1, 4, '#7fbf9a'); R(21, 41, 1, 5, '#7fbf9a'); circ(17, 40, 2, '#f7b6c9'); circ(22, 39, 2, '#fde9a6');
+      break;
+
+    case 'e_juggle':
+      sky(['#3d3466', '#4a3f78', '#57498a', '#62549a']);
+      stars(24, 30, '#fff6d6', 5);
+      R(0, 50, 96, 14, '#7a6aa8');
+      spr(PPL.front, 44, 36, PC);
+      R(49, 42, 3, 4, '#4a3b55');
+      [[8, 10, 26], [62, 8, 26], [34, 4, 26]].forEach(([x, y, w], k) => {
+        R(x, y, w, 12, '#e3dcec'); R(x + 3, y + 12, 3, 2, '#e3dcec');
+        R(x + 3, y + 3, w - 10, 1, '#bdb0c8'); R(x + 3, y + 6, w - 14, 1, '#bdb0c8');
+        R(x + w - 6, y + 7, 4, 3, '#9a8fb5');
+      });
+      R(18, 24, 1, 6, '#bdb0c8'); R(74, 22, 1, 8, '#bdb0c8'); R(46, 18, 1, 14, '#bdb0c8');
+      break;
+
+    case 'e_proud':
+      sky(['#bfe3ff', '#d6eeff', '#e9f6ff', '#fff3df']);
+      circ(80, 12, 6, '#fff0a8');
+      R(14, 10, 14, 3, '#ffffff'); R(17, 8, 8, 2, '#ffffff');
+      R(0, 30, 18, 22, '#f7c2d4'); R(2, 34, 5, 5, '#fff6ea'); R(10, 34, 5, 5, '#fff6ea');
+      R(78, 26, 18, 26, '#cdbdf3'); R(81, 30, 5, 5, '#fff6ea'); R(89, 30, 5, 5, '#fff6ea');
+      R(0, 52, 96, 12, '#f4e3cf'); for (let x = 0; x < 96; x += 10) R(x, 57, 6, 1, '#ffffff');
+      spr(PPL.front, 38, 38, PA); spr(PPL.frontL, 50, 38, PC);
+      R(44, 46, 7, 1, '#ffe1cc');
+      heart(45, 30, '#f39bb8');
+      [[30, 22, '#f7a8c0'], [62, 20, '#cdbdf3'], [24, 32, '#b4e7d1'], [68, 34, '#fde9a6']].forEach(([x, y, c]) => R(x, y, 2, 2, c));
+      break;
+
+    case 'e_balance':
+      R(0, 0, 96, 64, '#fff1e2'); R(0, 0, 96, 5, '#f6d3b8');
+      for (let x = 6; x < 96; x += 14){ R(x, 6, 1, 6, '#c99a7a'); heart(x - 2, 11, ['#f7a8c0','#cdbdf3','#b4e7d1','#fde9a6'][(x / 14 | 0) % 4]); }
+      spr(PPL.front, 10, 26, PB); spr(PPL.frontL, 26, 24, PC); spr(PPL.front, 42, 24, PA); spr(PPL.frontL, 58, 24, PB); spr(PPL.front, 74, 26, PC);
+      R(4, 38, 88, 4, '#c99a7a'); R(4, 42, 88, 2, '#a97f63'); R(8, 44, 3, 20, '#a97f63'); R(85, 44, 3, 20, '#a97f63');
+      R(42, 31, 12, 7, '#ffffff'); R(42, 31, 12, 2, '#f7b6c9'); R(47, 28, 1, 3, '#fde9a6'); R(48, 27, 1, 1, '#ffb347');
+      cup(16, 34, '#fde9a6'); cup(30, 34, '#b7dcf7'); cup(64, 34, '#cdbdf3'); cup(78, 34, '#ffcfb3');
+      break;
+
+    case 'e_affair_repair':
+      sky(['#f3e6f7', '#f6e2ea', '#fbe3dd', '#fde9d6']);
+      win(38, 6, 20, 14, '#ffd9c4');
+      spr(PPL.front, 22, 28, PA); spr(PPL.frontL, 67, 28, PB);
+      R(12, 42, 72, 3, '#c99a7a'); R(46, 45, 4, 19, '#a97f63');
+      R(30, 38, 12, 2, '#ffe1cc'); R(55, 38, 12, 2, '#ffe1cc');
+      spr([".xx.xx.","xxxxxxx","xxxxxxx",".xxxxx.","..xxx..","...x..."], 45, 26, {x:'#f39bb8'});
+      R(48, 26, 1, 6, '#fff6ea'); R(46, 28, 5, 2, '#fde9a6');
+      break;
+
+    case 'e_affair_caught':
+      sky(['#2a2448', '#332b56', '#3b3263', '#443a70']);
+      R(0, 48, 96, 16, '#544a85');
+      win(70, 8, 16, 16, '#1f1a3a'); circ(76, 13, 2, '#fff3c4');
+      spr(PPL.back, 18, 34, PB); R(14, 40, 6, 8, '#b98a6a'); R(14, 39, 6, 1, '#8e6a52');
+      spr(PPL.front, 64, 34, PA);
+      R(42, 50, 10, 5, '#4a3b55'); R(43, 51, 8, 3, '#dff0ff'); circ(47, 52, 6, 'rgba(223,240,255,.12)');
+      R(30, 30, 1, 1, '#8c84b5'); R(33, 27, 1, 1, '#8c84b5'); R(36, 24, 1, 1, '#8c84b5');
+      break;
+
+    case 'e_affair_leave':
+      R(0, 0, 96, 64, '#efe7f4'); R(0, 46, 96, 18, '#d9cfe2');
+      win(8, 8, 18, 14, '#dfe6f2');
+      R(22, 30, 54, 12, '#b9a8cc'); R(22, 28, 54, 3, '#c9b8da'); R(20, 30, 3, 14, '#a896bd'); R(75, 30, 3, 14, '#a896bd');
+      spr(PPL.front, 24, 22, PA); spr(PPL.frontL, 64, 22, PB);
+      R(29, 27, 3, 4, '#4a3b55'); R(30, 28, 1, 2, '#dff0ff'); R(69, 27, 3, 4, '#4a3b55'); R(70, 28, 1, 2, '#dff0ff');
+      R(84, 34, 6, 10, '#c99a7a'); R(86, 26, 1, 8, '#8aa88f'); R(87, 25, 3, 2, '#c8b8a8'); R(85, 27, 2, 2, '#c8b8a8');
+      break;
+
+    case 'e_airport':
+      sky(['#cfe6ff', '#dcedff', '#e9f3ff', '#f4f8ff']);
+      R(0, 6, 96, 30, '#e6f1fb'); for (let x = 0; x < 96; x += 16) R(x, 6, 1, 30, '#b9cde2'); R(0, 36, 96, 2, '#b9cde2');
+      R(54, 14, 22, 3, '#ffffff'); R(70, 11, 3, 9, '#ffffff'); R(60, 12, 2, 7, '#ffffff'); R(74, 15, 4, 1, '#cfd9e6');
+      R(0, 38, 96, 26, '#f1e8df'); for (let x = 0; x < 96; x += 12) R(x, 38, 1, 26, '#e4d8cb');
+      spr(PPL.front, 40, 38, PA); spr(PPL.frontL, 46, 38, PB);
+      R(60, 44, 8, 10, '#f7b6c9'); R(62, 42, 4, 2, '#4a3b55'); R(61, 54, 1, 2, '#4a3b55'); R(66, 54, 1, 2, '#4a3b55');
+      heart(43, 30, '#f7a8c0');
+      break;
+
+    case 'e_lonely':
+      sky(['#e9e4f0', '#e4dfec', '#dfd9e8', '#dad3e3']);
+      R(0, 48, 96, 16, '#cfc5da');
+      R(14, 36, 68, 3, '#b9a8cc'); R(16, 39, 2, 14, '#a896bd'); R(78, 39, 2, 14, '#a896bd');
+      [[18, 30], [64, 30], [74, 30]].forEach(([x, y]) => { R(x, y, 8, 2, '#c9bcd8'); R(x, y + 2, 2, 16, '#c9bcd8'); });
+      spr(PPL.front, 42, 22, PC);
+      R(45, 33, 6, 3, '#ffffff'); R(46, 32, 1, 1, '#c8c0d0');
+      cup(56, 32, '#ffffff');
+      R(60, 8, 22, 12, '#f7f3fb'); R(62, 10, 10, 1, '#bdb0c8'); R(62, 13, 14, 1, '#bdb0c8'); R(62, 16, 8, 1, '#bdb0c8'); R(64, 20, 3, 2, '#f7f3fb');
+      break;
+
+    case 'e_wedding':
+      sky(['#fde4ec', '#fff0f4', '#fff6ee', '#f2fbf6']);
+      for (let a = 0; a <= 20; a++){ const t = a / 20 * Math.PI; R(48 + Math.cos(t) * 26, 44 - Math.sin(t) * 30, 3, 3, ['#f7a8c0','#ffffff','#cdbdf3','#fde9a6'][a % 4]); }
+      R(21, 44, 3, 20, '#b4e7d1'); R(73, 44, 3, 20, '#b4e7d1');
+      R(0, 54, 96, 10, '#d3f0e1');
+      spr(PPL.front, 38, 38, PA); spr(PPL.frontL, 51, 38, PB);
+      R(44, 46, 8, 1, '#ffe1cc'); R(47, 44, 2, 2, '#fde9a6'); R(48, 43, 1, 1, '#ffffff');
+      [[30, 10], [62, 8], [20, 22], [76, 20]].forEach(([x, y]) => heart(x, y, '#ffb3c9'));
+      break;
+
+    case 'e_fishpond':
+      sky(['#bfe3ff', '#cfe9ff', '#dff0ff', '#eef7ff']);
+      R(0, 30, 96, 34, '#9fd0ee'); for (let y = 34; y < 64; y += 5) for (let x = (y % 10); x < 96; x += 12) R(x, y, 5, 1, '#c6e6f8');
+      [[18, 40, '#f7a8c0'], [40, 48, '#fde9a6'], [62, 38, '#cdbdf3'], [76, 52, '#ffcfb3'], [30, 56, '#b4e7d1']].forEach(([x, y, c]) => {
+        R(x, y, 7, 3, c); R(x + 7, y - 1, 2, 5, c); R(x + 1, y + 1, 1, 1, '#4a3b55');
+      });
+      R(48, 0, 1, 34, '#8e6a52'); R(48, 34, 1, 6, '#f7f7f7'); R(46, 40, 5, 2, '#f39bb8');
+      break;
+
+    case 'e_aircon':
+      R(0, 0, 96, 64, '#f2f7ff');
+      R(30, 4, 36, 10, '#ffffff'); R(30, 14, 36, 2, '#d6e4f2'); R(34, 7, 28, 1, '#d6e4f2');
+      for (let i = 0; i < 4; i++) R(36 + i * 7, 18 + (i % 2) * 2, 4, 1, '#b7dcf7');
+      R(0, 50, 96, 14, '#e6edf6');
+      spr(PPL.front, 44, 34, PA);
+      [[14, 36, PB], [26, 38, PC], [66, 38, PB], [78, 36, PC]].forEach(([x, y, pal]) => spr(PPL.frontL, x, y, pal));
+      [[20, 30], [32, 32], [72, 32], [84, 30], [48, 26]].forEach(([x, y]) => heart(x, y, '#ffc2d4'));
+      break;
+
+    case 'e_youth':
+      sky(['#ffe9c9', '#ffe0cf', '#ffd6dc', '#f6d5ea']);
+      circ(70, 20, 8, '#fff4d8');
+      R(0, 44, 96, 20, '#f5e6d6'); for (let x = 0; x < 96; x += 8) R(x, 44, 1, 20, '#ead6c2');
+      win(8, 10, 22, 22, '#fff0d8');
+      spr(PPL.back, 54, 30, PC);
+      R(34, 36, 8, 10, '#ffffff'); R(35, 38, 6, 6, '#f7c2d4'); R(36, 46, 1, 2, '#c99a7a');
+      cup(20, 40, '#f3d9c4');
+      [[40, 12], [50, 6], [82, 34]].forEach(([x, y]) => R(x, y, 2, 1, '#ffb3c9'));
+      break;
+
+    case 'e_rebound':
+      R(0, 0, 96, 64, '#fff0e6'); R(0, 0, 96, 6, '#f6d3b8');
+      win(36, 8, 24, 16, '#ffd9c4');
+      spr(PPL.front, 24, 28, PA); spr(PPL.frontL, 64, 28, PB);
+      R(14, 42, 68, 3, '#c99a7a'); R(46, 45, 4, 19, '#a97f63');
+      R(42, 38, 12, 4, '#ffffff'); R(43, 36, 10, 2, '#ffcfb3');
+      R(6, 8, 18, 14, 'rgba(255,255,255,.7)'); spr(PPL.front, 11, 9, {h:'#c9bcd8', t:'#e6dfee', s:'#f2ece8', e:'#c9bcd8', b:'#e6dfee', k:'#e6dfee'});
+      break;
+
+    case 'e_friends':
+      sky(['#2f3a6a', '#3e4a80', '#5a5e96', '#8a79ae']);
+      stars(30, 26, '#fff6d6', 23); circ(80, 10, 4, '#fff3c4');
+      R(0, 40, 96, 24, '#7fa6c9'); for (let x = 0; x < 96; x += 9) R(x, 42 + (x % 3), 5, 1, '#a9c9e2');
+      R(0, 52, 96, 12, '#e8d6b9');
+      spr(PPL.back, 22, 38, PA); spr(PPL.backL, 34, 38, PB); spr(PPL.back, 46, 38, PC); spr(PPL.backL, 58, 38, PA);
+      R(28, 44, 7, 1, '#ffe1cc'); R(40, 44, 7, 1, '#ffe1cc'); R(52, 44, 7, 1, '#ffe1cc');
+      R(70, 50, 12, 6, '#f7b6c9'); R(72, 48, 8, 2, '#f39bb8');
+      break;
+
+    case 'e_wakeup':
+      sky(['#3d3466', '#4a3f78', '#57498a', '#62549a']);
+      R(0, 50, 96, 14, '#7a6aa8');
+      phone(14, 12, 26, 38, '#fdf6ff');
+      R(17, 18, 18, 5, '#e8dff0'); R(22, 25, 15, 5, '#f7b6c9'); R(17, 32, 14, 5, '#e8dff0');
+      R(18, 42, 18, 4, '#e9799f'); R(21, 43, 12, 2, '#ffffff');
+      spr(PPL.frontL, 60, 34, PB); R(62, 40, 1, 2, '#9fd0ee'); R(66, 40, 1, 2, '#9fd0ee');
+      circ(80, 14, 5, '#fff3c4'); stars(18, 30, '#fff6d6', 31);
+      break;
+
+    case 'e_lostworld':
+      sky(['#d9d3e3', '#d4cddf', '#cfc7da', '#cac1d5']);
+      R(0, 48, 96, 16, '#beb3cc');
+      phone(36, 8, 26, 40, '#f4f0f8');
+      R(39, 13, 20, 4, '#e3dcec'); R(39, 19, 20, 4, '#e3dcec'); R(39, 25, 20, 4, '#e3dcec');
+      R(39, 36, 14, 5, '#ffffff'); R(40, 38, 10, 1, '#bdb0c8'); R(54, 37, 4, 4, '#e9799f');
+      spr(PPL.back, 14, 34, PC);
+      [[74, 20], [82, 30], [72, 38]].forEach(([x, y]) => spr(PPL.front, x, y, {h:'#d6cde0', t:'#e3dcec', s:'#ebe5ee', e:'#d6cde0', b:'#e3dcec', k:'#e3dcec'}));
+      break;
+
+    case 'e_alone_ok':
+      sky(['#c9ecff', '#dff4ff', '#f1fbff', '#fff8e8']);
+      circ(78, 12, 6, '#fff0a8');
+      R(0, 40, 96, 24, '#d3f0e1'); R(0, 40, 96, 1, '#b4e2cb');
+      R(8, 28, 22, 12, '#b9d9a8'); R(60, 30, 30, 10, '#a9cf9a');
+      spr(PPL.front, 42, 30, PB);
+      R(50, 38, 6, 7, '#f7b6c9'); R(51, 36, 4, 2, '#4a3b55');
+      R(18, 50, 30, 1, '#f4e3cf'); R(48, 50, 1, 6, '#f4e3cf');
+      [[30, 16], [58, 20], [20, 22]].forEach(([x, y]) => { R(x, y, 2, 1, '#4a3b55'); R(x + 2, y - 1, 2, 1, '#4a3b55'); });
+      break;
+
+    case 'e_back':
+      sky(['#2f2b5a', '#3d3570', '#55468a', '#8e72b0']);
+      stars(30, 30, '#fff6d6', 41); circ(16, 10, 4, '#fff3c4');
+      R(0, 48, 96, 16, '#4a4380');
+      R(62, 14, 26, 34, '#5b5290'); R(66, 18, 6, 6, '#ffe39a'); R(76, 18, 6, 6, '#ffe39a'); R(66, 30, 6, 6, '#3e3770'); R(76, 30, 6, 6, '#ffe39a'); R(72, 38, 6, 10, '#3e3770');
+      R(46, 20, 2, 28, '#2a2650'); R(43, 18, 8, 3, '#2a2650'); circ(47, 24, 6, 'rgba(255,240,190,.18)'); R(45, 21, 4, 2, '#fff0bd');
+      spr(PPL.front, 28, 34, PC); spr(PPL.frontL, 36, 34, PB);
+      heart(32, 26, '#ffb3c9');
+      break;
+
+    case 'e_truth':
+      sky(['#3a3470', '#4f4488', '#6a56a0', '#9a7ab8', '#d7a7c9']);
+      stars(46, 44, '#fff6d6', 19);
+      for (let i = 0; i < 10; i++) R(60 + i, 8 + (i >> 1), 1, 1, i < 3 ? '#fff6d6' : 'rgba(255,246,214,.5)');
+      heart(28, 12, '#ffd6e6');
+      R(0, 50, 96, 14, '#2c2850'); R(0, 50, 96, 1, '#5b4f8a');
+      R(10, 44, 76, 2, '#3f3870'); for (let x = 12; x < 86; x += 6) R(x, 44, 1, 6, '#3f3870');
+      spr(PPL.back, 45, 36, PC);
+      break;
+  }
+}
+
+/* =========================================================
+   匿名遊玩統計（送到 Google 試算表）
+   STATS_URL 填入 Apps Script 部署後的網址；留空就不會傳送任何資料
+   不會傳送玩家輸入的名字，只用隨機產生的玩家 ID 區分不同的人
+   ========================================================= */
+const STATS_URL = '';
+
+/* 要統計的關鍵選擇：節點 → 題目與選項簡稱（順序對應選項順序） */
+const KEY = {
+  m4:    {q:'曖昧策略', o:['專心認識第一位','專心認識第二位','和同性朋友相處','多線都聊']},
+  s8b:   {q:'對方忽冷忽熱', o:['假裝不在意','直接問','也晾對方']},
+  s8d:   {q:'好友喜歡同一人', o:['公平競爭','讓給好友','暗中較勁']},
+  j3:    {q:'多線曖昧被撞見', o:['坦白','說謊']},
+  fr5:   {q:'對同性朋友心動', o:['不逃避','先不想']},
+  sit1b: {q:'海王海后不給名分', o:['先這樣','設停損點']},
+  uq1:   {q:'單戀被約團體行', o:['繼續默默喜歡','直球告白','慢慢退開']},
+  s9c:   {q:'被告白', o:['答應','想一想']},
+  s9w2:  {q:'想一想之後', o:['答應','只想當朋友','繼續拖']},
+  s10:   {q:'熱戀期不安', o:['查勤','約見面']},
+  dyS2:  {q:'家人問感情狀況', o:['出櫃','說還沒','之後再說']},
+  fp1:   {q:'朋友生日撞期', o:['赴朋友的約','推掉朋友','帶伴侶一起去']},
+  fp4:   {q:'伴侶嫌朋友吵', o:['為朋友說話','附和伴侶','關心伴侶']},
+  c4:    {q:'分享時對方只看手機', o:['說出在意','指責對方','算了']},
+  d1:    {q:'察覺伴侶異狀', o:['直接問','裝沒看到','偷看手機']},
+  d2:    {q:'察覺伴侶異狀', o:['直接問','裝沒看到','偷看手機']},
+  d3:    {q:'察覺伴侶異狀', o:['直接問','裝沒看到','偷看手機']},
+  d4:    {q:'察覺伴侶異狀', o:['直接問','裝沒看到','偷看手機']},
+  s20a:  {q:'伴侶坦白出軌', o:['先不要聯絡','一起面對','當場指責']},
+  s20b:  {q:'伴侶坦白出軌', o:['先不要聯絡','一起面對','當場指責']},
+  tm1:   {q:'深夜曖昧訊息', o:['回覆聊天','劃清界線','告訴伴侶']},
+  tm3:   {q:'分開前的擁抱', o:['推開','沒推開']},
+  tm4:   {q:'越線之後', o:['主動坦白','繼續隱瞞','離開伴侶']},
+  ct1:   {q:'交換密碼與定位', o:['全部給','給一部分','拒絕']},
+  s24c:  {q:'第七章抉擇', o:['再試一次','先分開','先找回自己']},
+  gRoute:{q:'分手後第一個月', o:['交友軟體','小帳偷看','課業運動','找朋友']},
+  g3:    {q:'偷看前任動態', o:['取消追蹤','再看一下','傳訊息']},
+  g5:    {q:'前任深夜「睡了嗎」', o:['回覆','已讀不回','提醒不聯絡']}
+};
+const ETYPE = {
+  e_pass:'沒開始', e_juggle:'沒開始', e_unsaid:'沒開始', e_ambig:'沒開始', e_fishpond:'沒開始', e_aircon:'沒開始', e_youth:'沒開始', e_wakeup:'沒開始',
+  e_long:'在一起', e_balance:'在一起', e_proud:'在一起', e_distance:'在一起', e_affair_repair:'在一起', e_anxious:'在一起', e_cycle:'在一起', e_wedding:'在一起'
+};
+const UID_KEY = 'love-sim-uid';
+let statRun = '', curId = '';
+
+function statUid(){
+  try {
+    let id = localStorage.getItem(UID_KEY);
+    if (!id){ id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); localStorage.setItem(UID_KEY, id); return {id, first: 1}; }
+    return {id, first: 0};
+  } catch(e){ return {id: 'anon', first: 0}; }
+}
+function statDevice(){
+  const coarse = matchMedia('(pointer:coarse)').matches, w = Math.min(screen.width, screen.height);
+  if (!coarse) return '電腦';
+  return w >= 600 ? '平板' : '手機';
+}
+function statSource(){
+  const q = new URLSearchParams(location.search).get('utm_source');
+  if (q) return q.toLowerCase();
+  try {
+    const h = document.referrer ? new URL(document.referrer).hostname : '';
+    if (!h) return '直接開啟';
+    if (h.includes('threads')) return 'threads';
+    if (h.includes('instagram')) return 'instagram';
+    if (h.includes('facebook')) return 'facebook';
+    if (h.includes('google')) return 'google';
+    return h;
+  } catch(e){ return '直接開啟'; }
+}
+const STAT_UID = statUid(), STAT_DEVICE = statDevice(), STAT_SOURCE = statSource();
+
+function track(event, extra){
+  if (!STATS_URL) return;
+  const P = state.cast ? who('P') : null;
+  const persLabel = P ? (typeof PERS[P.pers].label === 'string' ? PERS[P.pers].label : PERS[P.pers].label[P.g]) : '';
+  const body = Object.assign({
+    event, uid: STAT_UID.id, run: statRun, gender: state.gender === 'm' ? '男' : state.gender === 'f' ? '女' : '',
+    device: STAT_DEVICE, source: STAT_SOURCE, chapter: chapName,
+    pers: persLabel, same: state.cast ? (isSame() ? '是' : '否') : '', crisis: (state.flags && state.flags.crisis) || ''
+  }, extra || {});
+  try {
+    fetch(STATS_URL, {method: 'POST', mode: 'no-cors', keepalive: true,
+      headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(body)}).catch(() => {});
+  } catch(e){}
+}
+function trackChoice(c){
+  const k = KEY[curId];
+  if (!k) return;
+  const sc = SCENES[curId];
+  const i = (sc.choices || []).indexOf(c);
+  if (i < 0) return;
+  track('choice', {q: k.q, opt: k.o[i] || ('選項' + (i + 1)), optText: fillText(V(c.label, sc))});
+}
+
+/* =========================================================
+   狀態
+   ========================================================= */
+let state = {name:'', gender:'f', cast:null, a:0, t:0, s:0, flags:{}};
+let chapName = '序章';
+let pendingNext = null;
+let typing = false, typeTimer = null, typeDone = null, segs = [], typeLen = 0, typeIdx = 0;
+let tipCb = null, setupGender = 'f';
+let modeAuto = false, modeSkip = false, autoTimer = null, deltaTimer = null;
+let log = [], lastShown = null, lastEnding = null, curBg = 'campus';
+
+const $ = sel => document.querySelector(sel);
+const clamp = v => Math.max(STAT_MIN, Math.min(STAT_MAX, v));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const gCls = g => g === 'm' ? 'male' : 'female';
+
+/* 每輪重新抽角色：兩位異性、一位同性朋友、一位陪你走過低潮的朋友、一位第三者，個性各不相同 */
+function setupCast(playerG){
+  const oppG = playerG === 'f' ? 'm' : 'f';
+  const used = new Set([state.name]);
+  const draw = g => { const n = pickOne(POOL[g].filter(x => !used.has(x))); used.add(n); return n; };
+  const pers = [...PERS_KEYS].sort(() => Math.random() - .5);
+  const xg = Math.random() < .5 ? playerG : oppG;
+  state.cast = {
+    A: {name: draw(oppG),    g: oppG,    pers: pers[0], look: 'a'},
+    B: {name: draw(oppG),    g: oppG,    pers: pers[1], look: 'b'},
+    F: {name: draw(playerG), g: playerG, pers: pers[2], look: 'c'},
+    C: {name: draw(playerG), g: playerG, pers: pers[3], look: 'b'},
+    X: {name: draw(xg),      g: xg,      pers: pers[4], look: 'b'},
+    pk: 'A'
+  };
+  /* 你對每個人的心動（公開）與對方對你的心動（隱藏） */
+  state.me = {A:0, B:0, F:0};
+  state.them = {};
+  ['A', 'B', 'F'].forEach(k => {
+    state.them[k] = THEM_BASE[state.cast[k].pers] + Math.floor(Math.random() * 3) - 1;
+  });
+  state.a = 0;
+}
+/* 換對象時，畫面上的心動值跟著換成對這個人的 */
+function setPartner(k){
+  state.cast.pk = k;
+  if (state.me && k in state.me) state.a = state.me[k];
+}
+const who = k => state.cast[k === 'P' ? state.cast.pk : k === 'O' ? (state.cast.pk === 'A' ? 'B' : 'A') : k];
+const pron = p => p.g === 'f' ? '她' : '他';
+const isSame = () => !!state.cast && who('P').g === state.gender;
+
+/* 代號換成文字：名字依性別上色（男藍、女粉） */
+function tok(k){
+  if (k === 'N') return {t: state.name, cls: gCls(state.gender)};
+  if (k === 'pH') return {t: pron(who('P'))};
+  if (k === 'GF') return {t: state.gender === 'm' ? '女朋友' : '男朋友'};
+  const m = k.match(/^(P|O|A|B|F|C|X)(H|t|d)?$/);
+  if (!m) return null;
+  const p = who(m[1]);
+  if (!m[2]) return {t: p.name, cls: gCls(p.g)};
+  if (m[2] === 'H') return {t: pron(p)};
+  if (m[2] === 't'){ const l = PERS[p.pers].label; return {t: typeof l === 'string' ? l : l[p.g]}; }
+  return {t: PERS[p.pers].desc};
+}
+function toSegs(str){
+  const out = [];
+  String(str).split(/(\{\w+\})/).forEach(part => {
+    const m = part.match(/^\{(\w+)\}$/);
+    const r = m && state.cast ? tok(m[1]) : null;
+    if (r) out.push(r); else if (part) out.push({t: part});
+  });
+  return out;
+}
+
+/* 依情境挑台詞：同性伴侶 → 說話者的個性 → 你的性別 → 預設 */
+function personOf(sc){
+  const m = ((sc && sc.speaker) || '').match(/\{(P|O|A|B|F|C|X)\}/);
+  return state.cast ? who(m ? m[1] : 'P') : null;
+}
+function V(x, sc){
+  if (x == null || typeof x === 'string') return x;
+  if (typeof x === 'function') return x(state);
+  if (typeof x !== 'object') return x;
+  const p = personOf(sc);
+  if (x.same !== undefined && isSame()) return x.same;
+  if (p && x[p.pers] !== undefined) return x[p.pers];
+  if (x[state.gender] !== undefined) return x[state.gender];
+  return x.def;
+}
+function segsHTML(list, n = Infinity){
+  let html = '', left = n;
+  for (const s of list){
+    if (left <= 0) break;
+    const t = esc(s.t.slice(0, left));
+    left -= s.t.length;
+    html += s.cls ? `<span class="${s.cls}">${t}</span>` : t;
+  }
+  return html;
+}
+const fillHTML = str => segsHTML(toSegs(str));
+const fillText = str => toSegs(str).map(s => s.t).join('');
+const neutral = str => str.replace(/\{(\w+)\}/g, (_, k) => k === 'X' ? '第三者' : (k === 'F' || k === 'C') ? '朋友' : k === 'N' ? '你' : k === 'O' ? '另一個人' : '對方');
+
+/* 存檔：解鎖清單 + 每個結局最近一次的紀錄 */
+function loadUnlocked(){ try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || []; } catch(e){ return []; } }
+function loadRecords(){ try { return JSON.parse(localStorage.getItem(REC_KEY)) || {}; } catch(e){ return {}; } }
+function unlock(id){
+  const list = loadUnlocked();
+  if (!list.includes(id)) list.push(id);
+  const rec = loadRecords();
+  rec[id] = {name: state.name, gender: state.gender, a: state.a, t: state.t, s: state.s, p: state.p,
+             text: fillText(ENDINGS[id].text), date: new Date().toISOString().slice(0, 10)};
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(list));
+    localStorage.setItem(REC_KEY, JSON.stringify(rec));
+  } catch(e){}
+}
+function clearUnlocked(){ try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(REC_KEY); } catch(e){} }
+
+/* =========================================================
+   畫面元件
+   ========================================================= */
+function setBg(name){ curBg = BG[name] ? name : 'campus'; $('#bg').style.background = BG[curBg]; }
+
+/* 進度存檔：每到一個新的劇情節點就存一次，離開網頁再回來可以繼續 */
+function saveProgress(id){
+  try {
+    localStorage.setItem(PROG_KEY, JSON.stringify({id, state, chapName, bg: curBg, log: log.slice(-80), time: Date.now()}));
+  } catch(e){}
+}
+function loadProgress(){
+  try {
+    const p = JSON.parse(localStorage.getItem(PROG_KEY));
+    return p && SCENES[p.id] && p.state && p.state.cast && p.state.cast.A && p.state.them ? p : null;
+  } catch(e){ return null; }
+}
+function clearProgress(){ try { localStorage.removeItem(PROG_KEY); } catch(e){} }
+function updateHud(){
+  $('#hudChap').textContent = chapName;
+  ['a','t','s','p'].forEach(k => {
+    $('#v-' + k).textContent = state[k];
+    $('#b-' + k).style.width = ((state[k] - STAT_MIN) / (STAT_MAX - STAT_MIN) * 100) + '%';
+  });
+}
+function showDelta(fx){
+  const label = {a:'心動', t:'信任', s:'自我', p:'友情'};
+  const parts = Object.keys(fx || {}).filter(k => fx[k]).map(k =>
+    `<span class="${fx[k] > 0 ? 'up' : 'dn'}">${label[k]} ${fx[k] > 0 ? '+' : ''}${fx[k]}</span>`);
+  if (!parts.length) return;
+  const el = $('#delta');
+  el.innerHTML = parts.join('　');
+  el.classList.add('show');
+  clearTimeout(deltaTimer);
+  deltaTimer = setTimeout(() => el.classList.remove('show'), 1400);
+}
+function showChapter(name){
+  const card = $('#chapCard');
+  $('#chapText').textContent = name;
+  card.classList.remove('run'); void card.offsetWidth; card.classList.add('run');
+}
+function setChara(sc){
+  const box = $('#chara'), cv = $('#sp');
+  const m = (sc.speaker || '').match(/\{(P|O|A|B|F|C|X)\}/);
+  if (m){
+    const key = m[1] === 'P' ? state.cast.pk : m[1] === 'O' ? (state.cast.pk === 'A' ? 'B' : 'A') : m[1];
+    if (key !== lastShown){
+      const p = state.cast[key];
+      const pal = p.look === 'c' ? LOOK.fr : p.look === 'b' ? LOOK2[p.g] : LOOK[p.g];
+      drawChara(cv, p.g, pal);
+      lastShown = key;
+    }
+    box.classList.remove('hide', 'dim');
+    box.classList.add('talk');
+  } else {
+    box.classList.remove('talk');
+    box.classList.add(lastShown ? 'dim' : 'hide');
+  }
+}
+function speakerOf(sp){
+  const m = (sp || '').match(/^\{(P|O|A|B|F|C|X)\}$/);
+  if (!m) return null;
+  const p = who(m[1]);
+  return {name: p.name, cls: gCls(p.g)};
+}
+
+/* 打字機 */
+function typeText(list, done){
+  clearInterval(typeTimer);
+  segs = list; typeLen = list.reduce((n, s) => n + s.t.length, 0);
+  typeIdx = 0; typing = true; typeDone = done;
+  $('#text').innerHTML = '';
+  $('#textWrap').scrollTop = 0;
+  if (modeSkip){ finishTyping(); return; }
+  typeTimer = setInterval(() => {
+    typeIdx++;
+    $('#text').innerHTML = segsHTML(segs, typeIdx);
+    if (typeIdx >= typeLen) finishTyping();
+  }, TYPE_MS);
+}
+function finishTyping(){
+  if (!typing) return;
+  clearInterval(typeTimer);
+  typing = false;
+  $('#text').innerHTML = segsHTML(segs);
+  const d = typeDone; typeDone = null;
+  if (d) d();
+}
+
+/* 選項、前進、小知識 */
+function hideChoices(){ $('#choices').classList.remove('show'); $('#choices').innerHTML = ''; }
+function hideNext(){ $('#next').classList.remove('show'); }
+function cancelAuto(){ clearTimeout(autoTimer); autoTimer = null; }
+function showChoices(list, sc){
+  const wrap = $('#choices');
+  wrap.innerHTML = '<div class="chHead">請選擇你的回應</div>';
+  list.forEach(c => {
+    const b = document.createElement('button');
+    const html = fillHTML(V(c.label, sc));
+    b.className = 'choice';
+    b.innerHTML = html;
+    b.addEventListener('click', ev => { ev.stopPropagation(); choose(c, html); });
+    wrap.appendChild(b);
+  });
+  wrap.classList.add('show');
+  $('#chara').classList.add('dim');
+  $('#chara').classList.remove('talk');
+}
+/* 套用一個選項的效果：a 是你的心動，h 是對方的心動（隱藏） */
+function applyChoice(c){
+  if (c.setP) setPartner(c.setP);
+  const pk = state.cast.pk;
+  for (const k in (c.fx || {})){
+    const v = c.fx[k];
+    if (k === 'a'){ if (state.me && pk in state.me) state.me[pk] = clamp(state.me[pk] + v); state.a = clamp(state.a + v); }
+    else if (k === 'h'){ if (state.them && pk in state.them) state.them[pk] = clamp(state.them[pk] + v); }
+    else state[k] = clamp(state[k] + v);
+  }
+  if (c.flag) state.flags[c.flag] = true;
+}
+function choose(c, html){
+  trackChoice(c);
+  hideChoices();
+  applyChoice(c);
+  log.push({pick: true, html});
+  updateHud();
+  showDelta(c.fx);
+  show(c.to);
+}
+function showTip(key, cb){
+  const tip = typeof key === 'string' ? TIPS[key] : key;
+  $('#tipTitle').textContent = tip.title;
+  track('tip', {tip: tip.title});
+  $('#tipBody').innerHTML = fillHTML(tip.body);
+  $('#tipSrc').textContent = tip.src ? '研究出處：' + tip.src : '';
+  tipCb = cb;
+  $('#tip').classList.add('show');
+}
+$('#tipOk').addEventListener('click', () => {
+  $('#tip').classList.remove('show');
+  const cb = tipCb; tipCb = null;
+  if (cb) cb();
+});
+const anyOverlay = () => !!document.querySelector('.ov.show');
+function queueAuto(){
+  cancelAuto();
+  if (!(modeAuto || modeSkip) || !pendingNext) return;
+  const target = pendingNext;
+  autoTimer = setTimeout(() => {
+    autoTimer = null;
+    if (pendingNext === target && !typing && !anyOverlay()) advance();
+  }, modeSkip ? SKIP_DELAY : AUTO_DELAY + typeLen * 20);
+}
+function after(sc){
+  if (sc.choices){ showChoices(sc.choices, sc); return; }
+  if (!sc.next) return;
+  pendingNext = sc.next;
+  $('#next').classList.add('show');
+  queueAuto();
+}
+
+/* 場景 */
+function show(id){
+  const sc = SCENES[id];
+  if (!sc){ console.warn('找不到節點：', id); return; }
+  if (sc.end) return showEnding(sc.end);
+  if (sc.chap && sc.chap !== chapName){
+    const newCh = sc.chap.slice(0, 3) !== chapName.slice(0, 3);
+    chapName = sc.chap; showChapter(sc.chap);
+    if (newCh) track('chapter');
+  }
+  if (sc.bg) setBg(sc.bg);
+  if (sc.set) Object.assign(state.flags, sc.set);
+  if (sc.setP) setPartner(sc.setP);
+  if (sc.pick) return show(pickOne(sc.pick));
+  if (sc.branch) return show(sc.branch.find(b => !b.when || b.when(state)).to);
+
+  curId = id;
+  saveProgress(id);
+  setChara(sc);
+  const nameEl = $('#name');
+  const info = speakerOf(sc.speaker);
+  nameEl.textContent = info ? info.name : '';
+  nameEl.className = info ? info.cls : '';
+  nameEl.hidden = !info;
+
+  hideChoices(); hideNext(); pendingNext = null; cancelAuto();
+  updateHud();
+  const list = toSegs(V(sc.text, sc));
+  const tipKey = V(sc.tip, sc);
+  log.push({name: info ? info.name : '', cls: info ? info.cls : '', html: segsHTML(list)});
+  typeText(list, () => { if (tipKey) showTip(tipKey, () => after(sc)); else after(sc); });
+}
+function advance(){
+  if (anyOverlay()) return;
+  if (typing){ finishTyping(); return; }
+  if (pendingNext){
+    const n = pendingNext;
+    pendingNext = null;
+    cancelAuto(); hideNext();
+    show(n);
+  }
+}
+$('#box').addEventListener('click', advance);
+document.addEventListener('keydown', e => {
+  if ($('#bookOv').classList.contains('show')){
+    if (e.key === 'ArrowRight') turn(1);
+    if (e.key === 'ArrowLeft') turn(-1);
+    if (e.key === 'Escape') closeBook();
+    return;
+  }
+  if (!document.body.classList.contains('playing') || anyOverlay()) return;
+  if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); advance(); }
+});
+
+/* 上方按鈕 */
+function setMode(){
+  $('#pAuto').classList.toggle('on', modeAuto);
+  $('#pSkip').classList.toggle('on', modeSkip);
+}
+function stopModes(){ modeAuto = modeSkip = false; setMode(); cancelAuto(); }
+$('#pAuto').addEventListener('click', () => { modeAuto = !modeAuto; if (modeAuto) modeSkip = false; setMode(); if (!typing) queueAuto(); });
+$('#pSkip').addEventListener('click', () => {
+  modeSkip = !modeSkip; if (modeSkip) modeAuto = false; setMode();
+  if (modeSkip && typing) finishTyping(); else queueAuto();
+});
+$('#pLog').addEventListener('click', () => {
+  stopModes();
+  $('#logList').innerHTML = log.map(l => l.pick
+    ? `<div class="lg pick">▶ ${l.html}</div>`
+    : `<div class="lg">${l.name ? `<b class="${l.cls}">${esc(l.name)}</b>` : ''}${l.html}</div>`).join('');
+  $('#logOv').classList.add('show');
+  const p = $('#logOv .panel'); p.scrollTop = p.scrollHeight;
+});
+$('#logBack').addEventListener('click', () => $('#logOv').classList.remove('show'));
+$('#pMenu').addEventListener('click', () => { stopModes(); $('#menuOv').classList.add('show'); });
+$('#mResume').addEventListener('click', () => $('#menuOv').classList.remove('show'));
+$('#mRestart').addEventListener('click', () => startGame(true));
+$('#mTitle').addEventListener('click', openTitle);
+
+/* =========================================================
+   結局
+   ========================================================= */
+function showEnding(id){
+  const isNew = !loadUnlocked().includes(id);
+  unlock(id);
+  clearProgress();
+  lastEnding = id;
+  const e = ENDINGS[id];
+  clearInterval(typeTimer); typing = false;
+  stopModes(); hideChoices(); hideNext();
+  $('#endTag').textContent = (e.secret ? '隱藏結局' : '結局') + `・No.${ORDER.indexOf(id) + 1}` + (isNew ? '・NEW' : '');
+  $('#endTag').style.background = e.secret ? 'var(--lav)' : 'var(--lemon)';
+  $('#endTitle').textContent = e.title;
+  track('end', {endId: id, endTitle: e.title, a: state.a, t: state.t, s: state.s, p: state.p,
+    isNew: isNew ? 1 : 0, collected: loadUnlocked().length, endType: ETYPE[id] || '分開'});
+  paintScene($('#endArt'), id, false);
+  $('#endText').innerHTML = fillHTML(e.text);
+  $('#endStats').textContent = `心動 ${state.a}　信任 ${state.t}　自我 ${state.s}　友情 ${state.p}`;
+  $('#endCount').textContent = `結局之書收集進度 ${loadUnlocked().length} / ${ORDER.length}`;
+  $('#end').classList.add('show');
+}
+
+/* =========================================================
+   結局之書
+   ========================================================= */
+let bookIdx = 0;
+const isWide = () => matchMedia('(min-width:760px)').matches;
+const PAGE_COUNT = ORDER.length + 1;   // 目錄 + 每個結局一頁
+
+function artTag(id, locked){
+  return `<canvas class="art" width="96" height="64" data-art="${id}" data-lock="${locked ? 1 : 0}"></canvas>`;
+}
+function pageHTML(i, side){
+  const sideCls = side === 'left' ? ' left' : '';
+  if (i >= PAGE_COUNT) return `<div class="page blank${sideCls}"></div>`;
+  const got = loadUnlocked(), rec = loadRecords();
+  const foot = `<div class="pfoot">— ${i + 1} —</div>`;
+
+  /* 第一頁：小圖鑑 */
+  if (i === 0){
+    const cards = ORDER.map((id, k) => {
+      const e = ENDINGS[id], ok = got.includes(id);
+      const name = ok ? esc(e.title) : (e.secret ? '隱藏結局' : '？？？');
+      return `<button class="tcard${ok ? '' : ' lock'}${e.secret ? ' secret' : ''}" data-go="${k + 1}">
+        ${artTag(id, !ok)}<span class="tno">No.${k + 1}</span><span class="tname">${name}</span></button>`;
+    }).join('');
+    return `<div class="page toc-page${sideCls}"><div class="pno">CONTENTS</div><h3>結局圖鑑</h3>
+      <p class="intro">已收集 ${got.length} / ${ORDER.length}。點一張卡片，就會翻到那一頁。</p>
+      <div class="tgrid">${cards}</div>${foot}</div>`;
+  }
+
+  /* 結局頁 */
+  const id = ORDER[i - 1], e = ENDINGS[id];
+  const tag = `<span class="ptag${e.secret ? ' secret' : ''}">${e.secret ? '隱藏結局' : '結局'}</span>`;
+  if (!got.includes(id)){
+    return `<div class="page lock${sideCls}"><div class="pno">No.${i}</div>
+      <div class="partwrap">${artTag(id, true)}</div>${tag}<h3>${e.secret ? '隱藏結局' : '？？？'}</h3>
+      <div class="q">${e.secret ? '需要走過特定的路，才會翻到這一頁。' : '這一頁還是空白的。換個選擇再玩一次吧。'}</div>
+      <div class="pbtns"><button class="btn sm soft" data-go="0">← 目錄</button></div>${foot}</div>`;
+  }
+  const r = rec[id];
+  const recLine = r ? `<div class="prec">${esc(r.name)} 的紀錄・${r.date}　心動 ${r.a}　信任 ${r.t}　自我 ${r.s}${r.p != null ? '　友情 ' + r.p : ''}</div>` : '';
+  return `<div class="page${sideCls}"><div class="pno">No.${i}</div>
+    <div class="partwrap">${artTag(id, false)}<div class="stamp">已收錄</div></div>
+    ${tag}<h3>${esc(e.title)}</h3><p>${esc(r ? r.text : neutral(e.text))}</p>${recLine}
+    <div class="pbtns"><button class="btn sm soft" data-go="0">← 目錄</button><button class="btn sm shareBtn" data-id="${id}">分享這一頁</button></div>${foot}</div>`;
+}
+
+function renderBook(dir){
+  const per = isWide() ? 2 : 1;
+  const maxIdx = Math.ceil(PAGE_COUNT / per) - 1;
+  bookIdx = Math.max(0, Math.min(maxIdx, bookIdx));
+  const first = bookIdx * per;
+  const sp = $('#spread');
+  sp.innerHTML = per === 2 ? pageHTML(first, 'left') + pageHTML(first + 1, 'right') : pageHTML(first, 'right');
+  sp.querySelectorAll('canvas[data-art]').forEach(cv => paintScene(cv, cv.dataset.art, cv.dataset.lock === '1'));
+  sp.className = 'spread' + (dir > 0 ? ' flip-next' : dir < 0 ? ' flip-prev' : '');
+  $('#pgNum').textContent = per === 2
+    ? `${first + 1}–${Math.min(first + 2, PAGE_COUNT)} / ${PAGE_COUNT}`
+    : `${first + 1} / ${PAGE_COUNT}`;
+  $('#pgNext').disabled = bookIdx >= maxIdx;
+  $('#pgNext').style.opacity = bookIdx >= maxIdx ? .4 : 1;
+  $('#pgToc').style.visibility = bookIdx > 0 ? 'visible' : 'hidden';
+}
+function openBook(){
+  const n = loadUnlocked().length;
+  $('#cvProg').textContent = `收集 ${n} / ${ORDER.length}`;
+  $('#book').className = '';
+  $('#bookOv').classList.add('show');
+}
+function openPages(){ $('#book').className = 'open'; bookIdx = 0; renderBook(0); }
+function closeBook(){ $('#bookOv').classList.remove('show'); }
+function turn(d){
+  if (!$('#book').classList.contains('open')){ if (d > 0) openPages(); return; }
+  if (d < 0 && bookIdx === 0){ $('#book').className = ''; return; }
+  bookIdx += d; renderBook(d);
+}
+$('#cover').addEventListener('click', openPages);
+$('#pgPrev').addEventListener('click', () => turn(-1));
+$('#pgNext').addEventListener('click', () => turn(1));
+$('#pgToc').addEventListener('click', () => { if (bookIdx > 0){ bookIdx = 0; renderBook(-1); } });
+$('#bookBack').addEventListener('click', closeBook);
+$('#spread').addEventListener('click', e => {
+  const go = e.target.closest('[data-go]');
+  if (go){ const per = isWide() ? 2 : 1, to = Math.floor(+go.dataset.go / per), d = to < bookIdx ? -1 : 1; bookIdx = to; renderBook(d); return; }
+  const sh = e.target.closest('.shareBtn');
+  if (sh) openShare(sh.dataset.id);
+});
+(function swipe(){
+  /* 只有明顯的左右滑才翻頁；上下捲動時就算手指有點斜，也不會翻頁。
+     滑動不會把書闔上，要回封面請按左箭頭。 */
+  let x0 = null, y0 = 0;
+  $('#book').addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, {passive:true});
+  $('#book').addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (!$('#book').classList.contains('open')) return;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 2) return;
+    if (dx > 0 && bookIdx === 0) return;
+    turn(dx < 0 ? 1 : -1);
+  });
+})();
+/* 只有在「一頁 / 兩頁」的版面真的改變時才重畫，手機網址列伸縮不會重置捲動位置 */
+let bookPer = isWide() ? 2 : 1;
+addEventListener('resize', () => {
+  const per = isWide() ? 2 : 1;
+  if (per === bookPer) return;
+  const firstPage = bookIdx * bookPer;
+  bookPer = per;
+  if ($('#book').classList.contains('open')){ bookIdx = Math.floor(firstPage / per); renderBook(0); }
+});
+
+/* =========================================================
+   分享圖卡
+   ========================================================= */
+function wrapLines(ctx, text, maxW){
+  const lines = [];
+  text.split('\n').forEach(par => {
+    let line = '';
+    for (const ch of par){
+      const test = line + ch;
+      if (ctx.measureText(test).width > maxW && line){
+        // 標點不放行首
+        const P = '，。、！？；：」』）…';
+        if (P.includes(ch)){
+          // 往回找到不是標點的字，連同它一起帶到下一行，避免標點落單在行首
+          let k = line.length - 1;
+          while (k > 0 && P.includes(line[k])) k--;
+          lines.push(line.slice(0, k)); line = line.slice(k) + ch; continue;
+        }
+        lines.push(line); line = ch;
+      } else line = test;
+    }
+    if (line) lines.push(line);
+  });
+  return lines;
+}
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+/* 分享圖卡：1080 x 1920，適合 IG 限動與 Threads */
+async function makeCard(id){
+  const e = ENDINGS[id];
+  const r = loadRecords()[id] || {name: state.name || '你', a: state.a, t: state.t, s: state.s, text: neutral(e.text)};
+  try { await Promise.all([document.fonts.load('700 60px "Noto Serif TC"'), document.fonts.load('400 34px "Noto Sans TC"')]); } catch(err){}
+  const W = 1080, H = 1920, cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const SANS = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+  const SERIF = '"Noto Serif TC","Songti TC","PMingLiU",serif';
+
+  // 背景：馬卡龍漸層、色塊、圓點
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, '#fde4ec'); g.addColorStop(.5, '#efe6fb'); g.addColorStop(1, '#e3f5ee');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  [['#ffd3e0', 110, 170, 210], ['#e2d6fb', 990, 140, 180], ['#cdeedd', 980, 1740, 260], ['#fff0c4', 80, 1800, 200]].forEach(([c, x, y, rr]) => {
+    ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, rr, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.fillStyle = 'rgba(255,255,255,.6)';
+  for (let y = 22; y < H; y += 44) for (let x = 22; x < W; x += 44){ ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); }
+
+  // 紙卡
+  const cx = 80, cy = 110, cw = W - 160, ch = 1690;
+  ctx.save(); ctx.shadowColor = 'rgba(74,59,85,.22)'; ctx.shadowBlur = 44; ctx.shadowOffsetY = 16;
+  roundRect(ctx, cx, cy, cw, ch, 40); ctx.fillStyle = '#fffaf4'; ctx.fill(); ctx.restore();
+  roundRect(ctx, cx + 18, cy + 18, cw - 36, ch - 36, 28); ctx.strokeStyle = '#f7a8c0'; ctx.lineWidth = 3; ctx.stroke();
+
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#7a6a86'; ctx.font = `500 32px ${SANS}`;
+  ctx.fillText('戀愛沒那麼簡單', W / 2, cy + 100);
+  const tagText = `${e.secret ? '隱藏結局' : '結局'}  No.${ORDER.indexOf(id) + 1}`;
+  ctx.font = `700 28px ${SANS}`;
+  const tw = ctx.measureText(tagText).width + 60;
+  roundRect(ctx, W / 2 - tw / 2, cy + 130, tw, 54, 27); ctx.fillStyle = e.secret ? '#cdbdf3' : '#fde9a6'; ctx.fill();
+  ctx.fillStyle = '#4a3b55'; ctx.fillText(tagText, W / 2, cy + 167);
+
+  // 代表畫面（96x64 放大 7 倍）
+  const art = document.createElement('canvas'); art.width = ART_W; art.height = ART_H;
+  paintScene(art, id, false);
+  const aw = ART_W * 7, ah = ART_H * 7, ax = (W - aw) / 2, ay = cy + 220;
+  ctx.save(); ctx.shadowColor = 'rgba(74,59,85,.2)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 8;
+  roundRect(ctx, ax - 12, ay - 12, aw + 24, ah + 24, 22); ctx.fillStyle = '#ffffff'; ctx.fill(); ctx.restore();
+  ctx.save(); roundRect(ctx, ax, ay, aw, ah, 12); ctx.clip();
+  ctx.imageSmoothingEnabled = false; ctx.drawImage(art, ax, ay, aw, ah); ctx.restore();
+
+  // 標題
+  ctx.font = `700 76px ${SERIF}`;
+  let y = ay + ah + 130;
+  wrapLines(ctx, e.title, cw - 140).forEach(l => {
+    ctx.fillStyle = '#ffffff'; ctx.fillText(l, W / 2 + 4, y + 4);
+    ctx.fillStyle = '#4a3b55'; ctx.fillText(l, W / 2, y); y += 92;
+  });
+  ctx.font = `500 32px ${SANS}`; ctx.fillStyle = '#e9799f';
+  ctx.fillText(`${r.name} 的結局`, W / 2, y - 18);
+
+  // 內文（橫線對齊）
+  ctx.textAlign = 'left'; ctx.font = `400 36px ${SANS}`; ctx.fillStyle = '#56485f';
+  const lines = wrapLines(ctx, r.text, cw - 170).slice(0, 7);
+  let by = y + 62;
+  ctx.strokeStyle = '#f3e3d4'; ctx.lineWidth = 2;
+  lines.forEach(l => {
+    ctx.beginPath(); ctx.moveTo(cx + 70, by + 20); ctx.lineTo(cx + cw - 70, by + 20); ctx.stroke();
+    ctx.fillText(l, cx + 85, by); by += 62;
+  });
+
+  // 三項數值
+  const stats = [['心動', r.a, '#e9799f'], ['信任', r.t, '#79b9ec'], ['自我', r.s, '#e3b44f'], ['友情', r.p == null ? 2 : r.p, '#6cc9a0']];
+  const sy = cy + ch - 230, colW = (cw - 160) / 4;
+  stats.forEach(([lab, v, c], k) => {
+    const x = cx + 80 + k * colW;
+    ctx.font = `500 28px ${SANS}`; ctx.fillStyle = '#7a6a86'; ctx.textAlign = 'left';
+    ctx.fillText(lab, x, sy);
+    ctx.font = `700 28px ${SANS}`; ctx.fillStyle = '#4a3b55'; ctx.textAlign = 'right';
+    ctx.fillText(String(v), x + colW - 30, sy);
+    roundRect(ctx, x, sy + 20, colW - 30, 14, 7); ctx.fillStyle = 'rgba(74,59,85,.1)'; ctx.fill();
+    const pct = (v - STAT_MIN) / (STAT_MAX - STAT_MIN);
+    roundRect(ctx, x, sy + 20, Math.max(14, (colW - 30) * pct), 14, 7); ctx.fillStyle = c; ctx.fill();
+  });
+
+  ctx.textAlign = 'center';
+  ctx.font = `500 28px ${SANS}`; ctx.fillStyle = '#7a6a86';
+  ctx.fillText(`結局圖鑑 ${loadUnlocked().length} / ${ORDER.length}　・　你會走到哪一頁？`, W / 2, cy + ch - 100);
+  ctx.font = `500 26px ${SANS}`; ctx.fillStyle = '#a796ae';
+  ctx.fillText(GAME_URL ? `${GAME_URL}　made by ${AUTHOR}` : `made by ${AUTHOR}`, W / 2, H - 50);
+
+  // 角落愛心
+  const hc = document.createElement('canvas'); hc.width = 9; hc.height = 8; drawHeart(hc, '#f7a8c0');
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(hc, cx + cw - 130, cy + 54, 72, 64);
+  ctx.drawImage(hc, cx + 56, cy + 54, 45, 40);
+  return cv;
+}
+
+let shareBlob = null, shareId = null;
+async function openShare(id){
+  track('share', {endId: id, endTitle: ENDINGS[id].title});
+  shareId = id; shareBlob = null;
+  const cv = await makeCard(id);
+  $('#shareImg').src = cv.toDataURL('image/png');
+  cv.toBlob(b => { shareBlob = b; }, 'image/png');
+  $('#shareOv').classList.add('show');
+}
+$('#shareDo').addEventListener('click', async () => {
+  const fname = `戀愛沒那麼簡單_${ENDINGS[shareId].title}.png`;
+  if (shareBlob && navigator.canShare){
+    const file = new File([shareBlob], fname, {type: 'image/png'});
+    if (navigator.canShare({files: [file]})){
+      try { await navigator.share({files: [file], title: '戀愛沒那麼簡單', text: `我走到了「${ENDINGS[shareId].title}」，你呢？`}); return; }
+      catch(err){ if (err.name === 'AbortError') return; }
+    }
+  }
+  const a = document.createElement('a');
+  a.href = $('#shareImg').src; a.download = fname;
+  document.body.appendChild(a); a.click(); a.remove();
+});
+$('#shareClose').addEventListener('click', () => $('#shareOv').classList.remove('show'));
+$('#endShare').addEventListener('click', () => openShare(lastEnding));
+
+/* =========================================================
+   畫面切換
+   ========================================================= */
+function refreshProgress(){
+  const p = loadProgress();
+  $('#btnContinue').hidden = !p;
+  $('#btnStart').classList.toggle('main', !p);
+  $('#btnStart').textContent = p ? '重新開始' : '開始遊戲';
+  if (p) $('#contInfo').textContent = `${p.state.name}・${p.chapName}`;
+  const n = loadUnlocked().length;
+  $('#progress').innerHTML = n ? `已收集結局 <b>${n}</b> / ${ORDER.length}` : '';
+}
+function closeAll(){ document.querySelectorAll('.ov').forEach(o => o.classList.remove('show')); }
+function openTitle(){
+  cancelAuto(); closeAll();
+  $('#title').classList.remove('hide');
+  document.body.classList.remove('playing');
+  refreshProgress();
+}
+function openSetup(){ $('#setup').classList.add('show'); setSetupGender(setupGender); }
+function setSetupGender(g){
+  setupGender = g;
+  document.querySelectorAll('.gbtn').forEach(b => b.setAttribute('aria-pressed', b.dataset.g === g ? 'true' : 'false'));
+}
+const randomPlayerName = g => pickOne(ENGLISH_PLAYER[g]);
+
+/* again=true：沿用名字與性別再玩一次（對象名字與劇情版本會重新抽） */
+function startGame(again){
+  const name = again ? state.name : ($('#nameIn').value.trim().slice(0, 8) || randomPlayerName(setupGender));
+  const gender = again ? state.gender : setupGender;
+  state = {name, gender, cast:null, a:0, t:0, s:0, p:2, flags:{}};
+  setupCast(gender);
+  chapName = '序章'; log = []; lastShown = null;
+  statRun = 'r' + Date.now().toString(36);
+  track('start', {opt: again ? '再玩一次' : '新遊戲'});
+  closeAll();
+  $('#title').classList.add('hide');
+  document.body.classList.add('playing');
+  $('#chara').className = 'hide';
+  setBg('campus');
+  stopModes();
+  updateHud();
+  show('start');
+}
+
+function resumeGame(){
+  const p = loadProgress();
+  if (!p){ refreshProgress(); return; }
+  state = p.state;
+  if (state.p == null) state.p = 2;
+  chapName = p.chapName || '序章';
+  log = p.log || [];
+  lastShown = null;
+  closeAll();
+  $('#title').classList.add('hide');
+  document.body.classList.add('playing');
+  $('#chara').className = 'hide';
+  setBg(p.bg);
+  stopModes();
+  updateHud();
+  showChapter(chapName);
+  statRun = statRun || ('r' + Date.now().toString(36));
+  track('resume');
+  show(p.id);
+}
+
+$('#btnStart').addEventListener('click', () => {
+  if (loadProgress() && !confirm('重新開始會蓋掉目前的進度，確定嗎？')) return;
+  openSetup();
+});
+$('#btnContinue').addEventListener('click', resumeGame);
+$('#btnBook').addEventListener('click', openBook);
+$('#btnReset').addEventListener('click', () => {
+  if (confirm('要清除所有結局紀錄和遊戲進度嗎？清除後無法復原。')){ clearUnlocked(); clearProgress(); refreshProgress(); }
+});
+document.querySelectorAll('.gbtn').forEach(b => b.addEventListener('click', () => setSetupGender(b.dataset.g)));
+$('#btnRandom').addEventListener('click', () => { $('#nameIn').value = randomPlayerName(setupGender); });
+$('#nameIn').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
+$('#btnSetupStart').addEventListener('click', () => startGame(false));
+$('#btnSetupBack').addEventListener('click', () => $('#setup').classList.remove('show'));
+$('#endBook').addEventListener('click', openBook);
+$('#endAgain').addEventListener('click', () => startGame(true));
+$('#endBack').addEventListener('click', openTitle);
+
+if (FORTUNE_URL){
+  ['#btnFortune', '#endFortune'].forEach(s => {
+    $(s).hidden = false;
+    $(s).addEventListener('click', () => {
+      const atEnd = s === '#endFortune' && lastEnding;
+      track('fortune', atEnd ? {endId: lastEnding, endTitle: ENDINGS[lastEnding].title} : {});
+      window.open(FORTUNE_URL, '_blank', 'noopener');
+    });
+  });
+}
+
+/* 主頁裝飾：馬卡龍與像素愛心 */
+(function decorate(){
+  const deco = $('#deco');
+  const macs = [
+    ['#f7b6c9', '8%', '14%', 64], ['#cdbdf3', '80%', '9%', 52], ['#b4e7d1', '84%', '70%', 70],
+    ['#fde9a6', '6%', '76%', 56], ['#ffcfb3', '70%', '88%', 42], ['#b7dcf7', '18%', '45%', 38]
+  ];
+  macs.forEach(([c, l, t, w], k) => {
+    const m = document.createElement('div');
+    m.className = 'mac';
+    m.style.cssText = `--c:${c};--w:${w}px;left:${l};top:${t};animation-delay:-${k * 1.3}s`;
+    m.innerHTML = '<i></i><i></i><i></i>';
+    deco.appendChild(m);
+  });
+  const colors = ['#f7a8c0', '#cdbdf3', '#9fdcc0', '#f6d77c', '#ffb899'];
+  for (let i = 0; i < 12; i++){
+    const c = document.createElement('canvas');
+    c.width = 9; c.height = 8; c.className = 'ht';
+    drawHeart(c, colors[i % colors.length]);
+    const s = 12 + Math.random() * 16;
+    c.style.cssText = `left:${Math.random() * 100}%;width:${s}px;height:${s * .9}px;animation-duration:${12 + Math.random() * 10}s;animation-delay:-${Math.random() * 20}s`;
+    deco.appendChild(c);
+  }
+  drawHeart($('#cvHeart'), '#fffaf4');
+})();
+
+updateHud();
+refreshProgress();
+if (STATS_URL) $('#statNote').hidden = false;
+track('open', {first: STAT_UID.first});
+</script>
+</body>
+</html>
