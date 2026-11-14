@@ -256,6 +256,21 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .pbtns .btn.soft{border:2px solid transparent}
 @media (min-width:760px){ .tgrid{grid-template-columns:repeat(3,minmax(0,1fr))} }
 
+/* ================= 分享連結 ================= */
+.shareGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.sbtn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border:2px solid #f3e3ea;border-radius:14px;background:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.sbtn:active{transform:scale(.96)}
+.sbtn b{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:#f7b6c9;color:#fff;font-size:18px}
+#lkNative b{background:#cdbdf3}
+#linkArt{max-width:200px}
+#linkOv h2{margin:4px 0 2px}
+#fromCard{position:relative;display:flex;gap:12px;align-items:center;margin:0 0 16px;padding:10px 12px;border-radius:16px;background:rgba(255,250,244,.9);box-shadow:0 4px 14px rgba(74,59,85,.12);text-align:left}
+#fromCard[hidden]{display:none}
+#fromCard .art{width:84px;flex:0 0 auto;border-radius:8px}
+#fromCard small{display:block;font-size:12px;color:var(--ink2)}
+#fromCard b{display:block;font-size:16px;font-family:var(--serif);color:var(--ink)}
+#fromCard span{display:block;font-size:12px;color:var(--rose-d);margin-top:2px}
+
 /* ================= 版面調整 ================= */
 @media (min-width:700px){
   #hud{font-size:12px;flex:0 1 auto}
@@ -299,6 +314,10 @@ button{font:inherit;color:inherit;touch-action:manipulation}
     <p>一段關係裡的每個選擇，都會留下痕跡。</p>
   </div>
   <div class="menuWrap">
+    <div id="fromCard" hidden>
+      <canvas id="fromArt" class="art" width="96" height="64"></canvas>
+      <div><small>你的朋友走到了</small><b id="fromTitle"></b><span>你會走到哪一個結局？</span></div>
+    </div>
     <div class="menu">
       <button class="btn main" id="btnContinue" hidden>繼續遊戲<small id="contInfo"></small></button>
       <button class="btn main" id="btnStart">開始遊戲</button>
@@ -406,7 +425,8 @@ button{font:inherit;color:inherit;touch-action:manipulation}
     <div id="endStats"></div>
     <p id="endCount" class="note"></p>
     <div class="foot">
-      <button class="btn main" id="endShare">分享結局圖卡</button>
+      <button class="btn main" id="endLink">分享結局連結</button>
+      <button class="btn" id="endShare">分享結局圖卡</button>
       <button class="btn" id="endAgain">再玩一次</button>
       <button class="btn" id="endBook">結局之書</button>
       <button class="btn" id="endFortune" hidden>去問問小豬</button>
@@ -438,6 +458,30 @@ button{font:inherit;color:inherit;touch-action:manipulation}
   </div>
 </div>
 
+<!-- 分享連結 -->
+<div id="linkOv" class="ov">
+  <div class="panel" style="max-width:420px">
+    <span class="ribbon">分享結局</span>
+    <canvas id="linkArt" class="art framed" width="96" height="64"></canvas>
+    <h2 id="linkTitle" style="text-align:center"></h2>
+    <p class="note" style="text-align:center;margin-top:0">朋友點開連結，會看到你走到的結局，再開始他自己的故事。</p>
+    <div class="shareGrid">
+      <button class="sbtn" data-ch="native" id="lkNative" hidden><b>📤</b>分享到…</button>
+      <button class="sbtn" data-ch="line"><b style="background:#06c755">L</b>LINE</button>
+      <button class="sbtn" data-ch="threads"><b style="background:#111">@</b>Threads</button>
+      <button class="sbtn" data-ch="facebook"><b style="background:#1877f2">f</b>Facebook</button>
+      <button class="sbtn" data-ch="x"><b style="background:#111">𝕏</b>X</button>
+      <button class="sbtn" data-ch="copy"><b style="background:#e9799f">🔗</b>複製連結</button>
+    </div>
+    <input id="linkField" class="field" readonly style="font-size:13px;margin-top:12px">
+    <p class="note" id="linkMsg" style="text-align:center;min-height:1.2em"></p>
+    <div class="foot">
+      <button class="btn" id="linkCard">改分享圖卡</button>
+      <button class="btn soft" id="linkClose">關閉</button>
+    </div>
+  </div>
+</div>
+
 <!-- 分享圖卡 -->
 <div id="shareOv" class="ov">
   <div class="panel">
@@ -446,6 +490,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
     <p class="note">手機也可以長按圖片直接儲存。</p>
     <div class="foot">
       <button class="btn main" id="shareDo">分享／儲存圖片</button>
+      <button class="btn" id="shareToLink">改分享連結</button>
       <button class="btn soft" id="shareClose">關閉</button>
     </div>
   </div>
@@ -2474,7 +2519,7 @@ function pageHTML(i, side){
   return `<div class="page${sideCls}"><div class="pno">No.${i}</div>
     <div class="partwrap">${artTag(id, false)}<div class="stamp">已收錄</div></div>
     ${tag}<h3>${esc(e.title)}</h3><p>${esc(r ? r.text : neutral(e.text))}</p>${recLine}
-    <div class="pbtns"><button class="btn sm soft" data-go="0">← 目錄</button><button class="btn sm shareBtn" data-id="${id}">分享這一頁</button></div>${foot}</div>`;
+    <div class="pbtns"><button class="btn sm soft" data-go="0">← 目錄</button><button class="btn sm shareBtn" data-id="${id}">分享圖卡</button><button class="btn sm linkBtn" data-id="${id}">分享連結</button></div>${foot}</div>`;
 }
 
 function renderBook(dir){
@@ -2516,6 +2561,8 @@ $('#spread').addEventListener('click', e => {
   if (go){ const per = isWide() ? 2 : 1, to = Math.floor(+go.dataset.go / per), d = to < bookIdx ? -1 : 1; bookIdx = to; renderBook(d); return; }
   const sh = e.target.closest('.shareBtn');
   if (sh) openShare(sh.dataset.id);
+  const lk = e.target.closest('.linkBtn');
+  if (lk) openLink(lk.dataset.id);
 });
 (function swipe(){
   /* 只有明顯的左右滑才翻頁；上下捲動時就算手指有點斜，也不會翻頁。
@@ -2689,6 +2736,73 @@ $('#shareDo').addEventListener('click', async () => {
 });
 $('#shareClose').addEventListener('click', () => $('#shareOv').classList.remove('show'));
 $('#endShare').addEventListener('click', () => openShare(lastEnding));
+
+/* =========================================================
+   分享結局連結
+   每個結局都有一頁 e/結局ID.html，連結預覽會顯示該結局的畫面；
+   點進去後會轉回主頁，並帶上 ?from=結局ID
+   ========================================================= */
+const SITE_URL = 'https://iammay22.github.io/situationship/';
+let linkId = null;
+const endLink = (id, ch) => `${SITE_URL}e/${id}.html${ch ? '?c=' + ch : ''}`;
+const shareText = id => `我在《戀愛沒那麼簡單》走到了「${ENDINGS[id].title}」，你會走到哪一個結局？`;
+
+function openLink(id){
+  linkId = id;
+  paintScene($('#linkArt'), id, false);
+  $('#linkTitle').textContent = ENDINGS[id].title;
+  $('#linkField').value = endLink(id);
+  $('#linkMsg').textContent = '';
+  $('#lkNative').hidden = !navigator.share;
+  $('#shareOv').classList.remove('show');
+  $('#linkOv').classList.add('show');
+}
+async function copyText(t){
+  try { await navigator.clipboard.writeText(t); return true; }
+  catch(e){
+    const f = $('#linkField'), keep = f.value; f.value = t; f.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch(x){}
+    f.value = keep;
+    return ok;
+  }
+}
+document.querySelectorAll('.sbtn').forEach(b => b.addEventListener('click', async () => {
+  const ch = b.dataset.ch, id = linkId, txt = shareText(id);
+  track('share', {endId: id, endTitle: ENDINGS[id].title, opt: '連結-' + ch});
+  const url = endLink(id, ch === 'native' ? 'share' : ch);
+  const enc = encodeURIComponent;
+  if (ch === 'native'){
+    try { await navigator.share({title: '戀愛沒那麼簡單', text: txt, url}); } catch(e){}
+    return;
+  }
+  if (ch === 'copy'){
+    const ok = await copyText(txt + '\n' + url);
+    $('#linkMsg').textContent = ok ? '已複製，貼到任何地方都可以。' : '複製失敗，請長按上面的網址手動複製。';
+    return;
+  }
+  const go = {
+    line: `https://line.me/R/share?text=${enc(txt + '\n' + url)}`,
+    threads: `https://www.threads.net/intent/post?text=${enc(txt + '\n' + url)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`,
+    x: `https://twitter.com/intent/tweet?text=${enc(txt)}&url=${enc(url)}`
+  }[ch];
+  window.open(go, '_blank', 'noopener');
+}));
+$('#linkField').addEventListener('focus', e => e.target.select());
+$('#endLink').addEventListener('click', () => openLink(lastEnding));
+$('#linkClose').addEventListener('click', () => $('#linkOv').classList.remove('show'));
+$('#linkCard').addEventListener('click', () => { $('#linkOv').classList.remove('show'); openShare(linkId); });
+$('#shareToLink').addEventListener('click', () => openLink(shareId));
+
+/* 從朋友的分享連結進來：主頁顯示朋友走到的結局 */
+(function fromFriend(){
+  const id = new URLSearchParams(location.search).get('from');
+  if (!id || !ENDINGS[id]) return;
+  paintScene($('#fromArt'), id, false);
+  $('#fromTitle').textContent = `「${ENDINGS[id].title}」`;
+  $('#fromCard').hidden = false;
+})();
 
 /* =========================================================
    畫面切換
