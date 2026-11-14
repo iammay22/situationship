@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#fde4ec">
+<meta name="theme-color" content="#c9b8ec">
+<link rel="preload" as="image" href="assets/hero.webp" type="image/webp">
 <meta name="description" content="一款約 10 分鐘的戀愛文字冒險。曖昧、交往、爭吵、出軌與分手，每個選擇都會留下痕跡。">
 <title>戀愛沒那麼簡單</title>
 <meta property="og:type" content="website">
@@ -16,7 +17,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 8' shape-rendering='crispEdges'%3E%3Cpath fill='%23f7a8c0' d='M1 0h2v1H1zM5 0h2v1H5zM0 1h4v1H0zM4 1h4v1H4zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700&family=Silkscreen&display=swap" rel="stylesheet">
 <style>
 :root{
   /* 馬卡龍色系 */
@@ -53,44 +54,156 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .btn[aria-pressed="true"]{background:var(--rose);color:#fff}
 .btn.sm{font-size:14px;min-height:38px;padding:7px 16px}
 
-/* ================= 主頁（標題） ================= */
-#title{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px calc(60px + var(--safeB));overflow:hidden;
-  background:
-    radial-gradient(circle at 12% 18%,#ffe1ea 0 22%,transparent 23%),
-    radial-gradient(circle at 92% 10%,#e7defc 0 18%,transparent 19%),
-    radial-gradient(circle at 88% 78%,#d7f3e6 0 24%,transparent 25%),
-    radial-gradient(circle at 6% 88%,#fff0c4 0 20%,transparent 21%),
-    radial-gradient(circle at 50% 55%,#ffe6d6 0 35%,transparent 60%),
-    linear-gradient(160deg,#fde4ec 0%,#efe6fb 45%,#e3f5ee 100%)}
-#title::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.75) 1.5px,transparent 1.6px);background-size:22px 22px;opacity:.55;pointer-events:none}
+/* ================= 主頁（青春校園・韓系戀愛視覺小說） ================= */
+#title{--h-ink:#3e3358;--h-ink2:#776c8f;--h-rose:#ee8fb3;--h-lav:#a998e6;--h-sky:#9cc7f0;--h-cream:#fbf6f4;
+  position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;background:var(--h-cream);color:var(--h-ink)}
 #title.hide{display:none}
-#deco{position:absolute;inset:0;pointer-events:none}
-.mac{position:absolute;width:var(--w);height:calc(var(--w) * .78);animation:drift 7s ease-in-out infinite}
-.mac i{position:absolute;left:0;right:0;height:38%;border-radius:50%/60%;background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.06)}
-.mac i:nth-child(1){top:0}
-.mac i:nth-child(2){top:31%;height:38%;left:6%;right:6%;background:#fffaf4;border-radius:8px;box-shadow:none}
-.mac i:nth-child(3){bottom:0}
-@keyframes drift{50%{transform:translateY(-10px) rotate(4deg)}}
-.ht{position:absolute;bottom:-30px;image-rendering:pixelated;opacity:.8;animation:float linear infinite}
-@keyframes float{to{transform:translateY(-120vh) rotate(12deg)}}
+.pix{font-family:"Silkscreen","Courier New",monospace;font-weight:400;letter-spacing:.08em}
 
-.logo{position:relative;text-align:center;margin-bottom:26px}
-.logo small{display:inline-block;font-size:11px;letter-spacing:.32em;color:var(--ink2);padding:4px 14px;border:1px solid rgba(74,59,85,.25);border-radius:999px;background:rgba(255,255,255,.5);margin-bottom:14px}
-.logo h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,11vw,62px);line-height:1.18;letter-spacing:.06em;color:var(--ink);text-shadow:3px 3px 0 #fff,5px 5px 0 var(--rose)}
-.logo h1 em{font-style:normal;color:var(--rose-d)}
-.logo p{margin-top:16px;font-size:15px;line-height:1.8;color:var(--ink2)}
-.menuWrap{position:relative;width:min(290px,84vw)}
-.menu{position:relative;display:flex;flex-direction:column;gap:14px;width:100%}
-#btnFortune{background:var(--lemon);border-color:var(--ink);box-shadow:0 3px 0 var(--ink);white-space:nowrap}
-.menu .btn{width:100%;font-size:17px;min-height:52px}
-.menu .btn.soft{display:none}
-#btnContinue{line-height:1.3}
-#btnContinue small{display:block;font-size:12px;font-weight:500;opacity:.9;margin-top:2px}
-#progress{position:relative;margin-top:18px;font-size:13px;color:var(--ink2);min-height:1em}
-#progress b{color:var(--rose-d)}
-.credit{position:absolute;left:0;right:0;bottom:calc(14px + var(--safeB));display:flex;justify-content:center;align-items:center;gap:10px;font-size:12px;color:var(--ink2);letter-spacing:.06em}
+/* 插畫 */
+.hero{position:relative;flex:1 1 auto;min-height:32dvh;overflow:hidden}
+.hero picture{position:absolute;inset:0}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:24% 40%;display:block;animation:heroIn 1.6s ease both}
+@keyframes heroIn{from{opacity:0;transform:scale(1.05)}to{opacity:1;transform:none}}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(62,51,88,.18) 0,transparent 18%,transparent 62%,rgba(251,246,244,.75) 88%,var(--h-cream) 100%)}
+.heroSpace{display:none}
+
+/* 上方狀態列 */
+.topbar{position:absolute;top:calc(12px + var(--safeT));left:14px;right:14px;z-index:3;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;font-size:10px;color:#fff;background:rgba(62,51,88,.32);border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  clip-path:polygon(0 3px,3px 3px,3px 0,calc(100% - 3px) 0,calc(100% - 3px) 3px,100% 3px,100% calc(100% - 3px),calc(100% - 3px) calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,3px calc(100% - 3px),0 calc(100% - 3px))}
+.chip canvas{width:11px;height:10px;image-rendering:pixelated}
+.chip .dot{width:6px;height:6px;background:#ffd38a;box-shadow:0 0 6px #ffd38a;animation:blinkDot 1.6s steps(2) infinite}
+@keyframes blinkDot{50%{opacity:.25}}
+
+/* 主要內容 */
+.home{position:relative;z-index:2;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:56px 22px calc(54px + var(--safeB));margin-top:-56px;background:linear-gradient(180deg,rgba(251,246,244,0) 0,rgba(251,246,244,.92) 44px,var(--h-cream) 72px)}
+.logo{position:relative;margin-bottom:18px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:10px;color:var(--h-lav);margin-bottom:10px}
+.kicker::before,.kicker::after{content:"";width:18px;height:2px;background:currentColor;opacity:.6}
+.logo h1{display:flex;flex-direction:column;align-items:center;font-family:"Noto Sans TC",sans-serif;font-weight:900;line-height:1.08;letter-spacing:.04em;color:var(--h-ink)}
+.logo h1 .l1{font-size:clamp(22px,6vw,30px);font-weight:700;letter-spacing:.32em;color:var(--h-ink2);margin-bottom:6px;padding-left:.32em}
+.logo h1 .l2{position:relative;font-size:clamp(40px,11.5vw,64px);filter:drop-shadow(3px 3px 0 #ffd9e7) drop-shadow(2px 2px 0 rgba(169,152,230,.3))}
+.logo h1 .l2 em{font-style:normal;background:linear-gradient(180deg,var(--h-ink) 0 55%,#8f6fc9 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo .tag{margin-top:12px;font-size:14px;line-height:1.8;color:var(--h-ink2);letter-spacing:.06em}
+.logo .tag b{color:var(--h-rose);font-weight:700}
+.titleHeart{position:absolute;right:-26px;top:-8px;width:22px;height:20px;image-rendering:pixelated;animation:beat 1.4s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.18)}24%{transform:scale(1)}36%{transform:scale(1.12)}}
+
+/* 選單按鈕：毛玻璃＋像素切角 */
+.menuWrap{position:relative;width:min(320px,86vw)}
+.menu{display:flex;flex-direction:column;gap:11px}
+.hbtn{--cut:5px;position:relative;display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:0 18px;border:none;cursor:pointer;text-align:left;
+  color:var(--h-ink);background:rgba(255,255,255,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 0 0 0 1.5px rgba(169,152,230,.45),0 6px 18px rgba(62,51,88,.10);
+  clip-path:polygon(0 var(--cut),var(--cut) var(--cut),var(--cut) 0,calc(100% - var(--cut)) 0,calc(100% - var(--cut)) var(--cut),100% var(--cut),100% calc(100% - var(--cut)),calc(100% - var(--cut)) calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,var(--cut) 100%,var(--cut) calc(100% - var(--cut)),0 calc(100% - var(--cut)));
+  transition:transform .15s,background .2s}
+.hbtn[hidden]{display:none}
+.hbtn:hover{background:rgba(255,255,255,.9)}
+.hbtn:active{transform:translateY(2px) scale(.99)}
+.hbtn .ic{flex:0 0 auto;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.hbtn .ic svg{width:18px;height:18px;shape-rendering:crispEdges}
+.hbtn .tx{flex:1;display:flex;flex-direction:column;font-size:16px;font-weight:700;letter-spacing:.08em;line-height:1.3}
+.hbtn .tx small{font-size:11px;font-weight:500;letter-spacing:.02em;opacity:.8}
+.hbtn .en{font-size:9px;opacity:.55}
+.hbtn.main{color:#fff;background:linear-gradient(100deg,#a998e6 0%,#c9a2e0 45%,#f09bbd 100%);box-shadow:0 8px 22px rgba(169,120,210,.35)}
+.hbtn.main:hover{filter:brightness(1.04)}
+.hbtn.main .en{opacity:.85}
+.hbtn.main::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:shine 4.5s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-60%}100%{left:130%}}
+#btnFortune .ic{font-size:17px}
+
+/* 收集進度 */
+#progress{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;font-size:10px;color:var(--h-ink2);min-height:12px}
+#progress .bar{width:110px;height:6px;background:rgba(169,152,230,.22);position:relative}
+#progress .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--h-lav),var(--h-rose))}
+
+/* 頁尾 */
+.credit{position:absolute;left:0;right:0;bottom:calc(14px + var(--safeB));z-index:2;display:flex;justify-content:center;align-items:center;gap:10px;font-size:10px;color:var(--h-ink2);letter-spacing:.08em}
 .credit .sep{opacity:.4}
-.credit button{background:none;border:none;color:var(--ink2);font-size:12px;text-decoration:underline;cursor:pointer;padding:6px 4px;opacity:.75}
+.credit button{background:none;border:none;color:var(--h-ink2);font-size:11px;text-decoration:underline;cursor:pointer;padding:6px 4px;opacity:.7;font-family:"Noto Sans TC",sans-serif;letter-spacing:0}
+
+/* 裝飾：拍立得、紙飛機、像素愛心、閃光 */
+#deco{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.pola{position:absolute;width:var(--w,92px);padding:6px 6px 22px;background:#fff;box-shadow:0 8px 20px rgba(62,51,88,.22);transform:rotate(var(--r,8deg));animation:polaFloat 6s ease-in-out infinite}
+.pola img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.pola span{position:absolute;left:0;right:0;bottom:5px;text-align:center;font-size:8px;color:var(--h-ink2)}
+@keyframes polaFloat{50%{transform:rotate(var(--r,8deg)) translateY(-7px)}}
+.plane{position:absolute;width:34px;height:24px;image-rendering:pixelated;animation:fly 16s linear infinite;opacity:0}
+@keyframes fly{0%{opacity:0;transform:translate(-10vw,14vh) rotate(-8deg)}8%{opacity:.95}45%{transform:translate(45vw,4vh) rotate(-14deg)}85%{opacity:.95}100%{opacity:0;transform:translate(110vw,-6vh) rotate(-4deg)}}
+.trail{position:absolute;height:2px;width:40px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.9) 0 6px,transparent 6px 11px);transform-origin:right center}
+.ht{position:absolute;bottom:-24px;image-rendering:pixelated;opacity:.85;animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0)}100%{transform:translateY(-105dvh)}}
+.spk{position:absolute;width:10px;height:10px;image-rendering:pixelated;animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:1;transform:scale(1)}}
+
+/* 朋友分享卡 */
+#fromCard{display:flex;gap:12px;align-items:center;margin:0 0 14px;padding:9px 12px;background:rgba(255,255,255,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1.5px rgba(238,143,179,.45),0 6px 18px rgba(62,51,88,.10);text-align:left;
+  clip-path:polygon(0 4px,4px 4px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 4px,100% 4px,100% calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,4px calc(100% - 4px),0 calc(100% - 4px))}
+#fromCard[hidden]{display:none}
+#fromCard .art{width:78px;flex:0 0 auto;border-radius:3px}
+#fromCard small{display:block;font-size:11px;color:var(--h-ink2)}
+#fromCard b{display:block;font-size:15px;color:var(--h-ink)}
+#fromCard span{display:block;font-size:11px;color:var(--h-rose);margin-top:2px}
+
+/* ---- 平板直向 ---- */
+@media (min-width:600px) and (orientation:portrait){
+  .hero img{object-position:26% 40%}
+  .home{padding:64px 40px calc(64px + var(--safeB));margin-top:-64px}
+  .logo h1 .l2{font-size:72px}
+  .logo h1 .l1{font-size:32px}
+  .logo .tag{font-size:16px}
+  .menuWrap{width:400px}
+  .hbtn{min-height:60px}
+  .hbtn .tx{font-size:17px}
+  .topbar{left:24px;right:24px;top:calc(20px + var(--safeT))}
+  .chip{font-size:12px;padding:8px 14px}
+}
+
+/* ---- 橫向：電腦、平板橫放、手機橫放 ---- */
+@media (min-aspect-ratio:5/4){
+  .hero{position:absolute;inset:0}
+  .hero img{object-position:center 40%}
+  .hero::after{background:linear-gradient(90deg,transparent 0,transparent 38%,rgba(251,246,244,.35) 52%,rgba(251,246,244,.82) 66%,rgba(251,246,244,.9) 100%),linear-gradient(180deg,rgba(62,51,88,.12),transparent 20%)}
+  .heroSpace{display:none}
+  .home{position:absolute;right:max(5vw,calc((100vw - 1500px) / 2));top:50%;transform:translateY(-50%);width:min(430px,38vw);margin:0;padding:0;background:none;align-items:flex-start;text-align:left}
+  .logo h1{align-items:flex-start}
+  .logo h1 .l1{padding-left:0}
+  .logo h1 .l2{font-size:clamp(44px,4.6vw,76px)}
+  .kicker::before{display:none}
+  .menuWrap{width:100%}
+  #progress{justify-content:flex-start}
+  .credit{left:auto;right:max(5vw,calc((100vw - 1500px) / 2));width:min(430px,38vw);justify-content:flex-start}
+  .topbar{left:24px;right:24px;top:20px}
+}
+@media (min-aspect-ratio:5/4) and (max-height:520px){
+  .logo{margin-bottom:10px}
+  .kicker{margin-bottom:4px}
+  .logo h1 .l1{font-size:18px;margin-bottom:2px}
+  .logo h1 .l2{font-size:34px}
+  .logo .tag{display:none}
+  .menu{gap:7px}
+  .hbtn{min-height:40px}
+  .hbtn .tx{font-size:14px}
+  .hbtn .tx small{display:none}
+  #progress{margin-top:8px}
+  #fromCard{margin-bottom:8px;padding:6px 10px}
+  #fromCard .art{width:56px}
+  .credit{bottom:6px}
+  .topbar{top:10px}
+  .pola{display:none}
+}
+/* 很矮的直向手機（例如 iPhone SE） */
+@media (max-aspect-ratio:5/4) and (max-height:700px){
+  .home{padding-bottom:calc(44px + var(--safeB))}
+  .logo{margin-bottom:12px}
+  .logo h1 .l2{font-size:40px}
+  .logo .tag{display:none}
+  .hbtn{min-height:48px}
+  .menu{gap:9px}
+  .pola{--w:70px !important}
+}
 
 /* ================= 遊戲舞台 ================= */
 #game{position:fixed;inset:0;display:none;overflow:hidden;background:#fde4ec}
@@ -264,12 +377,6 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 #lkNative b{background:#cdbdf3}
 #linkArt{max-width:200px}
 #linkOv h2{margin:4px 0 2px}
-#fromCard{position:relative;display:flex;gap:12px;align-items:center;margin:0 0 16px;padding:10px 12px;border-radius:16px;background:rgba(255,250,244,.9);box-shadow:0 4px 14px rgba(74,59,85,.12);text-align:left}
-#fromCard[hidden]{display:none}
-#fromCard .art{width:84px;flex:0 0 auto;border-radius:8px}
-#fromCard small{display:block;font-size:12px;color:var(--ink2)}
-#fromCard b{display:block;font-size:16px;font-family:var(--serif);color:var(--ink)}
-#fromCard span{display:block;font-size:12px;color:var(--rose-d);margin-top:2px}
 
 /* ================= 版面調整 ================= */
 @media (min-width:700px){
@@ -294,8 +401,6 @@ button{font:inherit;color:inherit;touch-action:manipulation}
   .chHead{width:100%;padding:4px}
   .choice{flex:1 1 calc(50% - 8px);min-height:42px;padding:8px 12px;font-size:15px}
   #delta{top:calc(50px + var(--safeT))}
-  #title{flex-direction:row;gap:40px;padding-bottom:40px}
-  .logo{margin-bottom:0}.logo h1{font-size:40px}.logo p{display:none}
   .spread{height:84dvh}
   .cover{width:auto;height:76dvh}
   .bookNav{margin-top:6px}
@@ -307,27 +412,52 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 
 <!-- ================= 主頁 ================= -->
 <div id="title">
+  <div class="hero">
+    <picture>
+      <source srcset="assets/hero.webp" type="image/webp">
+      <img src="assets/hero.jpg" alt="放學後的校園頂樓，櫻花和城市天際線" fetchpriority="high">
+    </picture>
+  </div>
   <div id="deco"></div>
-  <div class="logo">
-    <small>LOVE IS NOT THAT SIMPLE</small>
-    <h1>戀愛<br><em>沒那麼</em>簡單</h1>
-    <p>一段關係裡的每個選擇，都會留下痕跡。</p>
+  <div class="topbar">
+    <span class="chip pix"><canvas id="chipHeart" width="9" height="8"></canvas>AFTER SCHOOL</span>
+    <span class="chip pix"><i class="dot"></i><span id="clock">17:42</span></span>
   </div>
-  <div class="menuWrap">
-    <div id="fromCard" hidden>
-      <canvas id="fromArt" class="art" width="96" height="64"></canvas>
-      <div><small>你的朋友走到了</small><b id="fromTitle"></b><span>你會走到哪一個結局？</span></div>
+  <div class="heroSpace"></div>
+  <main class="home">
+    <div class="logo">
+      <span class="kicker pix">SITUATIONSHIP</span>
+      <h1><span class="l1">戀愛</span><span class="l2"><em>沒那麼簡單</em><canvas class="titleHeart" id="titleHeart" width="9" height="8"></canvas></span></h1>
+      <p class="tag">放學後的那條路，<b>每個選擇</b>都會留下痕跡。</p>
     </div>
-    <div class="menu">
-      <button class="btn main" id="btnContinue" hidden>繼續遊戲<small id="contInfo"></small></button>
-      <button class="btn main" id="btnStart">開始遊戲</button>
-      <button class="btn" id="btnBook">結局之書</button>
-      <button class="btn" id="btnFortune" hidden>🐷 去問問小豬占卜</button>
+    <div class="menuWrap">
+      <div id="fromCard" hidden>
+        <canvas id="fromArt" class="art" width="96" height="64"></canvas>
+        <div><small>你的朋友走到了</small><b id="fromTitle"></b><span>你會走到哪一個結局？</span></div>
+      </div>
+      <div class="menu">
+        <button class="hbtn main" id="btnContinue" hidden>
+          <span class="ic"><svg viewBox="0 0 8 8"><path fill="#fff" d="M2 1h1v1h1v1h1v1h-1v1h-1v1h-1z"/></svg></span>
+          <span class="tx">繼續遊戲<small id="contInfo"></small></span><span class="en pix">CONTINUE</span>
+        </button>
+        <button class="hbtn main" id="btnStart">
+          <span class="ic"><svg viewBox="0 0 8 8"><path fill="#fff" d="M2 1h1v1h1v1h1v1h1v1h-1v1h-1v1h-1v1h-1z"/></svg></span>
+          <span class="tx" id="startLabel">開始遊戲</span><span class="en pix" id="startEn">NEW GAME</span>
+        </button>
+        <button class="hbtn" id="btnBook">
+          <span class="ic"><svg viewBox="0 0 8 8"><path fill="#a998e6" d="M1 1h3v1h1V1h2v6H5v-1H4v1H1zM2 2v4h2V3H3V2zM5 3v3h1V2H5z"/></svg></span>
+          <span class="tx">結局之書</span><span class="en pix">ENDINGS</span>
+        </button>
+        <button class="hbtn" id="btnFortune" hidden>
+          <span class="ic">🐷</span>
+          <span class="tx">去問問小豬占卜</span><span class="en pix">FORTUNE</span>
+        </button>
+      </div>
+      <div id="progress" class="pix"></div>
     </div>
-    <div id="progress" style="text-align:center"></div>
-  </div>
+  </main>
   <div class="credit">
-    <span>made by may22</span><span class="sep">｜</span><button id="btnReset">清除紀錄</button>
+    <span class="pix">MADE BY MAY22</span><span class="sep">｜</span><button id="btnReset">清除紀錄</button>
   </div>
 </div>
 
@@ -2811,10 +2941,12 @@ function refreshProgress(){
   const p = loadProgress();
   $('#btnContinue').hidden = !p;
   $('#btnStart').classList.toggle('main', !p);
-  $('#btnStart').textContent = p ? '重新開始' : '開始遊戲';
+  $('#startLabel').textContent = p ? '重新開始' : '開始遊戲';
+  $('#startEn').textContent = p ? 'RESTART' : 'NEW GAME';
+  $('#btnStart svg path').setAttribute('fill', p ? '#a998e6' : '#fff');
   if (p) $('#contInfo').textContent = `${p.state.name}・${p.chapName}`;
   const n = loadUnlocked().length;
-  $('#progress').innerHTML = n ? `已收集結局 <b>${n}</b> / ${ORDER.length}` : '';
+  $('#progress').innerHTML = n ? `<span>ENDINGS</span><span class="bar"><i style="width:${n / ORDER.length * 100}%"></i></span><span>${n}/${ORDER.length}</span>` : '';
 }
 function closeAll(){ document.querySelectorAll('.ov').forEach(o => o.classList.remove('show')); }
 function openTitle(){
@@ -2899,30 +3031,66 @@ if (FORTUNE_URL){
   });
 }
 
-/* 主頁裝飾：馬卡龍與像素愛心 */
+/* 主頁裝飾：拍立得、紙飛機、像素愛心、閃光、時鐘 */
 (function decorate(){
   const deco = $('#deco');
-  const macs = [
-    ['#f7b6c9', '8%', '14%', 64], ['#cdbdf3', '80%', '9%', 52], ['#b4e7d1', '84%', '70%', 70],
-    ['#fde9a6', '6%', '76%', 56], ['#ffcfb3', '70%', '88%', 42], ['#b7dcf7', '18%', '45%', 38]
-  ];
-  macs.forEach(([c, l, t, w], k) => {
-    const m = document.createElement('div');
-    m.className = 'mac';
-    m.style.cssText = `--c:${c};--w:${w}px;left:${l};top:${t};animation-delay:-${k * 1.3}s`;
-    m.innerHTML = '<i></i><i></i><i></i>';
-    deco.appendChild(m);
-  });
-  const colors = ['#f7a8c0', '#cdbdf3', '#9fdcc0', '#f6d77c', '#ffb899'];
-  for (let i = 0; i < 12; i++){
+  const wide = () => matchMedia('(min-aspect-ratio:5/4)').matches;
+
+  // 拍立得
+  const pola = document.createElement('div');
+  pola.className = 'pola';
+  pola.innerHTML = '<img src="assets/polaroid.jpg" alt=""><span class="pix">AFTER SCHOOL</span>';
+  deco.appendChild(pola);
+  const placePola = () => {
+    pola.style.cssText = wide()
+      ? '--w:118px;--r:-7deg;left:3.5vw;bottom:7vh'
+      : (innerWidth >= 600 ? '--w:104px;--r:8deg;right:28px;top:calc(84px + var(--safeT))' : '--w:76px;--r:8deg;right:14px;top:calc(64px + var(--safeT))');
+  };
+  placePola(); addEventListener('resize', placePola);
+
+  // 像素紙飛機
+  const plane = document.createElement('canvas');
+  plane.width = 17; plane.height = 12; plane.className = 'plane';
+  const pc = plane.getContext('2d');
+  const P = ["................x",".............xxx.","..........xxxwx..",".......xxxwwwx...","....xxxwwwwwx....",".xxxwwwwwwwx.....","xxxxxwwwwx.......","....xxsswx.......","......xssx.......",".......xsx.......","........x........","................."];
+  P.forEach((r, y) => [...r].forEach((ch, x) => { if (ch !== '.'){ pc.fillStyle = ch === 'x' ? '#8f86b8' : ch === 's' ? '#d9d2f0' : '#ffffff'; pc.fillRect(x, y, 1, 1); } }));
+  plane.style.cssText = 'left:0;top:12%';
+  deco.appendChild(plane);
+
+  // 上升的像素愛心
+  const colors = ['#f7a8c4', '#d6c7f5', '#ffffff', '#ffc9dc', '#bcd9f5'];
+  for (let i = 0; i < 9; i++){
     const c = document.createElement('canvas');
     c.width = 9; c.height = 8; c.className = 'ht';
     drawHeart(c, colors[i % colors.length]);
-    const s = 12 + Math.random() * 16;
-    c.style.cssText = `left:${Math.random() * 100}%;width:${s}px;height:${s * .9}px;animation-duration:${12 + Math.random() * 10}s;animation-delay:-${Math.random() * 20}s`;
+    const sz = 9 + Math.random() * 11;
+    c.style.cssText = `left:${4 + Math.random() * 92}%;width:${sz}px;height:${sz * .9}px;animation-duration:${14 + Math.random() * 12}s;animation-delay:-${Math.random() * 24}s`;
     deco.appendChild(c);
   }
+
+  // 閃光
+  const spark = document.createElement('canvas');
+  spark.width = 5; spark.height = 5;
+  const sc = spark.getContext('2d'); sc.fillStyle = '#fff';
+  [[2,0],[2,1],[0,2],[1,2],[2,2],[3,2],[4,2],[2,3],[2,4]].forEach(([x, y]) => sc.fillRect(x, y, 1, 1));
+  const url = spark.toDataURL();
+  [[12, 9], [34, 6], [58, 14], [76, 8], [88, 22], [66, 30], [22, 26]].forEach(([x, y], k) => {
+    const im = document.createElement('img');
+    im.src = url; im.alt = ''; im.className = 'spk';
+    im.style.cssText = `left:${x}%;top:${y}%;animation-delay:${k * .55}s`;
+    deco.appendChild(im);
+  });
+
+  drawHeart($('#titleHeart'), '#f39bbd');
+  drawHeart($('#chipHeart'), '#ffd0e0');
   drawHeart($('#cvHeart'), '#fffaf4');
+
+  // 狀態列時鐘
+  const tick = () => {
+    const d = new Date();
+    $('#clock').textContent = `${d.getHours() < 12 ? 'AM' : 'PM'} ${String(d.getHours() % 12 || 12).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  };
+  tick(); setInterval(tick, 20000);
 })();
 
 updateHud();
