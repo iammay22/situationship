@@ -59,7 +59,8 @@ button{font:inherit;color:inherit;touch-action:manipulation}
   font-family:"LXGW WenKai TC","Noto Sans TC",sans-serif;color:var(--chalk);
   background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0 2px,transparent 2px 9px),linear-gradient(180deg,#9a6840,#7a4d2c)}
 #title.hide{display:none}
-.chalk{filter:url(#chalkFx)}
+/* 粉筆顆粒：用一張只算一次的雜訊圖當遮罩，不再每次重畫都跑 SVG 濾鏡（原本會很卡）。按鈕的遮罩放在子元素上，外圈圓圈才不會被裁掉 */
+.chalk:not(.cbtn),.cbtn.chalk>*,.cbtn.chalk::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");-webkit-mask-size:160px 160px;mask-size:160px 160px}
 
 /* 黑板 */
 .board{position:absolute;top:12px;left:12px;right:12px;bottom:calc(var(--trayH) + var(--safeB));overflow:hidden;border-radius:4px;
@@ -439,15 +440,6 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 
 <!-- ================= 主頁 ================= -->
 <div id="title">
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <filter id="chalkFx" x="-5%" y="-10%" width="110%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4" result="noise"/>
-      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75" result="grain"/>
-      <feComposite in="SourceGraphic" in2="grain" operator="in" result="grainy"/>
-      <feTurbulence type="turbulence" baseFrequency=".045" numOctaves="2" seed="9" result="wobble"/>
-      <feDisplacementMap in="grainy" in2="wobble" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </svg>
   <div class="board">
     <div class="lesson chalk">戀愛學・第 <span>1</span> 堂</div>
     <div class="duty chalk"><b id="boardDate">11 月 14 日</b><br>值日生　may22</div>
@@ -464,10 +456,10 @@ button{font:inherit;color:inherit;touch-action:manipulation}
           <div><small>你的朋友走到了</small><b id="fromTitle"></b><span>你會走到哪一個結局？</span></div>
         </div>
         <div class="menu">
-          <button class="cbtn main chalk" id="btnContinue" hidden><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3" class="chalk"/></svg><span class="arr">▶</span><span class="lbl">繼續遊戲<small id="contInfo"></small></span></button>
-          <button class="cbtn main chalk" id="btnStart"><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3" class="chalk"/></svg><span class="arr">▶</span><span class="lbl" id="startLabel">開始遊戲</span></button>
-          <button class="cbtn chalk" id="btnBook"><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3" class="chalk"/></svg><span class="lbl">結局之書</span></button>
-          <button class="cbtn chalk" id="btnFortune" hidden><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3" class="chalk"/></svg><span class="lbl">去問問小豬占卜</span></button>
+          <button class="cbtn main chalk" id="btnContinue" hidden><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="arr">▶</span><span class="lbl">繼續遊戲<small id="contInfo"></small></span></button>
+          <button class="cbtn main chalk" id="btnStart"><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="arr">▶</span><span class="lbl" id="startLabel">開始遊戲</span></button>
+          <button class="cbtn chalk" id="btnBook"><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="lbl">結局之書</span></button>
+          <button class="cbtn chalk" id="btnFortune" hidden><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="lbl">去問問小豬占卜</span></button>
         </div>
         <div id="progress" class="chalk"></div>
       </div>
