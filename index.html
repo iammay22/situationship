@@ -236,7 +236,11 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 }
 
 /* ================= 遊戲舞台 ================= */
-#game{position:fixed;inset:0;display:none;overflow:hidden;background:#fde4ec}
+#game{position:fixed;inset:0;display:none;overflow:hidden;background-color:var(--edgeT,#fde4ec)}
+/* Safari 會抓貼著上下邊緣的「純色」元素來決定網址列、工具列的顏色，漸層抓不到，所以上下各放一條同色的純色條 */
+#game .edge{position:fixed;left:0;right:0;z-index:0;pointer-events:none;transition:background-color .6s}
+#game .edge.top{top:0;height:calc(var(--safeT) + 6px);background-color:var(--edgeT)}
+#game .edge.bot{bottom:0;height:calc(var(--safeB) + 6px);background-color:var(--edgeB)}
 .playing #game{display:block}
 #bg{position:absolute;inset:0;transition:background .6s}
 #bg::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.35) 1.5px,transparent 1.6px);background-size:22px 22px;pointer-events:none}
@@ -565,6 +569,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 <!-- ================= 遊戲 ================= -->
 <div id="game">
   <div id="bg"></div>
+  <div class="edge top"></div><div class="edge bot"></div>
   <div id="chara" class="hide"><canvas id="sp" width="20" height="24"></canvas></div>
   <div id="top">
     <div id="hud">
