@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2e4b3f">
+<meta name="theme-color" content="#9a6840" id="themeColor">
 <meta name="description" content="一款約 10 分鐘的戀愛文字冒險。曖昧、交往、爭吵、出軌與分手，每個選擇都會留下痕跡。">
 <title>戀愛沒那麼簡單</title>
 <meta property="og:type" content="website">
@@ -39,7 +39,9 @@
   --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:#fde4ec;overflow:hidden}
+html,body{height:100%;overflow:hidden}
+html{--edgeT:#9a6840;--edgeB:#6e4426;background:linear-gradient(180deg,var(--edgeT) 0 50%,var(--edgeB) 50% 100%) fixed;transition:--edgeT .6s}
+body{background:transparent}
 body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:var(--ink);-webkit-user-select:none;user-select:none}
 button{font:inherit;color:inherit;touch-action:manipulation}
 .male{color:var(--male);font-weight:700}
@@ -63,7 +65,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .chalk:not(.cbtn),.cbtn.chalk>*,.cbtn.chalk::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");-webkit-mask-size:160px 160px;mask-size:160px 160px}
 
 /* 黑板 */
-.board{position:absolute;top:12px;left:12px;right:12px;bottom:calc(var(--trayH) + var(--safeB));overflow:hidden;border-radius:4px;
+.board{position:absolute;top:calc(12px + var(--safeT));left:12px;right:12px;bottom:calc(var(--trayH) + var(--safeB));overflow:hidden;border-radius:4px;
   background-color:var(--board);
   background-image:
     radial-gradient(ellipse 38% 22% at 22% 30%,rgba(255,255,255,.07),transparent 70%),
@@ -2554,7 +2556,14 @@ function pickFresh(arr){
 /* =========================================================
    畫面元件
    ========================================================= */
-function setBg(name){ curBg = BG[name] ? name : 'campus'; $('#bg').style.background = BG[curBg]; }
+function setBg(name){ curBg = BG[name] ? name : 'campus'; $('#bg').style.background = BG[curBg]; edgeFromBg(BG[curBg]); }
+/* 手機上下延伸：讓瀏覽器頂部、底部和回彈區的顏色跟著畫面走 */
+function setEdges(top, bottom){
+  const r = document.documentElement.style;
+  r.setProperty('--edgeT', top); r.setProperty('--edgeB', bottom);
+  const m = document.getElementById('themeColor'); if (m) m.setAttribute('content', top);
+}
+function edgeFromBg(g){ const c = g.match(/#[0-9a-f]{6}/gi) || ['#fde4ec']; setEdges(c[0], c[c.length - 1]); }
 
 /* 進度存檔：每到一個新的劇情節點就存一次，離開網頁再回來可以繼續 */
 function saveProgress(id){
@@ -3383,6 +3392,7 @@ function openTitle(){
   cancelAuto(); closeAll();
   $('#title').classList.remove('hide');
   document.body.classList.remove('playing');
+  setEdges('#9a6840', '#6e4426');
   refreshProgress();
 }
 function openSetup(){ $('#setup').classList.add('show'); setSetupGender(setupGender); }
