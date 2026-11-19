@@ -305,6 +305,8 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 
 #tip .panel{max-width:480px}
 #tip .ribbon{background:var(--mint)}
+#tipNew{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;letter-spacing:.08em;padding:2px 10px;border-radius:999px;background:var(--rose,#f6b3c8);color:#fff;vertical-align:2px}
+
 
 /* 回顧 */
 .lg{padding:9px 0;border-bottom:1px dashed #ecdccf;font-size:15px;line-height:1.75}
@@ -368,6 +370,16 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .bookNav .btn{min-width:48px;padding:8px 14px}
 .bookClose{position:absolute;top:calc(12px + var(--safeT));right:12px}
 .bookWrap{display:flex;flex-direction:column;align-items:center}
+/* 心理學圖鑑：藍色那本 */
+.cover.blue{background:linear-gradient(135deg,#a9d3ef 0%,#86b9e0 55%,#6a9cd0 100%)}
+.cover.blue::before{border-color:rgba(240,248,255,.85);box-shadow:inset 0 0 0 4px rgba(240,248,255,.25)}
+#bookOv.tipMode .page .stamp{border-color:#5b8fc4;color:#5b8fc4}
+#bookOv.tipMode .page .ptag{background:#d4e8f7}
+#bookOv.tipMode .toc li:active{background:#e6f1fa}
+.tocCh{display:flex;justify-content:space-between;font-family:var(--serif);font-weight:700;font-size:14px;margin:14px 0 2px;padding-bottom:3px;border-bottom:1px dashed #d8c6b4}
+.tocCh small{font-family:inherit;font-weight:400;color:var(--ink2);font-size:12px}
+.tocScroll{flex:1;min-height:0;overflow-y:auto;padding-bottom:24px;-webkit-overflow-scrolling:touch}
+.page .psrc{font-size:12px;color:var(--ink2);margin:8px 0 10px;line-height:1.6}
 
 /* ================= 分享圖卡 ================= */
 #shareOv .panel{max-width:420px;text-align:center}
@@ -459,6 +471,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
           <button class="cbtn main chalk" id="btnContinue" hidden><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="arr">▶</span><span class="lbl">繼續遊戲<small id="contInfo"></small></span></button>
           <button class="cbtn main chalk" id="btnStart"><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="arr">▶</span><span class="lbl" id="startLabel">開始遊戲</span></button>
           <button class="cbtn chalk" id="btnBook"><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="lbl">結局之書</span></button>
+          <button class="cbtn chalk" id="btnTipBook"><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="lbl">心理學圖鑑</span></button>
           <button class="cbtn chalk" id="btnFortune" hidden><svg class="box" viewBox="0 0 300 54" preserveAspectRatio="none"><rect x="3" y="4" width="294" height="46" rx="3"/></svg><span class="lbl">去問問小豬占卜</span></button>
         </div>
         <div id="progress" class="chalk"></div>
@@ -530,7 +543,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 <!-- 小知識 -->
 <div id="tip" class="ov">
   <div class="panel">
-    <span class="ribbon">心理學小知識</span>
+    <span class="ribbon">心理學小知識</span><span id="tipNew" hidden>新收錄</span>
     <h2 id="tipTitle"></h2>
     <p id="tipBody"></p>
     <p id="tipSrc" class="note"></p>
@@ -574,6 +587,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
       <button class="btn" id="endShare">分享結局圖卡</button>
       <button class="btn" id="endAgain">再玩一次</button>
       <button class="btn" id="endBook">結局之書</button>
+      <button class="btn" id="endTipBook">心理學圖鑑</button>
       <button class="btn" id="endFortune" hidden>去問問小豬</button>
       <button class="btn soft" id="endBack">回到主頁</button>
     </div>
@@ -586,8 +600,8 @@ button{font:inherit;color:inherit;touch-action:manipulation}
   <div class="bookWrap">
     <div id="book">
       <div class="cover" id="cover">
-        <div class="cv-small">THE BOOK OF ENDINGS</div>
-        <h3>戀愛<br>結局之書</h3>
+        <div class="cv-small" id="cvSmall">THE BOOK OF ENDINGS</div>
+        <h3 id="cvTitle">戀愛<br>結局之書</h3>
         <canvas class="cv-heart" id="cvHeart" width="9" height="8"></canvas>
         <div class="cv-prog" id="cvProg"></div>
         <div class="cv-open">點一下翻開</div>
@@ -648,6 +662,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 const SAVE_KEY = 'love-sim-endings-v1';
 const REC_KEY = 'love-sim-records-v1';
 const PROG_KEY = 'love-sim-progress-v1';
+const TIP_KEY = 'love-sim-tips-v1';
 const TYPE_MS = 30;
 const STAT_MIN = -5, STAT_MAX = 10;
 const AUTO_DELAY = 1500, SKIP_DELAY = 220;
@@ -716,6 +731,17 @@ function drawChara(canvas, shape, pal){
 
 /* 像素愛心 */
 const HEART = ["..xx.xx..",".xxxxxxx.","xxxxxxxxx","xxxxxxxxx",".xxxxxxx.","..xxxxx..","...xxx...","....x...."];
+const BULB = ['..xxxxx..','.xxxxxxx.','.xxxxxxx.','.xxxxxxx.','..xxxxx..','...xxx...','...ooo...','....o....'];
+function drawBulb(canvas, color){
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 9, 8);
+  BULB.forEach((r, y) => [...r].forEach((c, x) => {
+    if (c === '.') return;
+    ctx.fillStyle = c === 'x' ? color : 'rgba(255,255,255,.55)';
+    ctx.fillRect(x, y, 1, 1);
+  }));
+  ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fillRect(2, 1, 1, 1); ctx.fillRect(1, 2, 1, 1);
+}
 function drawHeart(canvas, color){
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, 9, 8);
@@ -2356,7 +2382,47 @@ function unlock(id){
     localStorage.setItem(REC_KEY, JSON.stringify(rec));
   } catch(e){}
 }
-function clearUnlocked(){ try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(REC_KEY); } catch(e){} }
+function clearUnlocked(){ try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(REC_KEY); localStorage.removeItem(TIP_KEY); } catch(e){} }
+
+/* 心理學圖鑑：看過的小知識 */
+function loadTips(){ try { return JSON.parse(localStorage.getItem(TIP_KEY)) || []; } catch(e){ return []; } }
+function collectTip(key){
+  const list = loadTips();
+  if (list.includes(key)) return false;
+  list.push(key);
+  try { localStorage.setItem(TIP_KEY, JSON.stringify(list)); } catch(e){}
+  return true;
+}
+/* 每張卡第一次可能出現的章節（給圖鑑分組、當提示用） */
+const TIP_CHAP = {
+  halo:'第一章・相遇',
+  zeig:'第二章・曖昧', choice:'第二章・曖昧', intermittent:'第二章・曖昧', disclose:'第二章・曖昧', script:'第二章・曖昧', explore:'第二章・曖昧',
+  attach:'第三章・交往', triangle:'第三章・交往', minority:'第三章・交往', family:'第三章・交往', withdraw:'第三章・交往', network:'第三章・交往',
+  breadcrumb:'第三章・告白', dissonance:'第三章・告白', confirm:'第三章・告白',
+  horsemen:'第四章・裂縫', bids:'第四章・裂縫',
+  jealousy:'第五章・訊號', distance:'第五章・距離', emotional:'第五章・動搖', control:'第五章・透明',
+  betray:'第六章・坦白',
+  pain:'第八章・之後', crave:'第八章・之後', stalk:'第八章・之後', shoulder:'第八章・之後', rebound:'第八章・之後', dual:'第八章・之後', writing:'第八章・之後', cycle:'第八章・之後', selfc:'第八章・之後'
+};
+const CH_NUM = '一二三四五六七八九';
+const chNo = ch => CH_NUM.indexOf((ch || '').charAt(1)) + 1 || 99;
+
+/* 隨機事件：還沒收集過的小知識，被抽到的機率是其他事件的 4 倍 */
+function tipKeysOf(id){
+  const sc = SCENES[id];
+  if (!sc || !sc.tip) return [];
+  if (typeof sc.tip === 'string') return [sc.tip];
+  if (typeof sc.tip === 'object') return Object.values(sc.tip).filter(k => typeof k === 'string' && k);
+  return [];
+}
+function pickFresh(arr){
+  const got = loadTips();
+  const w = arr.map(id => tipKeysOf(id).some(k => !got.includes(k)) ? 4 : 1);
+  let r = Math.random() * w.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < arr.length; i++){ r -= w[i]; if (r < 0) return arr[i]; }
+  return arr[arr.length - 1];
+}
+
 
 /* =========================================================
    畫面元件
@@ -2489,6 +2555,7 @@ function choose(c, html){
 }
 function showTip(key, cb){
   const tip = typeof key === 'string' ? TIPS[key] : key;
+  $('#tipNew').hidden = !(typeof key === 'string' && collectTip(key));
   $('#tipTitle').textContent = tip.title;
   track('tip', {tip: tip.title});
   $('#tipBody').innerHTML = fillHTML(tip.body);
@@ -2532,7 +2599,7 @@ function show(id){
   if (sc.bg) setBg(sc.bg);
   if (sc.set) Object.assign(state.flags, sc.set);
   if (sc.setP) setPartner(sc.setP);
-  if (sc.pick) return show(pickOne(sc.pick));
+  if (sc.pick) return show(pickFresh(sc.pick));
   if (sc.branch) return show(sc.branch.find(b => !b.when || b.when(state)).to);
 
   curId = id;
@@ -2617,7 +2684,7 @@ function showEnding(id){
   paintScene($('#endArt'), id, false);
   $('#endText').innerHTML = fillHTML(e.text);
   $('#endStats').textContent = `心動 ${state.a}　信任 ${state.t}　自我 ${state.s}　友情 ${state.p}`;
-  $('#endCount').textContent = `結局之書收集進度 ${loadUnlocked().length} / ${ORDER.length}`;
+  $('#endCount').textContent = `結局之書收集進度 ${loadUnlocked().length} / ${ORDER.length}　心理學圖鑑 ${loadTips().length} / ${Object.keys(TIPS).length}`;
   $('#end').classList.add('show');
 }
 
@@ -2626,16 +2693,53 @@ function showEnding(id){
    ========================================================= */
 let bookIdx = 0;
 const isWide = () => matchMedia('(min-width:760px)').matches;
-const PAGE_COUNT = ORDER.length + 1;   // 目錄 + 每個結局一頁
+let bookMode = 'end';   // 'end'＝結局之書，'tip'＝心理學圖鑑
+const TIP_ORDER = Object.keys(TIPS).sort((a, b) => chNo(TIP_CHAP[a]) - chNo(TIP_CHAP[b]));   // 依章節排
+const pageCount = () => (bookMode === 'tip' ? TIP_ORDER.length : ORDER.length) + 1;   // 目錄 + 每張一頁
+
+function tipPageHTML(i, sideCls, foot){
+  const got = loadTips();
+  /* 第一頁：目錄 */
+  if (i === 0){
+    const n = TIP_ORDER.filter(k => got.includes(k)).length;
+    let html = '', cur = null;
+    TIP_ORDER.forEach((k, idx) => {
+      const g = chNo(TIP_CHAP[k]);
+      if (g !== cur){
+        cur = g;
+        const ks = TIP_ORDER.filter(x => chNo(TIP_CHAP[x]) === g);
+        html += `${html ? '</ul>' : ''}<div class="tocCh">${g === 99 ? '其他' : `第${CH_NUM[g - 1]}章`}<small>${ks.filter(x => got.includes(x)).length} / ${ks.length}</small></div><ul class="toc">`;
+      }
+      const ok = got.includes(k);
+      html += `<li data-go="${idx + 1}"><span class="${ok ? '' : 't-lock'}">${esc(TIPS[k].title)}</span><span class="dots"></span><span class="${ok ? '' : 't-lock'}">${ok ? idx + 1 : '未收集'}</span></li>`;
+    });
+    html += '</ul>';
+    return `<div class="page toc-page${sideCls}"><div class="pno">CONTENTS</div><h3>心理學圖鑑</h3>
+      <p class="intro">已收集 ${n} / ${TIP_ORDER.length}。${n < TIP_ORDER.length ? '還沒遇到的卡，換個選擇再玩一次就有機會翻到。' : '全部收集完成！'}</p>
+      <div class="tocScroll">${html}</div>${foot}</div>`;
+  }
+  /* 小知識頁 */
+  const k = TIP_ORDER[i - 1], t = TIPS[k], ch = TIP_CHAP[k] || '';
+  const tag = `<span class="ptag">${esc(ch || '心理學小知識')}</span>`;
+  const back = `<div class="pbtns"><button class="btn sm soft" data-go="0">← 目錄</button></div>`;
+  if (!got.includes(k)){
+    return `<div class="page lock${sideCls}"><div class="pno">No.${i}</div>${tag}<h3>${esc(t.title)}</h3>
+      <div class="q">這一頁還是空白的。這張卡會在${esc(ch || '某個章節')}出現，換個選擇再玩一次吧。</div>${back}${foot}</div>`;
+  }
+  return `<div class="page${sideCls}"><div class="pno">No.${i}</div><div class="stamp">已收錄</div>
+    ${tag}<h3>${esc(t.title)}</h3><p>${esc(neutral(t.body))}</p>
+    ${t.src ? `<div class="psrc">研究出處：${esc(t.src)}</div>` : ''}${back}${foot}</div>`;
+}
 
 function artTag(id, locked){
   return `<canvas class="art" width="96" height="64" data-art="${id}" data-lock="${locked ? 1 : 0}"></canvas>`;
 }
 function pageHTML(i, side){
   const sideCls = side === 'left' ? ' left' : '';
-  if (i >= PAGE_COUNT) return `<div class="page blank${sideCls}"></div>`;
-  const got = loadUnlocked(), rec = loadRecords();
+  if (i >= pageCount()) return `<div class="page blank${sideCls}"></div>`;
   const foot = `<div class="pfoot">— ${i + 1} —</div>`;
+  if (bookMode === 'tip') return tipPageHTML(i, sideCls, foot);
+  const got = loadUnlocked(), rec = loadRecords();
 
   /* 第一頁：小圖鑑 */
   if (i === 0){
@@ -2669,6 +2773,7 @@ function pageHTML(i, side){
 
 function renderBook(dir){
   const per = isWide() ? 2 : 1;
+  const PAGE_COUNT = pageCount();
   const maxIdx = Math.ceil(PAGE_COUNT / per) - 1;
   bookIdx = Math.max(0, Math.min(maxIdx, bookIdx));
   const first = bookIdx * per;
@@ -2683,9 +2788,16 @@ function renderBook(dir){
   $('#pgNext').style.opacity = bookIdx >= maxIdx ? .4 : 1;
   $('#pgToc').style.visibility = bookIdx > 0 ? 'visible' : 'hidden';
 }
-function openBook(){
-  const n = loadUnlocked().length;
-  $('#cvProg').textContent = `收集 ${n} / ${ORDER.length}`;
+function openBook(mode){
+  bookMode = mode === 'tip' ? 'tip' : 'end';
+  const tip = bookMode === 'tip';
+  $('#bookOv').classList.toggle('tipMode', tip);
+  $('#cover').classList.toggle('blue', tip);
+  $('#cvSmall').textContent = tip ? 'THE BOOK OF PSYCHOLOGY' : 'THE BOOK OF ENDINGS';
+  $('#cvTitle').innerHTML = tip ? '戀愛<br>心理學圖鑑' : '戀愛<br>結局之書';
+  if (tip) drawBulb($('#cvHeart'), '#fffaf4'); else drawHeart($('#cvHeart'), '#fffaf4');
+  const n = tip ? TIP_ORDER.filter(k => loadTips().includes(k)).length : loadUnlocked().length;
+  $('#cvProg').textContent = `收集 ${n} / ${tip ? TIP_ORDER.length : ORDER.length}`;
   $('#book').className = '';
   $('#bookOv').classList.add('show');
 }
@@ -3026,16 +3138,18 @@ $('#btnStart').addEventListener('click', () => {
   openSetup();
 });
 $('#btnContinue').addEventListener('click', resumeGame);
-$('#btnBook').addEventListener('click', openBook);
+$('#btnBook').addEventListener('click', () => openBook('end'));
+$('#btnTipBook').addEventListener('click', () => openBook('tip'));
+$('#endTipBook').addEventListener('click', () => openBook('tip'));
 $('#btnReset').addEventListener('click', () => {
-  if (confirm('要清除所有結局紀錄和遊戲進度嗎？清除後無法復原。')){ clearUnlocked(); clearProgress(); refreshProgress(); }
+  if (confirm('要清除所有結局紀錄、心理學圖鑑和遊戲進度嗎？清除後無法復原。')){ clearUnlocked(); clearProgress(); refreshProgress(); }
 });
 document.querySelectorAll('.gbtn').forEach(b => b.addEventListener('click', () => setSetupGender(b.dataset.g)));
 $('#btnRandom').addEventListener('click', () => { $('#nameIn').value = randomPlayerName(setupGender); });
 $('#nameIn').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
 $('#btnSetupStart').addEventListener('click', () => startGame(false));
 $('#btnSetupBack').addEventListener('click', () => $('#setup').classList.remove('show'));
-$('#endBook').addEventListener('click', openBook);
+$('#endBook').addEventListener('click', () => openBook('end'));
 $('#endAgain').addEventListener('click', () => startGame(true));
 $('#endBack').addEventListener('click', openTitle);
 
