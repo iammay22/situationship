@@ -289,6 +289,53 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .choice:active{transform:scale(.98);background:#fff0f5}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
+/* 飄愛心 */
+.fheart{position:fixed;z-index:70;pointer-events:none;image-rendering:pixelated;opacity:0;animation:floatUp 1.8s ease-out forwards}
+@keyframes floatUp{0%{opacity:0;transform:translate(0,10px) scale(.6)}15%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),-160px) scale(.9)}}
+
+/* 手機聊天 */
+#phoneOv{background:rgba(74,59,85,.5)}
+.phone{width:min(92vw,380px);height:min(80dvh,640px);background:#fff;border-radius:34px;border:9px solid #4a3b55;box-shadow:0 20px 50px rgba(40,30,50,.45);display:flex;flex-direction:column;overflow:hidden;animation:rise .3s ease both}
+.phHead{display:flex;align-items:center;gap:10px;padding:14px 16px 12px;background:#fbf4f8;border-bottom:1px solid #f1e3ec}
+.phHead canvas{width:36px;height:36px;border-radius:50%;background:#ffe3ec;image-rendering:pixelated;object-fit:cover;object-position:top}
+.phHead b{font-size:16px}
+.phOn{margin-left:auto;font-size:11px;color:#2f9d6c}
+.phOn::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#3cc584;margin-right:5px;vertical-align:1px}
+.phMsgs{flex:1;overflow-y:auto;padding:14px 12px;background:linear-gradient(180deg,#fdf6fa,#f4eefa);display:flex;flex-direction:column;gap:8px}
+.phTime{align-self:center;font-size:11px;color:#a898a9;margin-bottom:4px}
+.bub{max-width:78%;padding:9px 13px;border-radius:18px;font-size:15px;line-height:1.55;animation:rise .2s ease both;word-break:break-word}
+.bub.them{align-self:flex-start;background:#fff;border:1px solid #eee0ea;border-bottom-left-radius:6px}
+.bub.me{align-self:flex-end;background:#f29bb8;color:#fff;border-bottom-right-radius:6px}
+.bub.me span{color:#fff!important}
+.bub.sticker{background:none;padding:0}
+.bub.sticker canvas{width:64px;height:57px;image-rendering:pixelated}
+.bub.typing{display:flex;gap:4px;padding:12px 14px}
+.bub.typing span{width:7px;height:7px;border-radius:50%;background:#c9b6c8;animation:dot 1s infinite}
+.bub.typing span:nth-child(2){animation-delay:.15s}.bub.typing span:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+.phFoot{min-height:64px;padding:10px 10px 14px;border-top:1px solid #f1e3ec;background:#fff;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.chip{border:1.5px solid #f3bdd0;background:#fff7fa;color:var(--ink);border-radius:999px;padding:9px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;animation:rise .2s ease both}
+.chip:active{background:#ffe3ec}
+.chip.sm{padding:5px 11px;font-size:13px;font-weight:400}
+.nickRow{display:flex;gap:8px;width:100%}
+.nickIn{flex:1;min-width:0;font:inherit;font-size:16px;padding:8px 14px;border:1.5px solid #f3bdd0;border-radius:999px;outline:none}
+.nickIn:focus{border-color:var(--rose-d)}
+.nickSug{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
+
+/* 按住牽手 */
+.holdWrap{flex:0 0 auto;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0}
+.holdBtn{--p:0;position:relative;width:132px;height:132px;border-radius:50%;border:0;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  background:conic-gradient(#ee6f9a calc(var(--p) * 360deg),rgba(255,250,244,.96) 0);box-shadow:0 8px 22px rgba(74,59,85,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;animation:rise .25s ease both}
+.holdBtn::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--cream);box-shadow:inset 0 0 0 1px rgba(247,168,192,.6)}
+.holdBtn>*{position:relative}
+.holdBtn canvas{width:40px;height:36px;image-rendering:pixelated;transition:transform .2s}
+.holdBtn span{font-size:13px;font-weight:700;color:var(--ink);padding:0 14px;line-height:1.35}
+.holdBtn.on canvas{animation:beat .5s ease-in-out infinite}
+.holdBtn.win{background:#ee6f9a}
+.holdBtn.win canvas{transform:scale(1.35)}
+@keyframes beat{50%{transform:scale(1.25)}}
+.holdHint{font-size:13px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(74,59,85,.5);min-height:1.2em}
+
 /* ================= 視窗 ================= */
 .ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:16px;z-index:50;background:rgba(74,59,85,.35);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .ov.show{display:flex}
@@ -318,7 +365,9 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 #endText{background:repeating-linear-gradient(transparent 0 calc(1.9em - 1px),#f3e3d4 calc(1.9em - 1px) 1.9em);background-attachment:local}
 #endText{text-align:left;margin-top:6px}
 #endStats{display:flex;justify-content:center;gap:14px;font-size:13px;margin-top:14px;color:var(--ink2)}
-#endFortune{background:var(--lemon)}
+.endLinks{display:flex;justify-content:center;align-items:center;gap:4px;margin-top:14px;font-size:14px;color:var(--ink2)}
+.endLinks button{background:none;border:0;font:inherit;color:var(--ink2);padding:6px 6px;cursor:pointer;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(74,59,85,.25)}
+.endLinks button:active{color:var(--rose-d)}
 
 /* ================= 結局之書 ================= */
 #bookOv{background:rgba(74,59,85,.45)}
@@ -574,6 +623,14 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 </div>
 
 <!-- 結局 -->
+<div id="phoneOv" class="ov">
+  <div class="phone">
+    <div class="phHead"><canvas id="phAva" width="20" height="24"></canvas><b id="phName"></b><span class="phOn">在線上</span></div>
+    <div class="phMsgs" id="phMsgs"></div>
+    <div class="phFoot" id="phFoot"></div>
+  </div>
+</div>
+
 <div id="end" class="ov">
   <div class="panel">
     <span class="ribbon" id="endTag">結局</span>
@@ -583,13 +640,11 @@ button{font:inherit;color:inherit;touch-action:manipulation}
     <div id="endStats"></div>
     <p id="endCount" class="note"></p>
     <div class="foot">
-      <button class="btn main" id="endLink">分享結局連結</button>
-      <button class="btn" id="endShare">分享結局圖卡</button>
-      <button class="btn" id="endAgain">再玩一次</button>
-      <button class="btn" id="endBook">結局之書</button>
-      <button class="btn" id="endTipBook">心理學圖鑑</button>
-      <button class="btn" id="endFortune" hidden>去問問小豬</button>
-      <button class="btn soft" id="endBack">回到主頁</button>
+      <button class="btn main" id="endAgain">再玩一次</button>
+      <button class="btn" id="endLink">分享結局</button>
+    </div>
+    <div class="endLinks">
+      <button id="endBook">結局之書</button><span>・</span><button id="endTipBook">心理學圖鑑</button><span>・</span><button id="endBack">回到主頁</button>
     </div>
   </div>
 </div>
@@ -894,7 +949,7 @@ const ENDINGS = {
   e_wedding: {
     title: '說好一起變老',
     secret: true,
-    text: '交往的第五年，{P}在你們第一次見面的地方，拿出一個小盒子。{pH}的手在抖，說話也結結巴巴的。你們吵過、冷戰過、差點放棄過，可是每一次，都有人先伸出手。你點了點頭，眼淚掉在{pH}的手背上。'
+    text: '交往的第五年，{P}在你們第一次見面的地方，拿出一個小盒子。{pH}的手在抖，叫了一聲「{K}」，後面的話就說得結結巴巴的。你們吵過、冷戰過、差點放棄過，可是每一次，都有人先伸出手。你點了點頭，眼淚掉在{pH}的手背上。'
   }
 };
 const ORDER = ['e_pass','e_juggle','e_unsaid','e_ambig','e_fishpond','e_aircon','e_youth','e_long','e_balance','e_proud','e_distance','e_affair_repair','e_anxious','e_cycle','e_affair_caught','e_affair_leave','e_airport','e_friend','e_growth','e_rebound','e_friends','e_wakeup','e_lostworld','e_lonely','e_self','e_alone_ok','e_truth','e_back','e_wedding'];
@@ -1148,7 +1203,7 @@ const SCENES = {
       same:'我想了很久要不要說……我怕說了，連朋友都當不成。可是我喜歡你。'
     },
     choices:[
-      {label:'「好，我也喜歡你。」', to:'s10', fx:{a:4,t:1}},
+      {label:'「好，我也喜歡你。」', to:'sw0', fx:{a:4,t:1}},
       {label:'「我需要想一想。」', to:'s9w', fx:{t:1,s:1}}
     ]},
 
@@ -1162,7 +1217,7 @@ const SCENES = {
       {label:'「我想了很久，還是比較想當朋友。」', to:'s9n', fx:{s:1}},
       {label:'再拖一下，等心裡更確定', to:'s9d', fx:{t:-2}}
     ]},
-  s9y: {speaker:'{P}', text:{def:'……真的嗎？謝謝你認真想過。我會好好珍惜這個答案。', sunny:'真的嗎！太好了！我可以跳起來嗎？', cool:'……嗯。謝謝你。'}, next:'s10'},
+  s9y: {speaker:'{P}', text:{def:'……真的嗎？謝謝你認真想過。我會好好珍惜這個答案。', sunny:'真的嗎！太好了！我可以跳起來嗎？', cool:'……嗯。謝謝你。'}, next:'sw0'},
   s9n: {speaker:'{P}', text:{def:'嗯，我懂。謝謝你沒有讓我一直猜。', sunny:'好……那我們還是好朋友喔！說好了！', cool:'……好。', witty:'好，那我收回剛剛那段告白，假裝它是開玩笑的。……我開玩笑的，謝謝你老實說。'}, next:'s9n2'},
   s9n2: {speaker:null, text:'{pH}笑得有點勉強，還是把手上的飲料分了一半給你。', next:'e_ambig'},
   s9d: {speaker:null,
@@ -1170,6 +1225,70 @@ const SCENES = {
     next:'e_unsaid'},
 
   /* ---------- 第三章：交往 ---------- */
+  /* ---------- 第三章開頭：剛在一起的甜蜜期 ---------- */
+  sw0: {bg:'night', chap:'第三章・交往', speaker:null,
+    text:'在一起的第一個晚上。你洗完澡躺在床上，盯著天花板傻笑。手機震了一下。',
+    next:'sw1'},
+  sw1: {speaker:null, text:'📱 {P} 傳來一則訊息', next:'sw2',
+    chat:[
+      {p:{def:'到家了嗎？', cool:'到家了？', sunny:'到家了沒！！', witty:'報告，本人已平安抵達宿舍。請問你那邊呢', busy:'剛開完會。你到家了嗎？', sea:'到家了嗎～', aircon:'到家了嗎？今天外面好冷，記得喝熱的'}},
+      {p:{def:'我到現在還是覺得有點不真實', cool:'……今天說的，我是認真的。', sunny:'我到現在還在笑，室友以為我瘋了', witty:'我剛剛確認了三次，你真的答應了對吧', busy:'今天本來超累的，現在完全不累了', sea:'今天是我最近最開心的一天'}},
+      {me:[
+        {label:'到了～我也一直在想今天', fx:{a:1,h:1}, re:[{def:'那我們一樣', cool:'嗯。我也是。', sunny:'一樣一樣！！', witty:'英雄所見略同', busy:'那我就放心了'}]},
+        {label:'是真的啦，不准反悔喔', fx:{a:2,h:1}, re:[{def:'才不會反悔', cool:'不會。', sunny:'我才不會！你也不准！', witty:'白紙黑字，我截圖了', busy:'不會，我說到做到'}]},
+        {label:'（傳一張愛心貼圖）', sticker:true, fx:{a:1,h:1}, re:[{def:'好可愛，想抱', cool:'……可愛。', sunny:'啊啊啊好可愛，我要存起來', witty:'這張我要收藏，當作歷史文物', busy:'可愛。存了'}]}
+      ]},
+      {p:{def:'欸，我想問你一件事', cool:'問你一件事。', sunny:'欸欸我想到一件很重要的事！', witty:'嚴肅問題時間', busy:'對了，有件事想問你'}},
+      {p:'在一起之後，我可以叫你什麼？'},
+      {nick:true},
+      {p:{def:'{K}。我很喜歡', cool:'{K}。……嗯，好聽。', sunny:'{K}！{K}！{K}！好，我練習好了', witty:'{K}，收到。已存進我腦袋的我的最愛', busy:'{K}。我記住了'}},
+      {p:{def:'明天第一次約會，你想去哪裡？', cool:'明天見面。地點你挑。', sunny:'明天第一次約會耶！你想去哪裡！', witty:'明天第一次約會，我已經緊張到在查「約會不冷場的 100 種話題」了', busy:'明天我把行程全清空了。你想去哪？'}},
+      {me:[
+        {label:'見面再決定～', fx:{a:1}, re:[{def:'好，晚安，{K}', cool:'好。晚安，{K}。', sunny:'好！晚安{K}！夢裡見！', witty:'好，那我先去夢裡勘查地點。晚安，{K}', busy:'好。早點睡，{K}，晚安'}]},
+        {label:'晚安，我也很期待', fx:{a:1,h:1}, re:[{def:'晚安，{K}。明天見', cool:'晚安。明天見，{K}。', sunny:'晚安晚安！明天見{K}！', witty:'晚安，{K}。我會準時，甚至提早', busy:'晚安，{K}。明天見'}]}
+      ]}
+    ]},
+  sw2: {bg:'campus', speaker:null,
+    text:'隔天，你比約好的時間早到了十分鐘，結果{P}已經在那裡了。你們看到對方，同時笑了出來。',
+    choices:[
+      {label:'「我們去逛夜市吧！」', to:'swA', fx:{a:1}, flag:'dNight'},
+      {label:'「去看電影好不好？」', to:'swB', fx:{a:1}, flag:'dMovie'},
+      {label:'「去河堤走走吧。」', to:'swC', fx:{t:1}, flag:'dRiver'}
+    ]},
+  swA: {bg:'night', speaker:null,
+    text:'夜市人好多。{P}一手拿著雞排，一手很自然地把飲料遞到你嘴邊：「{K}，喝一口，這家超好喝。」吸管上還有{pH}剛剛喝過的痕跡。',
+    choices:[
+      {label:'低頭直接喝一口', to:'swHold', fx:{a:2,h:1}},
+      {label:'「你、你先喝啦。」（耳朵紅了）', to:'swHold', fx:{a:1,t:1}}
+    ]},
+  swB: {bg:'night', speaker:null,
+    text:'電影演到一半，{P}的手就放在扶手上，跟你的手只差一公分。你完全不知道劇情演到哪了。',
+    next:'swHold'},
+  swC: {bg:'campus', speaker:null,
+    text:'傍晚的河堤風很大。{P}把外套脫下來披在你身上：「你看，你都在發抖。」外套上還有{pH}的溫度。',
+    choices:[
+      {label:'「那你不會冷嗎？」', to:'swHold', fx:{t:1,h:1}},
+      {label:'把外套拉緊一點，偷偷聞了一下', to:'swHold', fx:{a:2}}
+    ]},
+  swHold: {speaker:null,
+    text: st => st.flags.dMovie
+      ? '散場的時候燈還沒全亮。你們的手背在扶手上碰在一起，誰都沒有移開。只要再靠近一點點……'
+      : '走回去的路上，你們的手背一直碰到。一下，兩下。你知道，只要再靠近一點點……',
+    hold:{label:'按住，慢慢牽上去', fx:{a:2,h:2}, ok:'swHoldOk', fail:'swHoldFail',
+          alt:{label:'還是把手放進口袋好了', to:'swHoldNo', fx:{s:1}}}},
+  swHoldOk: {speaker:'{P}',
+    text:{def:'……你的手好冰。我幫你握著。', cool:'……不要放開。', sunny:'終於牽到了！我剛剛想了一整條路欸！', witty:'你知道嗎，我剛剛在心裡排練了十次要怎麼牽', busy:'我本來想說等一下再牽，結果被你搶先了。', sea:'你的手好小喔。', aircon:'你的手好冰，我幫你暖一下。'},
+    next:'swEnd'},
+  swHoldFail: {speaker:null,
+    text:'指尖才碰到，你就緊張得縮了回來。{P}愣了一下，接著笑出來，把手伸過來牽住你：「{K}，是這樣牽啦。」',
+    next:'swEnd'},
+  swHoldNo: {speaker:null,
+    text:'你把手放進口袋。{P}看了你一眼，也把手放進自己的口袋，跟你並肩慢慢走。這樣好像也很好。',
+    next:'swEnd'},
+  swEnd: {bg:'night', speaker:null,
+    text:'那天晚上，你在備忘錄打了一行字：「第一次約會。{P}叫我{K}的時候，我好像一直在笑。」',
+    next:'s10'},
+
   s10: {bg:'night', chap:'第三章・交往', speaker:null,
     text:'交往的第一個月，每一天都像在發光。可是你也發現，自己開始很在意{pH}在不在。',
     tip:'attach',
@@ -1197,7 +1316,7 @@ const SCENES = {
   dayPickO: {pick:['dy1','dy2','dy3']},
   dayPickS: {pick:['dyS1','dyS2','dy1']},
   dy1: {bg:'campus', speaker:null,
-    text:{def:'你感冒請假那天，{P}下課後拎著一袋粥出現在你家樓下。袋子裡塞了一張紙條：「喝完再睡，不准滑手機。」', busy:'你感冒請假那天，{P}在兩場會議中間抽空，叫了一份粥送到你家，附上一句：「晚上忙完去看你。」', cool:'你感冒請假那天，門口多了一袋粥和一盒藥，沒有紙條。你知道是誰。'},
+    text:{def:'你感冒請假那天，{P}下課後拎著一袋粥出現在你家樓下。袋子裡塞了一張紙條：「{K}，喝完再睡，不准滑手機。」', busy:'你感冒請假那天，{P}在兩場會議中間抽空，叫了一份粥送到你家，附上一句：「晚上忙完去看你。」', cool:'你感冒請假那天，門口多了一袋粥和一盒藥，沒有紙條。你知道是誰。'},
     choices:[
       {label:'傳訊息：「你怎麼這麼好。」', to:'fpPick', fx:{a:2,t:1}},
       {label:'「你不用這樣啦，我會不好意思。」', to:'fpPick', fx:{s:1}}
@@ -1575,7 +1694,7 @@ const SCENES = {
     {when:st => st.them[st.cast.pk] >= 8, to:'sitYes'},
     {to:'sitNo'}
   ]},
-  sitYes: {speaker:'{P}', text:'……好啦，我認輸。我們在一起。這次我是認真的。', next:'s10'},
+  sitYes: {speaker:'{P}', text:'……好啦，我認輸。我們在一起。這次我是認真的。', next:'sw0'},
   sitNo: {speaker:null,
     text:'{P}沒有再回訊息。你難過了一陣子，某天早上醒來，發現自己反而鬆了一口氣。',
     next:'sitEnd'},
@@ -2181,6 +2300,7 @@ const STATS_URL = 'https://script.google.com/macros/s/AKfycbyw7g1y-c3OGcuYYZws1k
 
 /* 要統計的關鍵選擇：節點 → 題目與選項簡稱（順序對應選項順序） */
 const KEY = {
+  sw2:   {q:'第一次約會', o:['夜市','電影','河堤']},
   m4:    {q:'曖昧策略', o:['專心認識第一位','專心認識第二位','和同性朋友相處','多線都聊']},
   s8b:   {q:'對方忽冷忽熱', o:['假裝不在意','直接問','也晾對方']},
   s8d:   {q:'好友喜歡同一人', o:['公平競爭','讓給好友','暗中較勁']},
@@ -2319,6 +2439,7 @@ const isSame = () => !!state.cast && who('P').g === state.gender;
 /* 代號換成文字：名字依性別上色（男藍、女粉） */
 function tok(k){
   if (k === 'N') return {t: state.name, cls: gCls(state.gender)};
+  if (k === 'K') return {t: state.nick || state.name, cls: gCls(state.gender)};
   if (k === 'pH') return {t: pron(who('P'))};
   if (k === 'GF') return {t: state.gender === 'm' ? '女朋友' : '男朋友'};
   const m = k.match(/^(P|O|A|B|F|C|X)(H|t|d)?$/);
@@ -2366,7 +2487,7 @@ function segsHTML(list, n = Infinity){
 }
 const fillHTML = str => segsHTML(toSegs(str));
 const fillText = str => toSegs(str).map(s => s.t).join('');
-const neutral = str => str.replace(/\{(\w+)\}/g, (_, k) => k === 'X' ? '第三者' : (k === 'F' || k === 'C') ? '朋友' : k === 'N' ? '你' : k === 'O' ? '另一個人' : '對方');
+const neutral = str => str.replace(/\{(\w+)\}/g, (_, k) => k === 'X' ? '第三者' : (k === 'F' || k === 'C') ? '朋友' : (k === 'N' || k === 'K') ? '你' : k === 'O' ? '另一個人' : '對方');
 
 /* 存檔：解鎖清單 + 每個結局最近一次的紀錄 */
 function loadUnlocked(){ try { return JSON.parse(localStorage.getItem(SAVE_KEY)) || []; } catch(e){ return []; } }
@@ -2551,7 +2672,168 @@ function choose(c, html){
   log.push({pick: true, html});
   updateHud();
   showDelta(c.fx);
+  if (c.fx && c.fx.a >= 2) hearts(c.fx.a >= 3 ? 9 : 6);
   show(c.to);
+}
+
+/* 心動大漲：畫面飄出小愛心 */
+function hearts(n = 6, big){
+  for (let i = 0; i < n; i++){
+    const h = document.createElement('canvas');
+    h.width = 9; h.height = 8; h.className = 'fheart';
+    drawHeart(h, ['#f48fb1','#f7a8c0','#ee6f9a','#ffc2d4'][i % 4]);
+    const size = (big ? 26 : 18) + Math.random() * 14;
+    h.style.cssText = `left:${big ? 50 + (Math.random() - .5) * 60 : 20 + Math.random() * 60}%;bottom:${big ? 30 + Math.random() * 20 : 28 + Math.random() * 14}%;width:${size}px;height:${size * 8 / 9}px;animation-delay:${i * 90}ms;--dx:${(Math.random() - .5) * 80}px`;
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 2000 + i * 90);
+  }
+}
+
+/* =========================================================
+   互動：手機聊天
+   chat:[ {p:'對方的訊息'}, {me:[{label, fx, sticker, re:[回覆…]}]}, {nick:true} ]
+   ========================================================= */
+let chatSc = null, chatSteps = [], chatI = 0, chatTimer = null;
+const PSC = {speaker:'{P}'};
+function chatScroll(){ const m = $('#phMsgs'); m.scrollTop = m.scrollHeight; }
+function bubble(html, who, cls = ''){
+  const b = document.createElement('div');
+  b.className = `bub ${who} ${cls}`;
+  b.innerHTML = html;
+  $('#phMsgs').appendChild(b); chatScroll();
+  return b;
+}
+function openChat(sc){
+  chatSc = sc; chatSteps = sc.chat.slice(); chatI = 0;
+  const p = who('P');
+  $('#phName').textContent = p.name;
+  const pk = state.cast.pk, c = state.cast[pk];
+  drawChara($('#phAva'), c.g, c.look === 'c' ? LOOK.fr : c.look === 'b' ? LOOK2[c.g] : LOOK[c.g]);
+  const d = new Date();
+  $('#phMsgs').innerHTML = `<div class="phTime">今天 ${d.getHours() < 21 ? 23 : d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}</div>`;
+  $('#phFoot').innerHTML = '';
+  $('#phoneOv').classList.add('show');
+  setTimeout(chatRun, 500);
+}
+function chatRun(){
+  clearTimeout(chatTimer);
+  const foot = $('#phFoot');
+  if (chatI >= chatSteps.length){
+    foot.innerHTML = '<button class="btn main sm" id="phDone">放下手機 ›</button>';
+    $('#phDone').addEventListener('click', () => {
+      $('#phoneOv').classList.remove('show');
+      const next = chatSc.next; chatSc = null;
+      show(next);
+    });
+    return;
+  }
+  const st = chatSteps[chatI++];
+  if (st.p != null){
+    foot.innerHTML = '';
+    const raw = V(st.p, PSC);
+    const html = fillHTML(raw);
+    const t = bubble('<span></span><span></span><span></span>', 'them', 'typing');
+    const wait = modeSkip ? 150 : Math.min(1700, 550 + fillText(raw).length * 45);
+    chatTimer = setTimeout(() => {
+      t.className = 'bub them'; t.innerHTML = html; chatScroll();
+      log.push({name: who('P').name, cls: gCls(who('P').g), html});
+      chatTimer = setTimeout(chatRun, modeSkip ? 120 : 650);
+    }, wait);
+    return;
+  }
+  if (st.me){
+    foot.innerHTML = '';
+    st.me.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.innerHTML = fillHTML(V(c.label, PSC));
+      b.addEventListener('click', () => {
+        foot.innerHTML = '';
+        if (c.sticker){ const w = bubble('<canvas width="9" height="8"></canvas>', 'me', 'sticker'); drawHeart(w.querySelector('canvas'), '#f48fb1'); }
+        else bubble(fillHTML(V(c.label, PSC)), 'me');
+        log.push({pick: true, html: fillHTML(V(c.label, PSC))});
+        applyChoice(c); updateHud(); showDelta(c.fx);
+        if (c.fx && c.fx.a >= 2) hearts(6);
+        chatSteps.splice(chatI, 0, ...(c.re || []).map(r => ({p: r})));
+        chatTimer = setTimeout(chatRun, 450);
+      });
+      foot.appendChild(b);
+    });
+    return;
+  }
+  if (st.nick){
+    const last = state.name.slice(-1);
+    const opts = [...new Set([state.name, '寶貝', '小' + last, last + last, '笨蛋'])].filter(Boolean);
+    foot.innerHTML = `<div class="nickRow"><input class="nickIn" id="nickIn" maxlength="6" placeholder="輸入你想被叫的名字"><button class="btn main sm" id="nickOk">傳送</button></div>
+      <div class="nickSug">${opts.map(o => `<button class="chip sm" data-n="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
+    const send = v => {
+      v = (v || '').trim().slice(0, 6);
+      if (!v){ $('#nickIn').focus(); return; }
+      state.nick = v;
+      foot.innerHTML = '';
+      bubble(`叫我「${esc(v)}」吧`, 'me');
+      log.push({pick: true, html: `叫我「${esc(v)}」吧`});
+      chatTimer = setTimeout(chatRun, 450);
+    };
+    foot.querySelectorAll('.nickSug .chip').forEach(b => b.addEventListener('click', () => { $('#nickIn').value = b.dataset.n; }));
+    $('#nickOk').addEventListener('click', () => send($('#nickIn').value));
+    $('#nickIn').addEventListener('keydown', e => { if (e.key === 'Enter') send(e.target.value); });
+    return;
+  }
+  chatRun();
+}
+
+/* =========================================================
+   互動：按住不放（牽手）
+   hold:{label, fx, ok, fail, alt:{label, to, fx}}
+   ========================================================= */
+const HOLD_MS = 1800;
+function showHold(h, sc){
+  const wrap = $('#choices');
+  wrap.innerHTML = `<div class="chHead">按住下面的按鈕，不要放開</div>
+    <div class="holdWrap"><button class="holdBtn" id="holdBtn" style="--p:0"><canvas width="9" height="8"></canvas><span>${fillHTML(h.label)}</span></button>
+    <div class="holdHint" id="holdHint">慢慢來，心跳有點快</div></div>`;
+  drawHeart($('#holdBtn canvas'), '#ee6f9a');
+  if (h.alt){
+    const b = document.createElement('button');
+    b.className = 'choice'; b.innerHTML = fillHTML(h.alt.label);
+    b.addEventListener('click', ev => { ev.stopPropagation(); choose(h.alt, b.innerHTML); });
+    wrap.appendChild(b);
+  }
+  wrap.classList.add('show');
+  $('#chara').classList.add('dim'); $('#chara').classList.remove('talk');
+
+  const btn = $('#holdBtn'), hint = $('#holdHint');
+  let t0 = 0, raf = 0, done = false;
+  const hints = ['慢慢來，心跳有點快', '手背碰到了……', '再靠近一點點', '指尖勾到了！'];
+  const tick = () => {
+    const p = Math.min(1, (performance.now() - t0) / HOLD_MS);
+    btn.style.setProperty('--p', p);
+    hint.textContent = hints[Math.min(3, Math.floor(p * 4))];
+    if (navigator.vibrate && p > .3 && Math.random() < .06) navigator.vibrate(8);
+    if (p >= 1){ finish(true); return; }
+    raf = requestAnimationFrame(tick);
+  };
+  const start = e => { if (done) return; e.preventDefault(); e.stopPropagation(); t0 = performance.now(); btn.classList.add('on'); raf = requestAnimationFrame(tick); };
+  const stop = e => {
+    if (done || !t0) return;
+    e && e.stopPropagation();
+    cancelAnimationFrame(raf); btn.classList.remove('on');
+    const p = (performance.now() - t0) / HOLD_MS; t0 = 0;
+    if (p < .12){ btn.style.setProperty('--p', 0); hint.textContent = '要按住喔，不要放開'; return; }
+    finish(false);
+  };
+  const finish = ok => {
+    done = true; cancelAnimationFrame(raf);
+    const c = ok ? {fx: h.fx, to: h.ok} : {fx: {a: 1}, to: h.fail};
+    if (ok){ btn.classList.add('win'); hint.textContent = '牽到了。'; hearts(12, true); if (navigator.vibrate) navigator.vibrate([20, 40, 20]); }
+    setTimeout(() => { hideChoices(); applyChoice(c); log.push({pick: true, html: ok ? '（牽起了手）' : '（手縮了回來）'}); updateHud(); showDelta(c.fx); show(c.to); }, ok ? 700 : 200);
+  };
+  btn.addEventListener('pointerdown', start);
+  btn.addEventListener('pointerup', stop);
+  btn.addEventListener('pointerleave', stop);
+  btn.addEventListener('pointercancel', stop);
+  btn.addEventListener('click', e => e.stopPropagation());
+  btn.addEventListener('contextmenu', e => e.preventDefault());
 }
 function showTip(key, cb){
   const tip = typeof key === 'string' ? TIPS[key] : key;
@@ -2579,6 +2861,7 @@ function queueAuto(){
   }, modeSkip ? SKIP_DELAY : AUTO_DELAY + typeLen * 20);
 }
 function after(sc){
+  if (sc.hold){ showHold(sc.hold, sc); return; }
   if (sc.choices){ showChoices(sc.choices, sc); return; }
   if (!sc.next) return;
   pendingNext = sc.next;
@@ -2601,6 +2884,17 @@ function show(id){
   if (sc.setP) setPartner(sc.setP);
   if (sc.pick) return show(pickFresh(sc.pick));
   if (sc.branch) return show(sc.branch.find(b => !b.when || b.when(state)).to);
+  if (sc.chat){
+    curId = id; saveProgress(id);
+    setChara({speaker:null});
+    $('#name').hidden = true;
+    hideChoices(); hideNext(); pendingNext = null; cancelAuto();
+    updateHud();
+    const list = toSegs(V(sc.text, sc) || '');
+    $('#text').innerHTML = segsHTML(list);
+    log.push({name:'', cls:'', html: segsHTML(list)});
+    return openChat(sc);
+  }
 
   curId = id;
   saveProgress(id);
@@ -2992,7 +3286,6 @@ $('#shareDo').addEventListener('click', async () => {
   document.body.appendChild(a); a.click(); a.remove();
 });
 $('#shareClose').addEventListener('click', () => $('#shareOv').classList.remove('show'));
-$('#endShare').addEventListener('click', () => openShare(lastEnding));
 
 /* =========================================================
    分享結局連結
@@ -3154,11 +3447,10 @@ $('#endAgain').addEventListener('click', () => startGame(true));
 $('#endBack').addEventListener('click', openTitle);
 
 if (FORTUNE_URL){
-  ['#btnFortune', '#endFortune'].forEach(s => {
+  ['#btnFortune'].forEach(s => {
     $(s).hidden = false;
     $(s).addEventListener('click', () => {
-      const atEnd = s === '#endFortune' && lastEnding;
-      track('fortune', atEnd ? {endId: lastEnding, endTitle: ENDINGS[lastEnding].title} : {});
+      track('fortune', {});
       window.open(FORTUNE_URL, '_blank', 'noopener');
     });
   });
