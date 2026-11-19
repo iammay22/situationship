@@ -328,6 +328,44 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 .nickIn:focus{border-color:var(--rose-d)}
 .nickSug{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
 
+/* 聊天：系統訊息、轟炸、草稿、通話 */
+.phSys{align-self:center;font-size:12px;color:#a898a9;background:rgba(255,255,255,.7);padding:3px 12px;border-radius:999px;animation:rise .2s ease both}
+.phSys.alert{color:#d2556a;font-weight:700;background:#ffe6ea}
+.bub.shake{animation:rise .15s ease both,shake .3s ease .15s}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.draftBox{flex:1;min-height:40px;font-size:15px;padding:9px 14px;border:1.5px solid #f3bdd0;border-radius:20px;text-align:left;background:#fff}
+.draftBox::after{content:"|";color:var(--rose-d);animation:blink 1s steps(2) infinite;margin-left:1px}
+.chip.send{background:#f29bb8;border-color:#f29bb8;color:#fff}
+.phone.call .phHead{background:#3f3550;color:#fff;border-color:#3f3550}
+.phone.call .phMsgs{background:linear-gradient(180deg,#4a3f5e,#6b5a7a)}
+.phone.call .phTime{color:#d9cfe6}
+.phone.call .phOn{color:#9fe3c0}
+.phone.call .bub.them{background:rgba(255,255,255,.92)}
+
+/* 抓時機 */
+.tmWrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;padding:4px 0}
+.tmBar{position:relative;width:100%;height:42px;border-radius:999px;background:rgba(255,250,244,.96);box-shadow:0 5px 14px rgba(74,59,85,.18),inset 0 0 0 2px #fff}
+.tmBar.miss{animation:shake .3s}
+.tmZone{position:absolute;top:6px;bottom:6px;border-radius:999px;background:repeating-linear-gradient(45deg,#ffd3e0 0 6px,#ffe6ee 6px 12px);box-shadow:inset 0 0 0 2px #f29bb8}
+.tmDot{position:absolute;top:7px;width:30px;height:27px;image-rendering:pixelated}
+.tmBtn{width:100%}
+.flash{position:fixed;inset:0;background:#fff;z-index:80;pointer-events:none;animation:flash .5s ease-out forwards}
+@keyframes flash{from{opacity:.9}to{opacity:0}}
+
+/* 整理相簿 */
+.albGrid{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.albItem{position:relative;display:flex;flex-direction:column;gap:6px;padding:8px;border:2px solid #fff;border-radius:14px;background:rgba(255,250,244,.96);box-shadow:0 5px 14px rgba(74,59,85,.18);font:inherit;color:var(--ink);cursor:pointer;transition:opacity .2s,transform .2s;animation:rise .25s ease both}
+.albPic{display:block;height:64px;border-radius:8px}
+.albPic.p0{background:linear-gradient(180deg,#bfb3ea,#f8cfdc)}
+.albPic.p1{background:linear-gradient(180deg,#fff0d9,#ffd9c4)}
+.albPic.p2{background:linear-gradient(180deg,#ffe3ec,#dff5ea)}
+.albPic.p3{background:linear-gradient(180deg,#b9cbe4,#eef2f8)}
+.albCap{font-size:13px;line-height:1.45;font-weight:700}
+.albTag{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#fff;color:#2f9d6c}
+.albItem.del{opacity:.45;transform:scale(.96)}
+.albItem.del .albPic{filter:grayscale(1)}
+.albItem.del .albTag{color:#d2556a}
+
 /* 按住牽手 */
 .holdWrap{flex:0 0 auto;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0}
 .holdBtn{--p:0;position:relative;width:132px;height:132px;border-radius:50%;border:0;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
@@ -632,7 +670,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 <!-- 結局 -->
 <div id="phoneOv" class="ov">
   <div class="phone">
-    <div class="phHead"><canvas id="phAva" width="20" height="24"></canvas><b id="phName"></b><span class="phOn">在線上</span></div>
+    <div class="phHead"><canvas id="phAva" width="20" height="24"></canvas><b id="phName"></b><span class="phOn" id="phOn">在線上</span></div>
     <div class="phMsgs" id="phMsgs"></div>
     <div class="phFoot" id="phFoot"></div>
   </div>
@@ -725,6 +763,7 @@ const SAVE_KEY = 'love-sim-endings-v1';
 const REC_KEY = 'love-sim-records-v1';
 const PROG_KEY = 'love-sim-progress-v1';
 const TIP_KEY = 'love-sim-tips-v1';
+const SEEN_KEY = 'love-sim-seen-v1';
 const TYPE_MS = 30;
 const STAT_MIN = -5, STAT_MAX = 10;
 const AUTO_DELAY = 1500, SKIP_DELAY = 220;
@@ -837,6 +876,14 @@ const LOOK2 = {
    結局
    ========================================================= */
 const ENDINGS = {
+  e_escape: {
+    title: '離開不是你的錯',
+    text: '分開後好幾個月，你走在路上還是會忍不住回頭看。可是你又開始跟{C}吃宵夜，照片想發就發，手機靜音也不會心慌。你慢慢明白，那些不安從來不是因為愛得太深，是有人想把你關起來。你走出來了，這件事不需要任何人原諒。'
+  },
+  e_cage: {
+    title: '越來越小的房間',
+    text: '你跟{P}還在一起。{pH}說那是因為愛，你也這樣告訴自己。只是你已經想不起來，上一次沒有先報備就出門，是什麼時候了。如果有一天你想離開，記得你不是一個人。可以先告訴一個信任的人，也可以打 113 保護專線。'
+  },
   e_pass: {
     title: '擦肩而過的傳單',
     text: '你沒有接過那份好意，也沒有說出那句「我叫……」。日子平靜地過去，你們後來都沒再多說幾句話。偶爾在走廊遇到{P}，還是會想起那天的陽光。'
@@ -959,12 +1006,17 @@ const ENDINGS = {
     text: '交往的第五年，{P}在你們第一次見面的地方，拿出一個小盒子。{pH}的手在抖，叫了一聲「{K}」，後面的話就說得結結巴巴的。你們吵過、冷戰過、差點放棄過，可是每一次，都有人先伸出手。你點了點頭，眼淚掉在{pH}的手背上。'
   }
 };
-const ORDER = ['e_pass','e_juggle','e_unsaid','e_ambig','e_fishpond','e_aircon','e_youth','e_long','e_balance','e_proud','e_distance','e_affair_repair','e_anxious','e_cycle','e_affair_caught','e_affair_leave','e_airport','e_friend','e_growth','e_rebound','e_friends','e_wakeup','e_lostworld','e_lonely','e_self','e_alone_ok','e_truth','e_back','e_wedding'];
+const ORDER = ['e_pass','e_juggle','e_unsaid','e_ambig','e_fishpond','e_aircon','e_youth','e_long','e_balance','e_proud','e_distance','e_affair_repair','e_anxious','e_cycle','e_affair_caught','e_affair_leave','e_airport','e_friend','e_growth','e_rebound','e_friends','e_wakeup','e_lostworld','e_lonely','e_self','e_alone_ok','e_truth','e_back','e_wedding','e_escape','e_cage'];
 
 /* =========================================================
    心理學小知識（附研究出處）
    ========================================================= */
 const TIPS = {
+  honeymoon: {title:'熱戀期的大腦', body:'熱戀的時候，大腦的獎勵系統特別活躍，光是看到對方的照片，反應就像拿到獎賞一樣。所以那陣子對方做什麼都好，一則訊息就能開心一整天。這種感覺會慢慢退下來，那不代表不愛了，是關係要換一種方式走下去。', src:'人類學家費雪等人 2005 年以腦部造影研究熱戀中的人'},
+  perpetual: {title:'永遠吵不完的那件事', body:'追蹤上百對伴侶後發現，大約七成的爭吵是「永久性問題」，來自兩個人個性和習慣的差異，不會真的被解決。感情好的伴侶不是沒有這些問題，而是學會帶著幽默，跟彼此的不同相處。', src:'高特曼 1999 年《七個讓愛延續的方法》'},
+  repair: {title:'修復嘗試', body:'吵到一半，有人先開個玩笑、說一句「我們先停一下」，或伸手碰碰對方，這叫修復嘗試。關係能不能走下去，關鍵不在吵不吵架，而在這些小動作有沒有被對方接住。', src:'高特曼與列文森 1990 年代的伴侶互動研究'},
+  blackmail: {title:'情緒勒索', body:'「你如果走，我不知道我會做出什麼事。」用恐懼、義務和罪惡感讓對方聽話，就是情緒勒索。被勒索的人常常覺得是自己不夠好，但問題出在對方選擇用威脅來表達需要。', src:'心理治療師蘇珊・佛沃 1997 年《情緒勒索》'},
+  terror: {title:'控制不是愛', body:'查手機、限制你見朋友、讓你出門前先想好怎麼解釋，這些加在一起叫「強制控制」，常常是親密暴力的前兆。決定離開的時候，分手前後反而最危險，可以先找信任的人陪你，約在人多的地方。台灣的 113 保護專線 24 小時都有人接。', src:'社會學家史塔克 2007 年提出「強制控制」的概念'},
   halo: {title:'月暈效應', body:'第一印象好，之後看對方的其他特質也會跟著加分。一個順手的小幫忙，常常比想像中更有分量。', src:'心理學家桑代克在 1920 年的研究中命名了這個現象'},
   zeig: {title:'蔡格尼克效應', body:'人對還沒完成的事，記得比已經完成的事更清楚。曖昧之所以讓人一直惦記，就是因為它還懸在那裡。', src:'蔡格尼克，1927 年的記憶實驗'},
   choice: {title:'選擇太多的時候', body:'一項交友網站的研究讓受試者從 6 個或 24 個人裡挑一個約會對象。從 24 個人裡挑的人，一週後對自己的選擇比較不滿意，也比較常反悔。選擇多看起來是好事，有時候反而讓人更難定下來。', src:'丹傑羅與托馬，2017 年'},
@@ -1327,13 +1379,13 @@ const SCENES = {
     {when:st => isSame(), to:'dayPickS'},
     {to:'dayPickO'}
   ]},
-  dayPickO: {pick:['dy1','dy2','dy3']},
-  dayPickS: {pick:['dyS1','dyS2','dy1']},
+  dayPickO: {pick:['dy1','dy2','dy3','hl1','hl2','hl3','hl4','hl5']},
+  dayPickS: {pick:['dyS1','dyS2','dy1','hl1','hl2','hl3','hl4','hl5']},
   dy1: {bg:'campus', speaker:null,
     text:{def:'你感冒請假那天，{P}下課後拎著一袋粥出現在你家樓下。袋子裡塞了一張紙條：「{K}，喝完再睡，不准滑手機。」', busy:'你感冒請假那天，{P}在兩場會議中間抽空，叫了一份粥送到你家，附上一句：「晚上忙完去看你。」', cool:'你感冒請假那天，門口多了一袋粥和一盒藥，沒有紙條。你知道是誰。'},
     choices:[
-      {label:'傳訊息：「你怎麼這麼好。」', to:'fpPick', fx:{a:2,t:1}},
-      {label:'「你不用這樣啦，我會不好意思。」', to:'fpPick', fx:{s:1}}
+      {label:'傳訊息：「你怎麼這麼好。」', to:'dayNext', fx:{a:2,t:1}},
+      {label:'「你不用這樣啦，我會不好意思。」', to:'dayNext', fx:{s:1}}
     ]},
   dy2: {bg:'cafe', speaker:null,
     text:{
@@ -1341,50 +1393,320 @@ const SCENES = {
       f:'第一次跟{P}的朋友吃飯。他們一直開{P}玩笑，你努力跟上。回家路上，{P}牽起你的手：「他們都說你很好相處。」'
     },
     choices:[
-      {label:'「其實我緊張死了。」', to:'fpPick', fx:{t:2}},
-      {label:'「那當然。」（假裝很輕鬆）', to:'fpPick', fx:{a:1}}
+      {label:'「其實我緊張死了。」', to:'dayNext', fx:{t:2}},
+      {label:'「那當然。」（假裝很輕鬆）', to:'dayNext', fx:{a:1}}
     ]},
   dy3: {bg:'campus', speaker:null,
     text:'你發現{P}的手機桌布換成了你們的合照，而且是你覺得自己拍得很醜的那張。',
     tip:'triangle',
     choices:[
-      {label:'「換掉啦！這張好醜！」（但其實很開心）', to:'fpPick', fx:{a:2}},
-      {label:'假裝沒看到，偷偷開心了一整天', to:'fpPick', fx:{a:1,s:1}}
+      {label:'「換掉啦！這張好醜！」（但其實很開心）', to:'dayNext', fx:{a:2}},
+      {label:'假裝沒看到，偷偷開心了一整天', to:'dayNext', fx:{a:1,s:1}}
     ]},
   dyS1: {bg:'campus', speaker:null,
     text:'第一次在街上牽手。你下意識看了一下四周，{P}好像感覺到了，手稍微鬆開了一點。',
     tip:'minority',
     choices:[
-      {label:'把手牽回來：「沒事，我想牽著。」', to:'fpPick', fx:{a:2,t:2,s:1}},
-      {label:'把手放回口袋', to:'fpPick', fx:{t:-1,s:-1}},
-      {label:'「我們回家再牽好不好？」', to:'fpPick', fx:{t:1}}
+      {label:'把手牽回來：「沒事，我想牽著。」', to:'dayNext', fx:{a:2,t:2,s:1}},
+      {label:'把手放回口袋', to:'dayNext', fx:{t:-1,s:-1}},
+      {label:'「我們回家再牽好不好？」', to:'dayNext', fx:{t:1}}
     ]},
   dyS2: {bg:'cafe', speaker:null,
     text:'週末回家吃飯，媽媽夾了一塊肉給你，順口問：「有沒有交{GF}啊？」桌上突然安靜下來。',
     tip:'family',
     choices:[
-      {label:'「有一個在交往的人，叫{P}。改天想帶來給你們認識。」', to:'fpPick', fx:{s:2,t:2}, flag:'out'},
-      {label:'「還沒啦。」', to:'fpPick', fx:{s:-1}},
-      {label:'「等我準備好，再跟你們說。」', to:'fpPick', fx:{s:1}}
+      {label:'「有一個在交往的人，叫{P}。改天想帶來給你們認識。」', to:'dayNext', fx:{s:2,t:2}, flag:'out'},
+      {label:'「還沒啦。」', to:'dayNext', fx:{s:-1}},
+      {label:'「等我準備好，再跟你們說。」', to:'dayNext', fx:{s:1}}
     ]},
 
+  /* ======== v12：熱戀（交往後抽兩段甜蜜事件） ======== */
+  dayNext: {branch:[
+    {when:st => !st.flags.day2, to:'dayAgain'},
+    {to:'fpPick'}
+  ]},
+  dayAgain: {set:{day2:true}, branch:[
+    {when:st => isSame(), to:'dayPickS'},
+    {to:'dayPickO'}
+  ]},
+  hl1: {bg:'night', speaker:null, text:'晚上十二點半，{P}打來說「睡不著，想聽你的聲音」。', next:'dayNext', call:true,
+    chat:[
+      {p:{def:'你在幹嘛？', cool:'……在幹嘛。', sunny:'嗨嗨！你在幹嘛！', witty:'這裡是深夜廣播，今晚的特別來賓是你', busy:'剛把報告交出去，終於。你呢？'}},
+      {me:[
+        {label:'在想你啊', fx:{a:2,h:1}, re:[{def:'……你很犯規欸', cool:'……嗯。我也是。', sunny:'啊啊啊我要錄下來', witty:'這句我要設成鬧鐘鈴聲', busy:'那我今天值得了'}]},
+        {label:'在滑手機，剛好想打給你', fx:{a:1}, re:[{def:'那我們有默契', cool:'嗯，剛好。', sunny:'心電感應！', witty:'看吧，我們連滑手機都同步', busy:'那剛好，我也是'}]}
+      ]},
+      {sys:'（你們從今天吃了什麼，聊到小時候最怕的卡通人物）', wait:1400},
+      {p:{def:'好晚了，你先掛', cool:'很晚了。你先掛。', sunny:'好晚了！你先掛！', witty:'依照慣例，請你先掛', busy:'很晚了，你明天還有課，你先掛'}},
+      {me:[
+        {label:'不要，你先掛', fx:{a:1}, re:[{def:'不要，你先掛', cool:'……你先。', sunny:'不要～你先掛嘛', witty:'這是原則問題，你先'}]},
+        {label:'好，那我掛囉', fx:{s:1}, re:[{def:'……等一下！晚安，{K}', cool:'……晚安，{K}。', sunny:'等等等！晚安{K}！', witty:'等一下，忘了說，晚安，{K}'}]}
+      ]},
+      {me:[
+        {label:'那數到三一起掛', fx:{a:1}, re:['一、二……', {sys:'（三秒後，誰都沒有掛）', wait:1300}, {def:'……你怎麼還在', cool:'……你也沒掛。', sunny:'哈哈哈哈你也沒掛！', witty:'我就知道'}]},
+        {label:'晚安，明天見', fx:{a:1}, re:[{def:'晚安，明天見', cool:'晚安。', sunny:'晚安晚安晚安！', witty:'晚安，明天見，夢裡也見'}]}
+      ]}
+    ]},
+  hl2: {bg:'campus', speaker:'{P}',
+    text:{def:'來拍一張合照！我數到三，你按快門喔。', cool:'……拍一張吧。你按。', sunny:'我們拍拍貼！要拍到我們兩個都在笑的那一刻！', witty:'來，記錄歷史性的一刻。你負責按，我負責帥', busy:'難得有空，拍一張吧，你來按'},
+    timing:{label:'按下快門', hint:'等{P}笑得最燦爛的時候，在愛心跑進框框時按下去', ok:'hl2ok', fail:'hl2fail', fx:{a:2,h:1}, failFx:{a:1}, retry:'有人眨眼了！再一張', win:'喀嚓！', lose:'糊掉了……'}},
+  hl2ok: {speaker:null,
+    text:'照片裡的你們都笑得瞇起眼睛。隔天你發現，{P}把頭貼換成了這張，還把你那一半裁得比較大。',
+    next:'dayNext'},
+  hl2fail: {speaker:'{P}',
+    text:{def:'整張糊掉了，可是你看，你在笑耶。這張我要留著。', cool:'……糊掉了。但這張很好。', sunny:'哈哈哈哈全糊了！可是好可愛，我要設成桌布！', witty:'很有藝術感，我宣布這是我們的代表作', busy:'沒關係，這張很真實。我存起來了'},
+    next:'dayNext'},
+  hl3: {bg:'rain', speaker:null,
+    text:'下課突然下大雨，你們只有一把傘。走到一半你才發現，{P}一直把傘往你這邊偏，{pH}的左肩已經濕透了。',
+    choices:[
+      {label:'把傘推回去：「你也要撐到啦。」', to:'hl3b', fx:{t:1,h:1}},
+      {label:'挽住{pH}的手臂，兩個人靠緊一點', to:'hl3b', fx:{a:2,h:1}},
+      {label:'假裝沒發現，偷偷開心', to:'hl3b', fx:{a:1}}
+    ]},
+  hl3b: {speaker:'{P}',
+    text:{def:'淋濕一邊而已，你沒淋到就好。', cool:'……沒關係。', sunny:'淋一點雨很浪漫啊！', witty:'我是故意的，這叫半邊落湯雞造型', busy:'我等一下回去換就好，你別感冒'},
+    next:'dayNext'},
+  hl4: {bg:'cafe', speaker:null,
+    text:'交往滿一個月。你想了好久要送{P}什麼。',
+    tip:'honeymoon',
+    choices:[
+      {label:'手寫一張卡片，把這個月的小事都寫進去', to:'hl4a', fx:{a:1,t:2}},
+      {label:'帶{pH}回第一次約會的地方', to:'hl4b', fx:{a:2}},
+      {label:'買了{pH}上次多看兩眼的那個小東西', to:'hl4c', fx:{a:1,t:1}}
+    ]},
+  hl4a: {speaker:'{P}',
+    text:{def:'……你連我那天穿什麼都記得。我會好好收著。', cool:'（{pH}看了很久，沒說話，只是把卡片小心地夾進筆記本。）', sunny:'你怎麼這麼可愛！我要哭了！真的要哭了！', witty:'這張卡片的字數比我期末報告還多，我感動到詞窮', busy:'我這個月太忙，好多事都忘了。謝謝你幫我記得。'},
+    next:'dayNext'},
+  hl4b: {speaker:'{P}',
+    text:{def:'你也記得這裡喔？我還以為只有我會一直想起來。', cool:'……這裡。我也常想起那天。', sunny:'這裡！我們第一次約會的地方！你好浪漫！', witty:'重返案發現場。我承認，那天我超緊張', busy:'好久沒有好好停下來了。謝謝你帶我來。'},
+    next:'dayNext'},
+  hl4c: {speaker:'{P}',
+    text:{def:'你怎麼知道我想要這個？我只看了一下下欸。', cool:'……你有注意到。', sunny:'是那個！我超想要的那個！你是不是會讀心術！', witty:'你是不是在我身上裝了監視器？開玩笑的，我好開心', busy:'我自己都忘了。你怎麼記得的？'},
+    next:'dayNext'},
+  hl5: {bg:'cafe', speaker:null,
+    text:'週末你們第一次一起煮飯。{P}自告奮勇說要煎蛋，結果廚房冒出一陣黑煙。',
+    choices:[
+      {label:'笑到蹲在地上，拿手機拍下來', to:'hl5b', fx:{a:1,t:1}},
+      {label:'從後面抱住{pH}：「我教你。」', to:'hl5b', fx:{a:2,h:1}},
+      {label:'「沒關係，焦的我吃。」', to:'hl5b', fx:{t:2}}
+    ]},
+  hl5b: {speaker:'{P}',
+    text:{def:'不准笑！……好啦，下次換你煎，我負責吃。', cool:'……我以後不碰鍋子了。', sunny:'這叫焦糖風味！你懂什麼！', witty:'這不是失敗，這是一顆有故事的蛋', busy:'我會煮的只有泡麵，被你發現了。'},
+    next:'dayNext'},
+
+  /* ======== v12：磨合（吵兩輪，第二輪換一種吵法） ======== */
+  cRes: {branch:[{when:st => st.flags.round2, to:'s14b'}, {to:'s14'}]},
+  cCold: {branch:[{when:st => st.flags.round2, to:'s15b'}, {to:'s15'}]},
+  cPick2: {set:{round2:true}, bg:'rain', speaker:null, text:'和好之後過了一陣子。你們以為已經吵過最難的那一次了。', next:'cPickR'},
+  cPickR: {pick:['c1','c2','c3','c4','c5','c6','c7','c8']},
+  s14b: {speaker:'{P}',
+    text:{def:'這次我們都比較快冷靜下來了。我想把話說完，不想再讓它變成心裡的刺。', cool:'……這次我不想走開。我們把話說完。', sunny:'我們不要冷戰好不好？我不想跟你冷戰。', busy:'我剛剛把手機關了。我們好好講，講完再說別的。', witty:'我宣布暫停。不是不吵，是先抱一下再吵。'},
+    tip:'repair',
+    next:'crisisPick'},
+  s15b: {speaker:null,
+    text:{def:'這一次，你們都沒有先開口。你發現冷戰比吵架還累，因為連生氣都只能自己一個人。', cool:'{P}又安靜了。你也學會了安靜。兩個人在同一個房間裡，各自滑手機。', sunny:'{P}傳來一個貼圖想打破沉默，你看了很久，還是只回了一個「嗯」。'},
+    next:'crisisPick'},
+  c5: {bg:'night', speaker:null, text:'晚上九點，你傳了一則訊息給{P}。', next:'c5b',
+    chat:[
+      {mine:'今天好累，好想見你'},
+      {sys:'已讀', wait:1200},
+      {sys:'（十分鐘過去了）', wait:1200},
+      {sys:'（一個小時過去了）', wait:1300},
+      {me:[
+        {label:'再傳一個「？」', fx:{t:-1,h:-1}, say:'？', re:[{sys:'已讀', wait:1000}, {sys:'（又過了一個小時）', wait:1200}], flag:'spam'},
+        {label:'打電話過去', silent:true, fx:{t:-1}, sys:'（嘟——嘟——沒有人接）'},
+        {label:'放下手機，去洗澡', silent:true, fx:{s:2}, sys:'（你把手機丟在床上，去洗了一個很長的澡）'}
+      ]},
+      {p:{def:'抱歉剛剛在忙，現在才看到', cool:'剛在忙。', sunny:'對不起對不起！我剛剛跟朋友在外面，手機沒電了！', busy:'抱歉，剛剛在開會，現在才結束', witty:'抱歉，剛剛被報告綁架了', sea:'剛剛在外面啦～怎麼了？', aircon:'抱歉！剛剛在幫朋友處理事情，現在才看到'}}
+    ]},
+  c5b: {speaker:null,
+    text: st => st.flags.spam ? '你盯著那句「現在才看到」。可是兩個小時前，明明就已讀了。' : '你看著那句「現在才看到」，心裡卡卡的。明明顯示已讀了。',
+    tip:'bids',
+    choices:[
+      {label:'「沒關係。可是已讀不回，我會很不安。」', to:'cRes', fx:{t:2,s:1}},
+      {label:'「你明明已讀了，不用騙我。」', to:'cRes', fx:{t:-2,h:-2}},
+      {label:'「嗯。」', to:'cCold', fx:{t:-1}}
+    ]},
+  c6: {bg:'cafe', speaker:'{P}',
+    text:{def:'我想畢業後去國外念書。我申請了，下個月就知道結果。', cool:'……我畢業後想回老家工作。我爸媽年紀大了。', sunny:'我跟你說喔！我畢業想去打工度假一年！', busy:'我拿到南部的實習了，畢業後大概會留在那邊。', witty:'告訴你一個壞消息和一個好消息。好消息是我找到工作了，壞消息是在台中。'},
+    choices:[
+      {label:'「你怎麼現在才跟我說？」', to:'cRes', fx:{t:-2,s:1,h:-1}},
+      {label:'「那我們一起想，之後要怎麼走。」', to:'cRes', fx:{t:2,a:1}},
+      {label:'「……你有想過我嗎？」', to:'cCold', fx:{a:1,s:-1}}
+    ]},
+  c7: {bg:'campus', speaker:null,
+    text:'第一次一起出去玩兩天。{P}把行程排到每半小時一格，你只想睡到自然醒、隨便亂走。第二天早上，你賴床到十點，{pH}站在門口，臉很臭。',
+    tip:'perpetual',
+    choices:[
+      {label:'「那下午照你的，晚上照我的？」', to:'cRes', fx:{t:2}},
+      {label:'「出來玩幹嘛搞得像在上班？」', to:'cRes', fx:{t:-2,h:-2}},
+      {label:'默默起床，一整天都不太說話', to:'cCold', fx:{s:-1}}
+    ]},
+  c8: {bg:'night', speaker:null,
+    text:'吵到一半，{P}丟出一句：「你就是太敏感了。」你感覺一股火衝到喉嚨，很想把最傷人的那句話丟回去。',
+    hold:{head:'先別說話。按住按鈕，慢慢深呼吸', label:'吸氣，吐氣', hints:['吸氣……', '吐氣……', '再一次……', '心跳慢下來了'],
+          fx:{t:2,s:1}, ok:'c8ok', fail:'c8bad', failFx:{t:-2,h:-2}, win:'冷靜下來了', okLog:'（深呼吸，沒有說出那句話）', failLog:'（話已經衝出口了）', noHearts:true,
+          alt:{label:'直接回嘴：「那你就是冷血！」', to:'c8bad', fx:{t:-3,h:-2}}}},
+  c8ok: {speaker:null,
+    text:'你吐了一口氣，說：「我現在很生氣，我們十分鐘後再講好不好？」{P}愣住了，過了一會兒，小聲說：「……好。」',
+    next:'cRes'},
+  c8bad: {speaker:null,
+    text:'話一說出口你就後悔了。{P}的表情像被打了一下，房間裡安靜到可以聽見冰箱的聲音。',
+    choices:[
+      {label:'「對不起，我不是那個意思。」', to:'cRes', fx:{t:1}},
+      {label:'甩上門走出去', to:'cCold', fx:{t:-2,h:-1}}
+    ]},
+
+  /* ======== v12：恐怖情人（控制一步一步加深） ======== */
+  ct4: {bg:'night', speaker:null, text:'週五晚上，你跟{C}去看電影，手機開了靜音。散場的時候，你打開手機。', next:'ct5',
+    chat:[
+      {sys:'未接來電 ×7', alert:true, wait:900},
+      {p:'你在哪', fast:true},
+      {p:'為什麼不接', fast:true},
+      {p:'？', fast:true},
+      {p:'？？？', fast:true},
+      {p:'你是不是跟誰在一起', fast:true},
+      {p:'我在你家樓下', fast:true},
+      {p:'你不回我就一直等', fast:true},
+      {me:[
+        {label:'對不起！我在看電影，手機靜音了', fx:{s:-1}, re:[{p:'你為什麼要靜音', fast:true}, {p:'你知道我有多擔心嗎', fast:true}, {p:'下次不准靜音', fast:true}]},
+        {label:'我跟{C}在看電影，晚點打給你', fx:{s:1}, re:[{p:'晚點？', fast:true}, {p:'你現在就給我回來', fast:true}, {p:'你如果不回來，我不知道我會做出什麼事', fast:true}]},
+        {label:'（傳一張電影票根的照片）', silent:true, sys:'（你傳了一張照片）', fx:{t:1}, re:[{p:'……兩張？', fast:true}, {p:'另一張是誰的', fast:true}]}
+      ]}
+    ]},
+  ct5: {bg:'night', speaker:null,
+    text:'你回到家，{P}真的坐在樓梯間。{pH}一看到你就紅了眼眶：「我只是太愛你了，你為什麼要讓我這麼害怕？」說完，{pH}把手機用力摔在牆上。',
+    tip:'blackmail',
+    choices:[
+      {label:'「對不起，是我不好。」（抱住{pH}）', to:'ct6a', fx:{s:-2,t:1}, flag:'submit'},
+      {label:'「你先冷靜，我們明天再說。」（進門，把門鎖上）', to:'ct6b', fx:{s:1}},
+      {label:'打給{C}：「你可以來我家一下嗎？」', to:'ct6c', fx:{s:2,p:2}, flag:'help'}
+    ]},
+  ct6a: {speaker:null,
+    text:'之後的日子，{P}很溫柔，溫柔到你幾乎忘了那天晚上。直到某天你說想跟{C}吃飯，{pH}只回了一句：「你又要丟下我了嗎？」你把訊息刪掉，跟{C}說下次。',
+    next:'ct7'},
+  ct6b: {speaker:null,
+    text:'那晚你收到四十幾則訊息，從道歉、哀求，到最後一句「你會後悔的」。你沒有回。天亮的時候，你第一次認真想：這真的是愛嗎？',
+    next:'ct7'},
+  ct6c: {speaker:'{C}',
+    text:'……你等我，十分鐘到。在那之前，不要開門，也不要一個人下樓。',
+    next:'ct7'},
+  ct7: {bg:'rain', chap:'第六章・出口', speaker:null,
+    text:'你開始注意到一些事。你很久沒見朋友了。照片要先給{P}看過才敢發。每次說話之前，你都會先猜{pH}會不會生氣。',
+    tip:'terror',
+    choices:[
+      {label:'找{C}一起想，怎麼安全地分開', to:'ct8safe', fx:{s:2,p:1}},
+      {label:'再給{pH}一次機會，也許{pH}會改', to:'ct8stay', fx:{s:-2}, flag:'submit'},
+      {label:'一個人當面說分手，把話講清楚', to:'ct8face', fx:{s:1}}
+    ]},
+  ct8face: {speaker:'{P}',
+    text:'……分手？你以為你走得掉嗎？我什麼都知道。你的密碼、你去哪裡、你跟誰說了什麼。',
+    choices:[
+      {label:'轉身就走，邊走邊打給{C}', to:'ct8safe', fx:{s:1,p:1}},
+      {label:'「……對不起，我不是那個意思。」', to:'ct8stay', fx:{s:-2}, flag:'submit'}
+    ]},
+  ct8safe: {speaker:null,
+    text:'你們約在人很多的咖啡廳，{C}坐在隔壁桌。你說完分手，{P}哭著求你，又罵你，最後摔門離開。那天晚上，你換了所有密碼，關掉定位，封鎖了每個帳號。{C}陪你睡在客廳。',
+    next:'e_escape'},
+  ct8stay: {speaker:null,
+    text:'{P}真的變溫柔了一陣子。然後一切又開始重複：查手機、問行程、在你朋友面前臉很臭。你越來越少出門，房間好像越來越小。',
+    next:'e_cage'},
+  e_escape:{end:'e_escape'}, e_cage:{end:'e_cage'},
+
+  /* ======== v12：被分手的三種方式 ======== */
+  s24dPick: {bg:'night', chap:'第七章・選擇', set:{dumped:true}, pick:['s24d','s24m','s24g']},
+  s24m: {speaker:null, text:'📱 {P} 傳來訊息', next:'g1Pick',
+    chat:[
+      {p:'在嗎'},
+      {p:{def:'我想了很久，還是決定用打字的。當面我一定說不出口', cool:'有件事，打字比較說得出口。', sunny:'對不起，我知道這樣很差勁，可是我怕當面會哭到說不完', busy:'我知道應該當面說，可是我真的不知道怎麼開口'}},
+      {p:'我們分手吧。'},
+      {p:{def:'不是你不好，是我已經沒辦法給你你要的了', cool:'我累了。', sunny:'我真的很努力了，可是我好像沒辦法再像以前那樣喜歡你了', busy:'我現在沒有力氣好好愛一個人。對你不公平', witty:'這次我真的笑不出來。對不起'}},
+      {me:[
+        {label:'「可以見面說嗎？」', fx:{a:1}, re:[{def:'對不起，我真的沒辦法', cool:'……不要了。', sunny:'對不起，我見到你就會心軟'}]},
+        {label:'「……好。」', fx:{s:1}, re:['謝謝你。對不起。']},
+        {label:'（已讀，沒有回）', silent:true, fx:{s:-1}, re:[{sys:'（三分鐘後）', wait:1200}, {sys:'{P} 收回了一則訊息'}]}
+      ]}
+    ]},
+  s24g: {speaker:null,
+    text:'{P}的訊息越來越短，從「晚安」變成「嗯」，最後只剩已讀。第九天，{pH}傳來一句：「我覺得我們先這樣吧。」連「分手」兩個字都沒有說。',
+    choices:[
+      {label:'打電話過去', to:'s24g2', fx:{a:1}},
+      {label:'回一個「好。」', to:'g1Pick', fx:{s:1}}
+    ]},
+  s24g2: {speaker:null, text:'電話響了很久，你聽著嘟聲，一直聽到自動轉進語音信箱。你沒有留言。', next:'g1Pick'},
+
+  /* ======== v12：分手後，每個階段都有三種版本 ======== */
+  g1Pick: {bg:'night', chap:'第八章・之後', pick:['g1','g1b','g1c']},
+  g1b: {bg:'night', speaker:null,
+    text:'分開的第三天，你打開相簿，最上面那張就是你們的合照。你深吸一口氣，決定整理一下。',
+    album:{items:['第一次約會拍的那張','{P}睡著時，你偷拍的側臉','你們一起煮焦的那顆蛋','{P}幫你拍的、你最喜歡的自己'],
+      all:{to:'g1bAll', fx:{a:1,s:-1}}, some:{to:'g1bSome', fx:{s:1}}, none:{to:'g1bNone', fx:{s:2,a:-1}}}},
+  g1bAll: {speaker:null, text:'你一張都刪不下去。最後你把它們全部移進一個叫「先不要看」的資料夾。', next:'g2Pick'},
+  g1bSome: {speaker:null, text:'你刪掉了一些，留下了一些。留下來的那幾張，你覺得以後的自己，應該會想記得。', next:'g2Pick'},
+  g1bNone: {speaker:null, text:'你按下「刪除」。手機跳出確認視窗，你按了第二次。相簿空出一大塊，你的心也是。', next:'g2Pick'},
+  g1c: {bg:'night', speaker:null,
+    text:'{P}的外套還掛在你的椅子上。你把它摺好放進紙袋，又拿出來，又放回去。',
+    choices:[
+      {label:'寄還給{pH}，不附紙條', to:'g2Pick', fx:{s:2}},
+      {label:'今晚穿著它睡覺，明天再說', to:'g2Pick', fx:{a:1,s:-1}},
+      {label:'交給{C}：「幫我處理。」', to:'g2Pick', fx:{p:1,s:1}}
+    ]},
+  g2Pick: {pick:['g2','g2b','g2c']},
+  g2b: {bg:'cafe', speaker:null,
+    text:'第二週，你一個人去以前常去的那家早餐店。老闆很自然地問：「今天一樣兩份喔？」你愣了一下，說：「一份就好。」',
+    tip:'crave',
+    next:'gRoute'},
+  g2c: {bg:'cafe', speaker:null,
+    text:'第二週，有人在群組不小心提到{P}的名字。整個群組安靜了五秒，接著大家開始瘋狂傳貼圖洗版。你笑著笑著，眼淚就掉下來了。',
+    tip:'crave',
+    next:'gRoute'},
+  g5Pick: {pick:['g5','g5b','g5c']},
+  g5b: {bg:'night', speaker:null, text:'今天是{P}的生日。你打開聊天室，游標一直在閃。', next:'g6n',
+    chat:[
+      {sys:'上一則訊息：三週前'},
+      {draft:{text:'生日快樂。最近好嗎？',
+        send:{fx:{a:2,s:-2}, to:'g6r', re:['……謝謝你還記得', '其實我這陣子一直想傳訊息給你']},
+        del:{fx:{s:2}, sys:'（你把字一個一個刪掉，關掉了聊天室）'}}}
+    ]},
+  g5c: {bg:'night', speaker:null,
+    text:'你在限時動態看到{P}跟一個你不認識的人的合照。很普通的一張照片，你卻看了十幾遍。',
+    choices:[
+      {label:'傳訊息問：「那是誰？」', to:'g5c2', fx:{a:1,s:-1}},
+      {label:'把{pH}的限時動態設成隱藏', to:'g6n', fx:{s:2}}
+    ]},
+  g5c2: {speaker:'{P}',
+    text:{def:'朋友啦。……你還好嗎？', cool:'朋友。', sunny:'朋友啦！你……最近還好嗎？我常常想到你', busy:'同事。你怎麼了？'},
+    choices:[
+      {label:'「我很好。」', to:'g6n', fx:{s:1}},
+      {label:'「我很想你。」', to:'g6r', fx:{a:2,s:-2}}
+    ]},
+  g7Pick: {pick:['g7','g7b','g7c']},
+  g7b: {bg:'campus', speaker:null,
+    text:'三個月後，你收到一個包裹，是你留在{P}那裡的東西。最上面放著你們一起買的鑰匙圈，沒有紙條。你把鑰匙圈收進抽屜，沒有丟，也沒有再拿出來。',
+    tip:'selfc',
+    next:'b2'},
+  g7c: {bg:'campus', speaker:null,
+    text:'三個月後，你在捷運上看到一個很像{P}的背影，心跳快了一拍。對方轉過頭來，是個陌生人。你笑了一下，發現自己好像鬆了一口氣。',
+    tip:'selfc',
+    next:'b2'},
+
   /* ---------- 第四章：裂縫（四種起因） ---------- */
-  cPick: {bg:'rain', chap:'第四章・裂縫', pick:['c1','c2','c3','c4']},
+  cPick: {bg:'rain', chap:'第四章・裂縫', pick:['c1','c2','c3','c4','c5','c6','c7','c8']},
   c1: {speaker:null,
     text:'為了晚回訊息的事，你們吵了起來。{P}說：「你每次都要把話講到底。」你脫口而出：「那你呢？每次都裝沒事。」',
     tip:'horsemen',
     choices:[
-      {label:'「對不起，我剛剛說話太重了。」', to:'s14', fx:{t:3,a:1}},
-      {label:'「我又沒說錯！」', to:'s14', fx:{t:-3,s:1,h:-2}},
-      {label:'（沉默，轉身離開）', to:'s15', fx:{a:-2,t:-2,h:-1}}
+      {label:'「對不起，我剛剛說話太重了。」', to:'cRes', fx:{t:3,a:1}},
+      {label:'「我又沒說錯！」', to:'cRes', fx:{t:-3,s:1,h:-2}},
+      {label:'（沉默，轉身離開）', to:'cCold', fx:{a:-2,t:-2,h:-1}}
     ]},
   c2: {speaker:null,
     text:'週末的聚會，{P}沒有找你一起去。你問起，{pH}只說：「我以為你不喜歡那種場合。」你的語氣一下就硬了。',
     tip:'horsemen',
     choices:[
-      {label:'「我只是希望你先問我。」', to:'s14', fx:{t:3,a:1}},
-      {label:{def:'「你根本不想讓我認識你朋友吧。」', same:'「你是不是不想讓朋友知道我們的事？」'}, to:'s14', fx:{t:-3,s:1}},
-      {label:'（沉默，轉身離開）', to:'s15', fx:{a:-2,t:-2,h:-1}}
+      {label:'「我只是希望你先問我。」', to:'cRes', fx:{t:3,a:1}},
+      {label:{def:'「你根本不想讓我認識你朋友吧。」', same:'「你是不是不想讓朋友知道我們的事？」'}, to:'cRes', fx:{t:-3,s:1}},
+      {label:'（沉默，轉身離開）', to:'cCold', fx:{a:-2,t:-2,h:-1}}
     ]},
   c3: {speaker:null,
     text:{
@@ -1393,22 +1715,22 @@ const SCENES = {
       same:'結帳時，你們又為了誰付錢推來推去。{P}突然說：「我們可不可以不要每次都算得這麼清楚？」那天回家的路上，兩個人都沒說話。'
     },
     choices:[
-      {label:{m:'「我只是想對你好。我們聊聊好嗎？」', def:'「我只是不想欠你。我們聊聊好嗎？」'}, to:'s14', fx:{t:3,a:1}},
-      {label:{m:'「那以後都你付啊。」', def:'「那你以後都自己付啊。」'}, to:'s14', fx:{t:-3,s:1}},
-      {label:'（什麼都不說，假裝沒事）', to:'s15', fx:{a:-2,t:-2}}
+      {label:{m:'「我只是想對你好。我們聊聊好嗎？」', def:'「我只是不想欠你。我們聊聊好嗎？」'}, to:'cRes', fx:{t:3,a:1}},
+      {label:{m:'「那以後都你付啊。」', def:'「那你以後都自己付啊。」'}, to:'cRes', fx:{t:-3,s:1}},
+      {label:'（什麼都不說，假裝沒事）', to:'cCold', fx:{a:-2,t:-2}}
     ]},
   c4: {speaker:null,
     text:'你興奮地分享今天報告拿了高分，{P}的眼睛沒有離開手機，只回了一聲「嗯」。你把剩下的話吞了回去。',
     tip:'bids',
     choices:[
-      {label:'「我剛剛說的事，對我很重要。」', to:'s14', fx:{t:2,s:1}},
-      {label:'「你每次都這樣！」', to:'s14', fx:{t:-2,a:-1,h:-2}},
-      {label:'「算了，沒事。」', to:'s15', fx:{t:-2}}
+      {label:'「我剛剛說的事，對我很重要。」', to:'cRes', fx:{t:2,s:1}},
+      {label:'「你每次都這樣！」', to:'cRes', fx:{t:-2,a:-1,h:-2}},
+      {label:'「算了，沒事。」', to:'cCold', fx:{t:-2}}
     ]},
   s14: {speaker:'{P}',
     text:{def:'……我也有不對的地方。我們都還在學，好好說就好。', cool:'……我先冷靜一下。明天再說，好嗎？', sunny:'好啦，我們不要吵了。抱一下？', busy:'我最近壓力太大了，不是針對你。對不起。', witty:'好，暫停。我們重來一次，這次我先道歉。'},
-    next:'crisisPick'},
-  s15: {speaker:null, text:{def:'接下來三天，你們的對話只剩下「吃飯了嗎」「嗯」。', sunny:'{P}傳了好幾則訊息想和好，你都只回了一個「嗯」。', cool:'接下來三天，{P}一則訊息都沒傳。你也沒有。'}, next:'crisisPick'},
+    next:'cPick2'},
+  s15: {speaker:null, text:{def:'接下來三天，你們的對話只剩下「吃飯了嗎」「嗯」。', sunny:'{P}傳了好幾則訊息想和好，你都只回了一個「嗯」。', cool:'接下來三天，{P}一則訊息都沒傳。你也沒有。'}, next:'cPick2'},
 
   /* ---------- 第五章：三種不同的危機 ---------- */
   crisisPick: {pick:['dPick','ld1','fdPick','tm1','ct1']},
@@ -1637,11 +1959,11 @@ const SCENES = {
     text:'一個月後，你想找人說說話，翻遍通訊錄，卻不知道可以打給誰。上一次跟{C}好好聊天，已經是半年前的事了。',
     choices:[
       {label:'傳訊息給{C}：「好久不見，最近好嗎？」', to:'g4Lr', fx:{p:2,s:1}},
-      {label:'算了，一個人撐著就好', to:'g5', fx:{s:-1}, flag:'lonely'}
+      {label:'算了，一個人撐著就好', to:'g5Pick', fx:{s:-1}, flag:'lonely'}
     ]},
   g4Lr: {speaker:'{C}',
     text:{def:'……你終於找我了。我一直在等你。要不要出來吃個飯？', m:'……你終於出現了。走，去吃宵夜，我請。', cool:'……嗯。我在。'},
-    next:'g5'},
+    next:'g5Pick'},
 
   /* ======== v10：曖昧期新事件 ======== */
   /* 軍師群組：朋友會依「對方的隱藏心動值」和人格給出判斷 */
@@ -1805,22 +2127,22 @@ const SCENES = {
   ct3: {speaker:null,
     text:'你突然發現，自己出門前會先想：這個地方，要怎麼跟{pH}解釋？',
     choices:[
-      {label:'「我們把定位關掉吧。有不安，直接問我。」', to:'s24', fx:{s:2,t:1}},
-      {label:'以後少去{C}家', to:'s24', fx:{p:-2,s:-2}, flag:'submit'}
+      {label:'「我們把定位關掉吧。有不安，直接問我。」', to:'ct4', fx:{s:2,t:1}},
+      {label:'以後少去{C}家', to:'ct4', fx:{p:-2,s:-2}, flag:'submit'}
     ]},
-  ct2b: {speaker:'{P}', text:{def:'……好。那你可以答應我，有什麼事都先跟我說嗎？', sunny:'好吧……那你要常常傳照片給我喔！', cool:'……嗯。我會試著不要一直想。'}, next:'s24'},
-  ct2c: {speaker:'{P}', text:{def:'我只是怕失去你。你為什麼要說得這麼難聽？', cool:'……', sunny:'我只是太喜歡你了啊！'}, next:'s24'},
+  ct2b: {speaker:'{P}', text:{def:'……好。那你可以答應我，有什麼事都先跟我說嗎？', sunny:'好吧……那你要常常傳照片給我喔！', cool:'……嗯。我會試著不要一直想。'}, next:'ct4'},
+  ct2c: {speaker:'{P}', text:{def:'我只是怕失去你。你為什麼要說得這麼難聽？', cool:'……', sunny:'我只是太喜歡你了啊！'}, next:'ct4'},
 
   /* 第七章入口：對方可能先開口分手 */
   s24: {branch:[
-    {when:st => st.them[st.cast.pk] <= 1, to:'s24d'},
+    {when:st => st.them[st.cast.pk] <= 1, to:'s24dPick'},
     {to:'s24c'}
   ]},
   s24d: {bg:'night', chap:'第七章・選擇', set:{dumped:true}, speaker:'{P}',
     text:{def:'我們分手吧。我想了很久，不是因為哪一件事，是我已經……沒有那種感覺了。', cool:'……我們分手吧。', sunny:'對不起……我真的很努力了，可是我好像沒辦法再喜歡你了。', busy:'我們分手吧。我沒辦法再把時間花在一段我不確定的關係上。', witty:'我想了很多種說法，但好像怎麼說都很爛。我們分手吧。', sea:'我覺得我們不太適合。你值得更好的人。'},
     choices:[
-      {label:'「……為什麼？」', to:'g1', fx:{a:1}},
-      {label:'點點頭，說不出話', to:'g1', fx:{s:-1}}
+      {label:'「……為什麼？」', to:'g1Pick', fx:{a:1}},
+      {label:'點點頭，說不出話', to:'g1Pick', fx:{s:-1}}
     ]},
   s25k: {speaker:'{P}', text:'那我們說好，不查手機、不開定位。我不安的時候，就直接告訴你。', next:'b1'},
 
@@ -1838,27 +2160,36 @@ const SCENES = {
     tip:'rebound',
     choices:[
       {label:'不管了，先在一起再說', to:'rA2', fx:{s:-2}, flag:'rebound'},
-      {label:'「對不起，我好像還沒準備好。」', to:'g5', fx:{s:2}}
+      {label:'「對不起，我好像還沒準備好。」', to:'g5Pick', fx:{s:2}}
     ]},
-  rA2: {speaker:null, text:'你們很快就在一起了。第一次約會，對方點了{P}最愛吃的那道菜，你突然吃不下。', next:'g5'},
+  rA2: {speaker:null, text:'你們很快就在一起了。第一次約會，對方點了{P}最愛吃的那道菜，你突然吃不下。', next:'g5Pick'},
   rC1: {bg:'campus', speaker:null,
     text:'你每天早上去跑步，晚上泡在圖書館。某天在咖啡廳排隊，前面的人轉過頭來，是{P}。你發現自己的心跳，比想像中平靜。',
     choices:[
-      {label:'點點頭，說聲「嗨」', to:'g5', fx:{s:2}},
-      {label:'假裝沒看到，轉身離開', to:'g5', fx:{s:-1}}
+      {label:'點點頭，說聲「嗨」', to:'g5Pick', fx:{s:2}},
+      {label:'假裝沒看到，轉身離開', to:'g5Pick', fx:{s:-1}}
     ]},
   g4rb: {branch:[
     {when:st => st.p >= 5, to:'g4r'},
-    {to:'g5'}
+    {to:'g5Pick'}
   ]},
   g4r: {speaker:'{C}',
     text:{m:'走，現在去海邊吹風。不准說不要，車已經在樓下了。', def:'來，把{pH}送的東西都裝進這個箱子。今天是丟棄儀式，我負責拍照。'},
     next:'g4r2'},
-  g4r2: {speaker:null, set:{ritual:true}, text:'那天你哭得很醜，{C}笑得很大聲。回家的時候，你發現自己已經很久沒有這樣笑了。', next:'g5'},
+  g4r2: {speaker:null, set:{ritual:true}, text:'那天你哭得很醜，{C}笑得很大聲。回家的時候，你發現自己已經很久沒有這樣笑了。', next:'g5Pick'},
 
   /* ---------- 第七章：選擇 ---------- */
   s24c: {bg:'night', chap:'第七章・選擇', speaker:null,
-    text:'路燈下，你們站了很久。這一次，誰都沒有先移開視線。',
+    text: st => {
+      if (st.flags.bv == null) st.flags.bv = Math.floor(Math.random() * 5);
+      return [
+        '路燈下，你們站了很久。這一次，誰都沒有先移開視線。',
+        '捷運站的月台上，列車進站又開走，你們都沒有上車。廣播說，末班車快到了。',
+        '便利商店門口的長椅上，兩杯熱可可都涼了，誰都沒有先喝一口。',
+        '你們又回到第一次約會的那個地方。景色一樣，旁邊的人也一樣，只是你們已經很久沒有這樣好好看著對方了。',
+        '{pH}家樓下，機車引擎還熱著。{P}脫下安全帽，沒有像以前那樣問你：「要上去喝杯水嗎？」'
+      ][st.flags.bv];
+    },
     choices:[
       {label:'「我想再試一次，但我們要說好怎麼改。」', to:'b25', fx:{t:1}},
       {label:'「我們先分開，好好想想。」', to:'s26', fx:{s:1}},
@@ -1873,7 +2204,7 @@ const SCENES = {
   s25c: {speaker:'{P}', text:'手機密碼給你，我也會跟{X}說清楚。不是要你監督我，是我想讓你安心。', next:'b1'},
   s25d: {speaker:'{P}', text:'那我們一起排一個見面的計畫。不管我留不留，都先說好，不要讓對方一個人猜。', next:'b1'},
   s25f: {speaker:'{P}', text:'那從這個週末開始，手機收起來，我們好好約一次會。像第一次那樣。', next:'b1'},
-  s26: {speaker:'{P}', text:{def:'……好。你要照顧好自己。', cool:'……好。', sunny:'好……我會想你的。真的。', witty:'好。……這次我真的笑不出來了。', busy:'好。如果需要什麼，還是可以找我。'}, next:'g1'},
+  s26: {speaker:'{P}', text:{def:'……好。你要照顧好自己。', cool:'……好。', sunny:'好……我會想你的。真的。', witty:'好。……這次我真的笑不出來了。', busy:'好。如果需要什麼，還是可以找我。'}, next:'g1Pick'},
 
   /* ---------- 第八章：分手之後 ---------- */
   g1: {bg:'night', chap:'第八章・之後', speaker:null,
@@ -1882,8 +2213,8 @@ const SCENES = {
       : '分開的第一個晚上。你把聊天紀錄從最上面滑到最下面，又從最下面滑回最上面。天快亮了，你還是睡不著。',
     tip:'pain',
     choices:[
-      {label:'把對話紀錄封存起來', to:'g2', fx:{s:1}},
-      {label:'再看一遍就好', to:'g2', fx:{a:1,s:-1}}
+      {label:'把對話紀錄封存起來', to:'g2Pick', fx:{s:1}},
+      {label:'再看一遍就好', to:'g2Pick', fx:{a:1,s:-1}}
     ]},
   g2: {bg:'cafe', speaker:null,
     text:{
@@ -1909,12 +2240,12 @@ const SCENES = {
     choices:[
       {label:'跟{C}說出這陣子的感受', to:'g4rb', fx:{s:1,t:1,p:1}},
       {label:'回家把心情寫進日記', to:'g4w', fx:{s:1}},
-      {label:'笑著說「我早就沒事了」', to:'g5', fx:{s:-1}}
+      {label:'笑著說「我早就沒事了」', to:'g5Pick', fx:{s:-1}}
     ]},
   g4w: {bg:'night', speaker:null,
     text:'你寫了三頁。最後一行是：「我想念的，也許不只是{pH}，還有那時候的自己。」',
     tip:'writing',
-    next:'g5'},
+    next:'g5Pick'},
   g5: {bg:'night', speaker:null,
     text:{def:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}：「睡了嗎？」', sunny:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}：「睡了嗎？我好想你。」', cool:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}，只有兩個字：「在嗎」。', witty:'第二個月的某個深夜，兩點十七分，手機亮了。是{P}：「我剛剛夢到你在罵我，所以醒了。」'},
     choices:[
@@ -1928,7 +2259,7 @@ const SCENES = {
     next:'e_cycle'},
   g6n: {speaker:null,
     text:'你把手機蓋在枕頭上。那晚還是很難睡，但隔天醒來，你發現自己沒有後悔。',
-    next:'g7'},
+    next:'g7Pick'},
   g7: {bg:'campus', speaker:null,
     text:'三個月後。某天在街上聽到你們以前常聽的歌，心還是揪了一下。可是這一次，你沒有轉身逃開，而是把歌聽完了。',
     tip:'selfc',
@@ -2191,6 +2522,27 @@ function paintScene(cv, id, locked){
       R(45, 33, 6, 3, '#ffffff'); R(46, 32, 1, 1, '#c8c0d0');
       cup(56, 32, '#ffffff');
       R(60, 8, 22, 12, '#f7f3fb'); R(62, 10, 10, 1, '#bdb0c8'); R(62, 13, 14, 1, '#bdb0c8'); R(62, 16, 8, 1, '#bdb0c8'); R(64, 20, 3, 2, '#f7f3fb');
+      break;
+
+    case 'e_escape':
+      sky(['#fff4dc', '#ffeccf', '#ffe3c6', '#ffdcc0']);
+      R(0, 0, 40, 64, '#6b5a7a'); R(0, 0, 40, 64, 'rgba(58,45,68,.35)');
+      R(30, 10, 14, 44, '#8a7398'); R(32, 12, 10, 40, '#fff4dc');
+      for (let i = 0; i < 18; i++) R(42 + i * 2, 50 - (i >> 2), 3, 1, 'rgba(255,240,200,.9)');
+      R(0, 54, 96, 10, '#e9c9a8'); R(40, 54, 56, 10, '#f3dcc0');
+      spr(PPL.front, 52, 38, PA); spr(PPL.frontL, 64, 38, PC);
+      circ(80, 12, 6, '#fff7d6'); circ(80, 12, 4, '#ffe9a6');
+      heart(58, 30, '#f7a8c0');
+      break;
+
+    case 'e_cage':
+      sky(['#4a3f5e', '#463b59', '#423754', '#3e334f']);
+      R(10, 6, 76, 50, '#5a4d70'); R(10, 54, 76, 10, '#3a2f4a');
+      win(62, 14, 14, 14, '#2c2650'); for (let x = 63; x < 76; x += 3) R(x, 14, 1, 14, '#8a7398');
+      spr(PPL.front, 30, 36, PC);
+      phone(46, 40, 8, 12, '#fdf6ff'); R(47, 43, 6, 1, '#e9799f'); R(47, 45, 6, 1, '#e9799f'); R(47, 47, 6, 1, '#e9799f');
+      [[50, 30], [56, 26], [44, 24]].forEach(([x, y]) => { R(x, y, 7, 4, '#f7b6c9'); R(x + 1, y + 1, 5, 1, '#fff'); });
+      R(10, 6, 76, 2, '#2f2640'); R(10, 6, 2, 50, '#2f2640'); R(84, 6, 2, 50, '#2f2640');
       break;
 
     case 'e_wedding':
@@ -2516,7 +2868,7 @@ function unlock(id){
     localStorage.setItem(REC_KEY, JSON.stringify(rec));
   } catch(e){}
 }
-function clearUnlocked(){ try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(REC_KEY); localStorage.removeItem(TIP_KEY); } catch(e){} }
+function clearUnlocked(){ try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(REC_KEY); localStorage.removeItem(TIP_KEY); localStorage.removeItem(SEEN_KEY); seenEver = null; } catch(e){} }
 
 /* 心理學圖鑑：看過的小知識 */
 function loadTips(){ try { return JSON.parse(localStorage.getItem(TIP_KEY)) || []; } catch(e){ return []; } }
@@ -2532,6 +2884,7 @@ const TIP_CHAP = {
   halo:'第一章・相遇',
   zeig:'第二章・曖昧', choice:'第二章・曖昧', intermittent:'第二章・曖昧', disclose:'第二章・曖昧', script:'第二章・曖昧', explore:'第二章・曖昧',
   attach:'第三章・交往', triangle:'第三章・交往', minority:'第三章・交往', family:'第三章・交往', withdraw:'第三章・交往', network:'第三章・交往',
+  honeymoon:'第三章・交往', perpetual:'第四章・裂縫', repair:'第四章・裂縫', blackmail:'第五章・透明', terror:'第六章・出口',
   breadcrumb:'第三章・告白', dissonance:'第三章・告白', confirm:'第三章・告白',
   horsemen:'第四章・裂縫', bids:'第四章・裂縫',
   jealousy:'第五章・訊號', distance:'第五章・距離', emotional:'第五章・動搖', control:'第五章・透明',
@@ -2549,9 +2902,21 @@ function tipKeysOf(id){
   if (typeof sc.tip === 'object') return Object.values(sc.tip).filter(k => typeof k === 'string' && k);
   return [];
 }
-function pickFresh(arr){
-  const got = loadTips();
-  const w = arr.map(id => tipKeysOf(id).some(k => !got.includes(k)) ? 4 : 1);
+/* 看過的劇情：這一輪看過的不再抽，以前沒看過的比較容易抽到 */
+let seenEver = null;
+function loadSeen(){ if (!seenEver){ try { seenEver = new Set(JSON.parse(localStorage.getItem(SEEN_KEY)) || []); } catch(e){ seenEver = new Set(); } } return seenEver; }
+function markSeen(id){
+  if (!state.runSeen) state.runSeen = [];
+  if (!state.runSeen.includes(id)) state.runSeen.push(id);
+  const s = loadSeen();
+  if (!s.has(id)){ s.add(id); try { localStorage.setItem(SEEN_KEY, JSON.stringify([...s])); } catch(e){} }
+}
+function pickFresh(all){
+  const run = state.runSeen || [];
+  const fresh = all.filter(id => !run.includes(id));
+  const arr = fresh.length ? fresh : all;
+  const got = loadTips(), ever = loadSeen();
+  const w = arr.map(id => (tipKeysOf(id).some(k => !got.includes(k)) ? 4 : 1) * (ever.has(id) ? 1 : 3));
   let r = Math.random() * w.reduce((a, b) => a + b, 0);
   for (let i = 0; i < arr.length; i++){ r -= w[i]; if (r < 0) return arr[i]; }
   return arr[arr.length - 1];
@@ -2713,7 +3078,7 @@ function hearts(n = 6, big){
    互動：手機聊天
    chat:[ {p:'對方的訊息'}, {me:[{label, fx, sticker, re:[回覆…]}]}, {nick:true} ]
    ========================================================= */
-let chatSc = null, chatSteps = [], chatI = 0, chatTimer = null;
+let chatSc = null, chatSteps = [], chatI = 0, chatTimer = null, chatNext = null, callTimer = null;
 const PSC = {speaker:'{P}'};
 function chatScroll(){ const m = $('#phMsgs'); m.scrollTop = m.scrollHeight; }
 function bubble(html, who, cls = ''){
@@ -2724,9 +3089,16 @@ function bubble(html, who, cls = ''){
   return b;
 }
 function openChat(sc){
-  chatSc = sc; chatSteps = sc.chat.slice(); chatI = 0;
+  chatSc = sc; chatSteps = sc.chat.slice(); chatI = 0; chatNext = null;
   const p = who('P');
   $('#phName').textContent = p.name;
+  clearInterval(callTimer);
+  const ph = $('#phoneOv .phone');
+  ph.classList.toggle('call', !!sc.call);
+  if (sc.call){
+    let sec = 0; const tick = () => { $('#phOn').textContent = `通話中 ${String(sec / 60 | 0).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`; sec++; };
+    tick(); callTimer = setInterval(tick, 1000);
+  } else $('#phOn').textContent = '在線上';
   const pk = state.cast.pk, c = state.cast[pk];
   drawChara($('#phAva'), c.g, c.look === 'c' ? LOOK.fr : c.look === 'b' ? LOOK2[c.g] : LOOK[c.g]);
   const d = new Date();
@@ -2739,10 +3111,11 @@ function chatRun(){
   clearTimeout(chatTimer);
   const foot = $('#phFoot');
   if (chatI >= chatSteps.length){
-    foot.innerHTML = '<button class="btn main sm" id="phDone">放下手機 ›</button>';
+    foot.innerHTML = `<button class="btn main sm" id="phDone">${chatSc.call ? '掛斷電話' : '放下手機'} ›</button>`;
     $('#phDone').addEventListener('click', () => {
       $('#phoneOv').classList.remove('show');
-      const next = chatSc.next; chatSc = null;
+      clearInterval(callTimer);
+      const next = chatNext || chatSc.next; chatSc = null; chatNext = null;
       show(next);
     });
     return;
@@ -2753,12 +3126,49 @@ function chatRun(){
     const raw = V(st.p, PSC);
     const html = fillHTML(raw);
     const t = bubble('<span></span><span></span><span></span>', 'them', 'typing');
-    const wait = modeSkip ? 150 : Math.min(1700, 550 + fillText(raw).length * 45);
+    const wait = modeSkip ? 150 : st.fast ? 380 : Math.min(1700, 550 + fillText(raw).length * 45);
     chatTimer = setTimeout(() => {
-      t.className = 'bub them'; t.innerHTML = html; chatScroll();
+      t.className = 'bub them' + (st.fast ? ' shake' : ''); t.innerHTML = html; chatScroll();
+      if (st.fast && navigator.vibrate) navigator.vibrate(15);
       log.push({name: who('P').name, cls: gCls(who('P').g), html});
-      chatTimer = setTimeout(chatRun, modeSkip ? 120 : 650);
+      chatTimer = setTimeout(chatRun, modeSkip ? 120 : st.fast ? 260 : 650);
     }, wait);
+    return;
+  }
+  if (st.sys != null){
+    const d = document.createElement('div');
+    d.className = 'phSys' + (st.alert ? ' alert' : '');
+    d.innerHTML = fillHTML(V(st.sys, PSC));
+    $('#phMsgs').appendChild(d); chatScroll();
+    chatTimer = setTimeout(chatRun, modeSkip ? 120 : (st.wait || 900));
+    return;
+  }
+  if (st.mine != null){
+    const html = fillHTML(V(st.mine, PSC));
+    bubble(html, 'me'); log.push({pick: true, html});
+    chatTimer = setTimeout(chatRun, modeSkip ? 120 : (st.wait || 800));
+    return;
+  }
+  if (st.draft){
+    const dr = st.draft, text = fillText(V(dr.text, PSC));
+    foot.innerHTML = `<div class="nickRow"><div class="draftBox" id="draftBox"></div></div>
+      <div class="nickSug"><button class="chip" id="drDel">${esc(dr.delLabel || '刪掉')}</button><button class="chip send" id="drSend">${esc(dr.sendLabel || '傳送')}</button></div>`;
+    let n = 0; const box = $('#draftBox');
+    const typer = setInterval(() => { n++; box.textContent = text.slice(0, n); if (n >= text.length) clearInterval(typer); }, modeSkip ? 5 : 90);
+    const go = (opt, sent) => {
+      clearInterval(typer); foot.innerHTML = '';
+      if (sent){ bubble(esc(text), 'me'); log.push({pick: true, html: esc(text)}); }
+      else { log.push({pick: true, html: '（刪掉沒傳）'}); }
+      applyChoice(opt); updateHud(); showDelta(opt.fx);
+      if (opt.flag) state.flags[opt.flag] = true;
+      if (opt.to) chatNext = opt.to;
+      const after = (opt.re || []).map(r => ({p: r}));
+      if (opt.sys) after.unshift({sys: opt.sys});
+      chatSteps.splice(chatI, 0, ...after);
+      chatTimer = setTimeout(chatRun, 450);
+    };
+    $('#drSend').addEventListener('click', () => go(dr.send, true));
+    $('#drDel').addEventListener('click', () => go(dr.del, false));
     return;
   }
   if (st.me){
@@ -2769,11 +3179,14 @@ function chatRun(){
       b.addEventListener('click', () => {
         foot.innerHTML = '';
         if (c.sticker){ const w = bubble('<canvas width="9" height="8"></canvas>', 'me', 'sticker'); drawHeart(w.querySelector('canvas'), '#f48fb1'); }
-        else bubble(fillHTML(V(c.label, PSC)), 'me');
+        else if (!c.silent) bubble(fillHTML(V(c.say || c.label, PSC)), 'me');
+        if (c.to) chatNext = c.to;
         log.push({pick: true, html: fillHTML(V(c.label, PSC))});
         applyChoice(c); updateHud(); showDelta(c.fx);
         if (c.fx && c.fx.a >= 2) hearts(6);
-        chatSteps.splice(chatI, 0, ...(c.re || []).map(r => ({p: r})));
+        const more = (c.re || []).map(r => (r && typeof r === 'object' && (r.p != null || r.sys != null || r.mine != null)) ? r : {p: r});
+        if (c.sys) more.unshift({sys: c.sys});
+        chatSteps.splice(chatI, 0, ...more);
         chatTimer = setTimeout(chatRun, 450);
       });
       foot.appendChild(b);
@@ -2803,15 +3216,82 @@ function chatRun(){
 }
 
 /* =========================================================
+   互動：抓時機（按快門）
+   timing:{label, hint, ok, fail, fx, failFx, tries}
+   ========================================================= */
+function showTiming(tm, sc){
+  const wrap = $('#choices');
+  wrap.innerHTML = `<div class="chHead">${fillHTML(tm.hint || '在愛心跑進框框的時候按下去')}</div>
+    <div class="tmWrap"><div class="tmBar"><i class="tmZone"></i><canvas class="tmDot" width="9" height="8"></canvas></div>
+    <button class="choice tmBtn" id="tmBtn">${fillHTML(tm.label)}</button><div class="holdHint" id="tmHint"></div></div>`;
+  wrap.classList.add('show');
+  $('#chara').classList.add('dim'); $('#chara').classList.remove('talk');
+  const dot = $('#choices .tmDot'), bar = $('#choices .tmBar'), zone = $('#choices .tmZone');
+  drawHeart(dot, '#ee6f9a');
+  const zw = .2, zx = .5 + Math.random() * .25;
+  zone.style.left = (zx * 100) + '%'; zone.style.width = (zw * 100) + '%';
+  let tries = tm.tries || 2, t0 = performance.now(), raf = 0, stopped = false, speed = 1;
+  const pos = () => { const t = (performance.now() - t0) / 1000 * speed; return (1 - Math.cos(t * 2.4)) / 2; };
+  const loop = () => { if (stopped) return; dot.style.left = `calc(${pos()} * (100% - 34px) + 2px)`; raf = requestAnimationFrame(loop); };
+  raf = requestAnimationFrame(loop);
+  $('#tmBtn').addEventListener('click', ev => {
+    ev.stopPropagation();
+    if (stopped) return;
+    const x = pos(), ok = x >= zx && x <= zx + zw;
+    if (!ok && --tries > 0){
+      $('#tmHint').textContent = tm.retry || '差一點！再一次';
+      speed *= 1.15; bar.classList.remove('miss'); void bar.offsetWidth; bar.classList.add('miss');
+      return;
+    }
+    stopped = true; cancelAnimationFrame(raf);
+    const c = ok ? {fx: tm.fx, to: tm.ok} : {fx: tm.failFx || {}, to: tm.fail};
+    $('#tmHint').textContent = ok ? (tm.win || '喀嚓！') : (tm.lose || '啊……');
+    if (ok){ hearts(8, true); flash(); }
+    setTimeout(() => { hideChoices(); applyChoice(c); log.push({pick: true, html: ok ? '（成功了）' : '（沒抓到時機）'}); updateHud(); showDelta(c.fx); show(c.to); }, 650);
+  });
+}
+function flash(){ const f = document.createElement('div'); f.className = 'flash'; document.body.appendChild(f); setTimeout(() => f.remove(), 500); }
+
+/* =========================================================
+   互動：整理相簿（逐張選要留下還是刪掉）
+   album:{items:[...], all, some, none}  ← 依「留下幾張」走不同節點
+   ========================================================= */
+function showAlbum(al, sc){
+  const wrap = $('#choices');
+  const keep = al.items.map(() => true);
+  wrap.innerHTML = `<div class="chHead">點照片決定要留下還是刪掉</div>
+    <div class="albGrid">${al.items.map((t, i) => `<button class="albItem" data-i="${i}"><span class="albPic p${i % 4}"></span><span class="albCap">${fillHTML(t)}</span><span class="albTag">留下</span></button>`).join('')}</div>`;
+  const ok = document.createElement('button');
+  ok.className = 'choice'; ok.textContent = '整理好了';
+  wrap.appendChild(ok);
+  wrap.classList.add('show');
+  $('#chara').classList.add('dim'); $('#chara').classList.remove('talk');
+  wrap.querySelectorAll('.albItem').forEach(b => b.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const i = +b.dataset.i; keep[i] = !keep[i];
+    b.classList.toggle('del', !keep[i]);
+    b.querySelector('.albTag').textContent = keep[i] ? '留下' : '刪掉';
+  }));
+  ok.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const k = keep.filter(Boolean).length, n = keep.length;
+    const opt = k === n ? al.all : k === 0 ? al.none : al.some;
+    hideChoices(); applyChoice(opt);
+    log.push({pick: true, html: `（留下 ${k} 張，刪掉 ${n - k} 張）`});
+    updateHud(); showDelta(opt.fx); show(opt.to);
+  });
+}
+
+/* =========================================================
    互動：按住不放（牽手）
    hold:{label, fx, ok, fail, alt:{label, to, fx}}
    ========================================================= */
 const HOLD_MS = 1800;
 function showHold(h, sc){
   const wrap = $('#choices');
-  wrap.innerHTML = `<div class="chHead">按住下面的按鈕，不要放開</div>
+  wrap.innerHTML = `<div class="chHead">${esc(h.head || '按住下面的按鈕，不要放開')}</div>
     <div class="holdWrap"><button class="holdBtn" id="holdBtn" style="--p:0"><canvas width="9" height="8"></canvas><span>${fillHTML(h.label)}</span></button>
-    <div class="holdHint" id="holdHint">慢慢來，心跳有點快</div></div>`;
+    <div class="holdHint" id="holdHint">${esc((h.hints || ['慢慢來，心跳有點快'])[0])}</div></div>`;
   drawHeart($('#holdBtn canvas'), '#ee6f9a');
   if (h.alt){
     const b = document.createElement('button');
@@ -2824,7 +3304,7 @@ function showHold(h, sc){
 
   const btn = $('#holdBtn'), hint = $('#holdHint');
   let t0 = 0, raf = 0, done = false;
-  const hints = ['慢慢來，心跳有點快', '手背碰到了……', '再靠近一點點', '指尖勾到了！'];
+  const hints = h.hints || ['慢慢來，心跳有點快', '手背碰到了……', '再靠近一點點', '指尖勾到了！'];
   const tick = () => {
     const p = Math.min(1, (performance.now() - t0) / HOLD_MS);
     btn.style.setProperty('--p', p);
@@ -2844,9 +3324,9 @@ function showHold(h, sc){
   };
   const finish = ok => {
     done = true; cancelAnimationFrame(raf);
-    const c = ok ? {fx: h.fx, to: h.ok} : {fx: {a: 1}, to: h.fail};
-    if (ok){ btn.classList.add('win'); hint.textContent = '牽到了。'; hearts(12, true); if (navigator.vibrate) navigator.vibrate([20, 40, 20]); }
-    setTimeout(() => { hideChoices(); applyChoice(c); log.push({pick: true, html: ok ? '（牽起了手）' : '（手縮了回來）'}); updateHud(); showDelta(c.fx); show(c.to); }, ok ? 700 : 200);
+    const c = ok ? {fx: h.fx, to: h.ok} : {fx: h.failFx || {a: 1}, to: h.fail};
+    if (ok){ btn.classList.add('win'); hint.textContent = h.win || '牽到了。'; if (!h.noHearts) hearts(12, true); if (navigator.vibrate) navigator.vibrate([20, 40, 20]); }
+    setTimeout(() => { hideChoices(); applyChoice(c); log.push({pick: true, html: ok ? (h.okLog || '（牽起了手）') : (h.failLog || '（手縮了回來）')}); updateHud(); showDelta(c.fx); show(c.to); }, ok ? 700 : 200);
   };
   btn.addEventListener('pointerdown', start);
   btn.addEventListener('pointerup', stop);
@@ -2882,6 +3362,8 @@ function queueAuto(){
 }
 function after(sc){
   if (sc.hold){ showHold(sc.hold, sc); return; }
+  if (sc.timing){ showTiming(sc.timing, sc); return; }
+  if (sc.album){ showAlbum(sc.album, sc); return; }
   if (sc.choices){ showChoices(sc.choices, sc); return; }
   if (!sc.next) return;
   pendingNext = sc.next;
@@ -2902,7 +3384,7 @@ function show(id){
   if (sc.bg) setBg(sc.bg);
   if (sc.set) Object.assign(state.flags, sc.set);
   if (sc.setP) setPartner(sc.setP);
-  if (sc.pick) return show(pickFresh(sc.pick));
+  if (sc.pick){ const to = pickFresh(sc.pick); markSeen(to); return show(to); }
   if (sc.branch) return show(sc.branch.find(b => !b.when || b.when(state)).to);
   if (sc.chat){
     curId = id; saveProgress(id);
@@ -3411,7 +3893,7 @@ const randomPlayerName = g => pickOne(ENGLISH_PLAYER[g]);
 function startGame(again){
   const name = again ? state.name : ($('#nameIn').value.trim().slice(0, 8) || randomPlayerName(setupGender));
   const gender = again ? state.gender : setupGender;
-  state = {name, gender, cast:null, a:0, t:0, s:0, p:2, flags:{}};
+  state = {name, gender, cast:null, a:0, t:0, s:0, p:2, flags:{}, runSeen:[]};
   setupCast(gender);
   chapName = '序章'; log = []; lastShown = null;
   statRun = 'r' + Date.now().toString(36);
