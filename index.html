@@ -263,9 +263,13 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 #st-s .bar i{background:#e3b44f}
 #st-p .bar i{background:#6cc9a0}
 .stat b{min-width:14px;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
-#ctl{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:150px}
+#ctl{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:172px}
 .pill{font-size:11px;font-weight:700;color:var(--ink);background:rgba(255,250,244,.82);border:1px solid #fff;border-radius:999px;padding:6px 10px;min-height:30px;cursor:pointer;letter-spacing:.06em;box-shadow:0 3px 10px rgba(74,59,85,.12)}
 .pill.on{background:var(--rose);color:#fff}
+.pill.snd.off{opacity:.55;text-decoration:line-through}
+.sndBar{position:absolute;z-index:6;top:calc(76px + env(safe-area-inset-top,0px));left:16px;display:flex;gap:6px}
+.sndT{font:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;color:#f4f1e8;background:rgba(255,255,255,.1);border:1.5px solid rgba(244,241,232,.5);border-radius:999px;padding:4px 11px;min-height:30px;cursor:pointer}
+.sndT.off{opacity:.5;text-decoration:line-through}
 
 #delta{position:absolute;left:50%;top:calc(80px + var(--safeT));transform:translate(-50%,-6px);z-index:7;padding:6px 16px;border-radius:999px;background:rgba(255,250,244,.95);box-shadow:0 4px 14px rgba(74,59,85,.18);font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap}
 #delta.show{opacity:1;transform:translate(-50%,0)}
@@ -545,6 +549,7 @@ button{font:inherit;color:inherit;touch-action:manipulation}
 
 <!-- ================= 主頁 ================= -->
 <div id="title">
+  <div class="sndBar"><button class="sndT" data-snd="bgm" aria-label="背景音樂">音樂</button><button class="sndT" data-snd="se" aria-label="音效">音效</button></div>
   <div class="board">
     <div class="lesson chalk">戀愛學・第 <span>1</span> 堂</div>
     <div class="duty chalk"><b id="boardDate">11 月 14 日</b><br>值日生　may22</div>
@@ -621,6 +626,8 @@ button{font:inherit;color:inherit;touch-action:manipulation}
       <button class="pill" id="pLog">LOG</button>
       <button class="pill" id="pAuto">AUTO</button>
       <button class="pill" id="pSkip">SKIP</button>
+      <button class="pill snd" data-snd="bgm" aria-label="背景音樂">BGM</button>
+      <button class="pill snd" data-snd="se" aria-label="音效">SE</button>
       <button class="pill" id="pMenu" aria-label="選單">☰</button>
     </div>
   </div>
@@ -780,6 +787,371 @@ const BG = {
   night:  'linear-gradient(180deg,#bfb3ea 0%,#d9c8f0 55%,#f8cfdc 100%)',
   rain:   'linear-gradient(180deg,#b9cbe4 0%,#d6e1ef 65%,#eef2f8 100%)'
 };
+
+/* =========================================================
+   音效與背景音樂
+   全部用 Web Audio 現場合成，沒有外部音檔，所以不會有版權問題，載入也不會變慢。
+   瀏覽器規定要先點一下畫面才能出聲，所以第一次點擊後才會開始播。
+   想改音量：music 的 level、各層的 vol、sfx 裡的 vol。想改曲子：改下面的 MOODS。
+   ========================================================= */
+const Snd = (() => {
+  const KEY = 'love-sim-sound-v1';
+  const pref = {bgm: true, se: true};
+  try { Object.assign(pref, JSON.parse(localStorage.getItem(KEY)) || {}); } catch(e){}
+
+  let ctx = null, master, musicBus, sfxBus, fx, noiseBuf;
+  let want = null, track = null, holdV = null;
+
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  const QUAL = {maj:[0,4,7], min:[0,3,7], maj7:[0,4,7,11], min7:[0,3,7,10], dom7:[0,4,7,10], sus4:[0,5,7], dim:[0,3,6]};
+  const MAJOR = [0,2,4,5,7,9,11], MINOR = [0,2,3,5,7,8,10], PENTA = [0,2,4,7,9];
+  const SPARK = [1047, 1175, 1319, 1568, 1760, 2093];
+
+  function rng(seed){
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const hash = s => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
+
+  /* ---------- 基本發聲 ---------- */
+  function tone(dest, t, f, dur, o){
+    o = o || {};
+    const osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = o.type || 'sine';
+    osc.frequency.setValueAtTime(f, t);
+    if (o.to) osc.frequency.exponentialRampToValueAtTime(o.to, t + dur);
+    const a = o.a || .005, v = o.vol || .1;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(v, t + a);
+    if (o.hold) g.gain.setValueAtTime(v, t + dur * o.hold);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(g); g.connect(dest);
+    if (o.send){
+      const s = ctx.createGain(); s.gain.value = o.send;
+      g.connect(s); s.connect(o.fxNode || fx);
+    }
+    osc.start(t); osc.stop(t + dur + .03);
+  }
+  function noise(dest, t, dur, o){
+    o = o || {};
+    const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = noiseBuf;
+    f.type = o.type || 'bandpass';
+    f.frequency.setValueAtTime(o.f || 2000, t);
+    if (o.f2) f.frequency.exponentialRampToValueAtTime(o.f2, t + dur);
+    f.Q.value = o.q || .8;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(o.vol || .1, t + (o.a || .004));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f); f.connect(g); g.connect(dest);
+    src.start(t, Math.random() * 1.4); src.stop(t + dur + .03);
+  }
+  const seq = (t, freqs, gap, dur, o) => freqs.forEach((f, i) => tone(sfxBus, t + i * gap, f, dur, o));
+
+  /* ---------- 音效 ---------- */
+  const S = {
+    tap(t){ tone(sfxBus, t, 700, .06, {type:'triangle', vol:.05, to:520}); },
+    blip(t, hz){ tone(sfxBus, t, hz * (.95 + Math.random() * .1), .035, {type:'square', vol:.011, a:.002}); },
+    open(t){ tone(sfxBus, t, 430, .15, {vol:.035, to:690}); },
+    pick(t){ tone(sfxBus, t, 880, .12, {type:'triangle', vol:.05, to:1170}); },
+    up(t){ seq(t + .04, [523, 659, 784], .07, .24, {type:'triangle', vol:.065, send:.3}); },
+    down(t){ seq(t + .04, [392, 330, 262], .1, .3, {type:'triangle', vol:.065}); },
+    sparkle(t){ for (let i = 0; i < 5; i++) tone(sfxBus, t + .15 + i * .055, SPARK[(Math.random() * SPARK.length) | 0], .22, {vol:.028, send:.35}); },
+    chapter(t){
+      tone(sfxBus, t, 523, 1.5, {vol:.07, send:.5});
+      tone(sfxBus, t + .07, 784, 1.3, {vol:.045, send:.5});
+      tone(sfxBus, t + .14, 1047, 1.1, {vol:.03, send:.5});
+    },
+    tip(t){ seq(t, [988, 1319], .13, .55, {vol:.065, send:.4}); },
+    recv(t){ tone(sfxBus, t, 760, .09, {vol:.06, to:1100}); tone(sfxBus, t + .06, 1320, .1, {vol:.035}); },
+    send(t){ tone(sfxBus, t, 520, .09, {vol:.05, to:900}); noise(sfxBus, t, .1, {type:'highpass', f:3000, vol:.03}); },
+    alert(t){ [0, .14].forEach(d => tone(sfxBus, t + d, 190, .1, {type:'square', vol:.035})); },
+    ring(t){ [0, .55].forEach(d => { tone(sfxBus, t + d, 440, .4, {vol:.04, hold:.8}); tone(sfxBus, t + d, 480, .4, {vol:.04, hold:.8}); }); },
+    hang(t){ seq(t, [523, 392, 330], .1, .22, {type:'triangle', vol:.05}); },
+    shutter(t){
+      noise(sfxBus, t, .05, {type:'highpass', f:3500, vol:.1});
+      noise(sfxBus, t + .07, .06, {type:'highpass', f:2800, vol:.08});
+      tone(sfxBus, t, 170, .06, {vol:.07, to:90});
+    },
+    win(t){ seq(t, [523, 659, 784, 1047], .075, .38, {type:'triangle', vol:.07, send:.4}); S.sparkle(t + .1); },
+    miss(t){ tone(sfxBus, t, 260, .2, {vol:.08, to:170}); },
+    lose(t){ seq(t, [330, 262, 196], .13, .38, {type:'triangle', vol:.07}); },
+    page(t){ noise(sfxBus, t, .2, {f:2800, f2:1300, q:.6, vol:.06}); },
+    keep(t){ tone(sfxBus, t, 988, .09, {type:'triangle', vol:.05}); },
+    del(t){ noise(sfxBus, t, .12, {f:1800, f2:700, vol:.07}); tone(sfxBus, t, 300, .1, {type:'triangle', vol:.04, to:200}); },
+    start(t){ seq(t, [523, 659, 784, 1047, 1319], .08, .5, {vol:.06, send:.45}); },
+    beat(t, v){
+      tone(sfxBus, t, 95, .16, {vol:v || .16, to:45});
+      tone(sfxBus, t + .17, 85, .14, {vol:(v || .16) * .7, to:42});
+    },
+    sigh(t){ seq(t, [392, 330], .16, .5, {vol:.05, send:.3}); },
+    end(t, kind, isNew, secret){
+      if (kind === 'happy') seq(t, [523, 659, 784, 1047, 1319, 1568], .13, 1, {vol:.065, send:.5});
+      else if (kind === 'wistful') seq(t, [392, 494, 587, 784], .22, 1.3, {vol:.06, send:.55});
+      else seq(t, [440, 392, 330, 262], .3, 1.6, {type:'triangle', vol:.06, send:.6});
+      if (isNew) tone(sfxBus, t + 1.1, 1568, 1.1, {vol:.035, send:.5});
+      if (secret) S.sparkle(t + .9);
+    }
+  };
+
+  /* ---------- 背景音樂 ---------- */
+  /* bass：低音（第一個數字是 MIDI 音高），chords 一小節一個和弦，共 4 小節，旋律會跑 8 小節再回頭 */
+  const MOODS = {
+    title: {key:60, scale:PENTA, bpm:76, level:.9,
+      chords:[[48,'maj7'],[45,'min7'],[41,'maj7'],[43,'dom7']],
+      bass:{type:'sine', vol:.11, pat:[0,8], len:7}, pad:{type:'triangle', vol:.028},
+      arp:{type:'sine', vol:.05, every:2, seq:[0,1,2,3,2,1,2,1], len:5, send:.25},
+      lead:{type:'sine', vol:.065, send:.35, bell:true},
+      rhy:[[0,6,8,12],[0,4,8,10],[0,8,12],[2,6,10]], rest:.15},
+    campus: {key:67, scale:MAJOR, bpm:104, level:.8,
+      chords:[[43,'maj'],[50,'maj'],[40,'min'],[48,'maj']],
+      bass:{type:'triangle', vol:.12, pat:[0,6,8,14], len:4},
+      arp:{type:'square', vol:.016, every:2, seq:[0,1,2,1,0,1,2,3], len:2},
+      lead:{type:'triangle', vol:.075, send:.15},
+      hat:{steps:[4,12], vol:.03},
+      rhy:[[0,3,6,8,12],[0,4,6,8,10,14],[0,6,8,12]], rest:.1},
+    cafe: {key:65, scale:MAJOR, bpm:92, swing:.33, level:.85,
+      chords:[[41,'maj7'],[50,'min7'],[43,'min7'],[48,'dom7']],
+      bass:{type:'triangle', vol:.13, pat:[0,6,10], len:5}, pad:{type:'sine', vol:.025},
+      arp:{type:'sine', vol:.045, every:4, seq:[1,2,3,2], len:6, send:.2},
+      lead:{type:'triangle', vol:.07, send:.2},
+      hat:{steps:[2,6,10,14], vol:.018},
+      rhy:[[0,3,6,10,12],[2,6,8,12,14],[0,4,8,11]], rest:.2},
+    night: {key:62, scale:MAJOR, bpm:66, level:.95,
+      chords:[[38,'maj7'],[47,'min7'],[43,'maj7'],[45,'sus4']],
+      bass:{type:'sine', vol:.12, pat:[0], len:14}, pad:{type:'sine', vol:.045},
+      arp:{type:'sine', vol:.035, every:4, seq:[0,2,1,3,2,1,3,2], len:8, send:.4},
+      lead:{type:'sine', vol:.06, send:.6, bell:true},
+      rhy:[[0,10],[4,12],[0,6,12],[8]], rest:.3},
+    rain: {key:62, scale:MINOR, bpm:60, level:.95,
+      chords:[[38,'min'],[46,'maj7'],[41,'maj'],[48,'maj']],
+      bass:{type:'sine', vol:.12, pat:[0,8], len:10}, pad:{type:'sine', vol:.04},
+      arp:{type:'sine', vol:.05, every:2, seq:[0,1,2,1,0,2,1,2], len:5, send:.3},
+      lead:{type:'triangle', vol:.065, send:.5},
+      rain:true,
+      rhy:[[0,8],[0,6,12],[4,10],[0,12]], rest:.25},
+    tense: {key:57, scale:MINOR, bpm:72, level:.85,
+      chords:[[45,'min'],[41,'maj7'],[38,'min'],[40,'sus4']],
+      bass:{type:'sine', vol:.1, pat:[0], len:14}, pad:{type:'triangle', vol:.035},
+      arp:{type:'triangle', vol:.03, every:4, seq:[0,2,1,2], len:6, send:.3},
+      lead:{type:'sine', vol:.055, send:.5},
+      beat:{steps:[0,3], vol:.1},
+      rhy:[[0,10],[6],[0,8,12],[4,12]], rest:.4},
+    endHappy: {key:60, scale:MAJOR, bpm:88, level:.9,
+      chords:[[48,'maj'],[43,'maj'],[45,'min'],[41,'maj']],
+      bass:{type:'triangle', vol:.12, pat:[0,8], len:7}, pad:{type:'triangle', vol:.03},
+      arp:{type:'sine', vol:.05, every:2, seq:[0,1,2,1,2,1,0,1], len:5, send:.25},
+      lead:{type:'triangle', vol:.075, send:.3, bell:true},
+      hat:{steps:[4,12], vol:.016},
+      rhy:[[0,3,6,8,12],[0,4,8,10],[0,6,8,12,14]], rest:.1},
+    endSad: {key:57, scale:MINOR, bpm:56, level:1,
+      chords:[[45,'min'],[41,'maj7'],[48,'maj'],[43,'maj']],
+      bass:{type:'sine', vol:.12, pat:[0], len:14}, pad:{type:'sine', vol:.05},
+      arp:{type:'sine', vol:.04, every:4, seq:[0,1,2,1], len:8, send:.4},
+      lead:{type:'sine', vol:.07, send:.6, bell:true},
+      rhy:[[0,10],[4,12],[0,8],[6]], rest:.35}
+  };
+
+  const chordNotes = c => { const base = 60 + (c[0] % 12); return QUAL[c[1]].map(iv => base + iv); };
+
+  function buildMelody(M, name){
+    const r = rng(hash(name));
+    const pool = [];
+    for (let o = 0; o < 3; o++) for (const iv of M.scale) pool.push(M.key + 12 * o + iv);
+    let idx = M.scale.length + 1;
+    const bars = [];
+    for (let b = 0; b < 8; b++){
+      const bar = {};
+      bars.push(bar);
+      if (r() < M.rest && b !== 0 && b !== 4) continue;
+      const ch = M.chords[b % M.chords.length];
+      const pcs = QUAL[ch[1]].map(iv => (ch[0] + iv) % 12);
+      const tpl = M.rhy[(r() * M.rhy.length) | 0];
+      tpl.forEach((st, i) => {
+        if (i === 0){
+          let best = idx, bd = 99;
+          for (let k = Math.max(0, idx - 3); k <= Math.min(pool.length - 1, idx + 3); k++){
+            if (pcs.includes(pool[k] % 12) && Math.abs(k - idx) < bd){ best = k; bd = Math.abs(k - idx); }
+          }
+          idx = best;
+        } else {
+          const steps = [-2,-1,-1,0,1,1,2];
+          idx = Math.max(M.scale.length - 2, Math.min(pool.length - 3, idx + steps[(r() * steps.length) | 0]));
+        }
+        const next = tpl[i + 1] != null ? tpl[i + 1] : 16;
+        bar[st] = {m: pool[idx], d: next - st};
+      });
+    }
+    return bars;
+  }
+
+  function startTrack(name){
+    const M = MOODS[name];
+    if (!M || !ctx) return null;
+    const now = ctx.currentTime;
+    const bus = ctx.createGain(), send = ctx.createGain();
+    bus.gain.setValueAtTime(0.0001, now); bus.gain.linearRampToValueAtTime(.62 * (M.level || 1), now + 1.6);
+    send.gain.setValueAtTime(0.0001, now); send.gain.linearRampToValueAtTime(1, now + 1.6);
+    bus.connect(musicBus); send.connect(fx);
+    const tr = {name, M, bus, send, step:0, next: now + .15, mel: buildMelody(M, name), timer: null, rainSrc: null};
+    if (M.rain){
+      const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      src.buffer = noiseBuf; src.loop = true;
+      f.type = 'bandpass'; f.frequency.value = 2600; f.Q.value = .35;
+      g.gain.value = .055;
+      src.connect(f); f.connect(g); g.connect(bus); src.start();
+      tr.rainSrc = src;
+    }
+    tr.timer = setInterval(() => pump(tr), 90);
+    pump(tr);
+    return tr;
+  }
+  function stopTrack(tr, fast){
+    if (!tr) return;
+    clearInterval(tr.timer);
+    const now = ctx.currentTime, d = fast ? .15 : 1.2;
+    tr.bus.gain.cancelScheduledValues(now); tr.bus.gain.setValueAtTime(tr.bus.gain.value, now); tr.bus.gain.linearRampToValueAtTime(0.0001, now + d);
+    tr.send.gain.cancelScheduledValues(now); tr.send.gain.setValueAtTime(tr.send.gain.value, now); tr.send.gain.linearRampToValueAtTime(0.0001, now + d);
+    setTimeout(() => { try { if (tr.rainSrc) tr.rainSrc.stop(); tr.bus.disconnect(); tr.send.disconnect(); } catch(e){} }, d * 1000 + 300);
+  }
+
+  function pump(tr){
+    if (!ctx || ctx.state !== 'running') return;
+    const stepDur = 60 / tr.M.bpm / 4;
+    if (tr.next < ctx.currentTime - .1) tr.next = ctx.currentTime + .05;
+    while (tr.next < ctx.currentTime + .35){
+      playStep(tr, tr.step, tr.next, stepDur);
+      tr.step++; tr.next += stepDur;
+    }
+  }
+  function playStep(tr, s, t0, sd){
+    const M = tr.M, bar = Math.floor(s / 16) % 8, sb = s % 16;
+    const ch = M.chords[bar % M.chords.length], notes = chordNotes(ch);
+    const t = (M.swing && sb % 4 === 2) ? t0 + sd * M.swing : t0;
+    const o = {fxNode: tr.send};
+    if (M.pad && sb === 0){
+      notes.forEach(n => tone(tr.bus, t, mtof(n - 12), sd * 16, {type:M.pad.type, vol:M.pad.vol, a:.7, hold:.6}));
+    }
+    if (M.bass && M.bass.pat.includes(sb)){
+      tone(tr.bus, t, mtof(ch[0]), sd * M.bass.len, {type:M.bass.type, vol:M.bass.vol, a:.012});
+    }
+    if (M.arp && sb % M.arp.every === 0){
+      const k = (sb / M.arp.every) | 0, v = M.arp.seq[k % M.arp.seq.length];
+      const m = notes[v % notes.length] + 12 * Math.floor(v / notes.length);
+      tone(tr.bus, t, mtof(m), sd * M.arp.len, {type:M.arp.type, vol:M.arp.vol, a:.006, send:M.arp.send, fxNode:tr.send});
+    }
+    const mel = tr.mel[bar][sb];
+    if (mel){
+      const L = M.lead, f = mtof(mel.m), dur = Math.min(sd * mel.d * .95, sd * 12);
+      tone(tr.bus, t, f, Math.max(dur, sd * 3), {type:L.type, vol:L.vol, a:.01, send:L.send, fxNode:tr.send});
+      if (L.bell) tone(tr.bus, t, f * 2.005, Math.max(dur * .6, sd * 2), {type:'sine', vol:L.vol * .22, a:.004, send:L.send, fxNode:tr.send});
+    }
+    if (M.hat && M.hat.steps.includes(sb)) noise(tr.bus, t, .05, {type:'highpass', f:7000, vol:M.hat.vol});
+    if (M.beat && M.beat.steps.includes(sb)){
+      tone(tr.bus, t, 90, .16, {vol:M.beat.vol, to:42});
+    }
+  }
+
+  /* ---------- 解鎖與開關 ---------- */
+  function init(){
+    if (ctx) return true;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    try { ctx = new AC(); } catch(e){ return false; }
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -16; comp.ratio.value = 4; comp.attack.value = .01; comp.release.value = .25;
+    master = ctx.createGain(); master.gain.value = .9;
+    master.connect(comp); comp.connect(ctx.destination);
+    musicBus = ctx.createGain(); musicBus.gain.value = pref.bgm ? 1 : 0; musicBus.connect(master);
+    sfxBus = ctx.createGain(); sfxBus.gain.value = pref.se ? 1 : 0; sfxBus.connect(master);
+    fx = ctx.createGain();
+    const dl = ctx.createDelay(1), fb = ctx.createGain(), lp = ctx.createBiquadFilter(), ret = ctx.createGain();
+    dl.delayTime.value = .34; fb.gain.value = .34; lp.type = 'lowpass'; lp.frequency.value = 2200; ret.gain.value = .5;
+    fx.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(ret); ret.connect(master);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    return true;
+  }
+  function syncTrack(){
+    if (!ctx || ctx.state !== 'running') return;
+    if (!pref.bgm || !want){ if (track){ stopTrack(track, true); track = null; } return; }
+    if (track && track.name === want) return;
+    if (track) stopTrack(track);
+    track = startTrack(want);
+  }
+  function unlock(){
+    if (!init()) return;
+    if (ctx.state === 'running'){ syncTrack(); return; }
+    ctx.resume().then(syncTrack).catch(() => {});
+  }
+  ['pointerdown', 'touchend', 'keydown'].forEach(ev => document.addEventListener(ev, unlock, {capture:true, passive:true}));
+  document.addEventListener('visibilitychange', () => {
+    if (!ctx) return;
+    if (document.hidden) ctx.suspend().catch(() => {});
+    else ctx.resume().then(syncTrack).catch(() => {});
+  });
+
+  function paintButtons(){
+    document.querySelectorAll('[data-snd]').forEach(b => {
+      const on = !!pref[b.dataset.snd];
+      b.classList.toggle('off', !on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+  function toggle(kind){
+    pref[kind] = !pref[kind];
+    try { localStorage.setItem(KEY, JSON.stringify(pref)); } catch(e){}
+    paintButtons();
+    if (!init()) return;
+    const bus = kind === 'bgm' ? musicBus : sfxBus, now = ctx.currentTime;
+    bus.gain.cancelScheduledValues(now); bus.gain.setTargetAtTime(pref[kind] ? 1 : 0, now, .08);
+    if (ctx.state !== 'running') ctx.resume().then(syncTrack).catch(() => {}); else syncTrack();
+    if (kind === 'se' && pref.se) play('tap');
+  }
+  document.querySelectorAll('[data-snd]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); toggle(b.dataset.snd); }));
+  paintButtons();
+
+  function play(name, ...args){
+    if (!pref.se || !ctx || ctx.state !== 'running' || !S[name]) return;
+    try { S[name](ctx.currentTime + .005, ...args); } catch(e){ console.warn('音效錯誤', name, e); }
+  }
+
+  /* 牽手：按住的時候，心跳會越來越快，音調慢慢升高 */
+  function holdTick(p){
+    if (!pref.se || !ctx || ctx.state !== 'running') return;
+    const now = ctx.currentTime;
+    if (!holdV){
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'triangle'; osc.frequency.value = 196;
+      g.gain.setValueAtTime(0.0001, now); g.gain.linearRampToValueAtTime(.03, now + .3);
+      osc.connect(g); g.connect(sfxBus); osc.start();
+      holdV = {osc, g, next: now};
+    }
+    holdV.osc.frequency.setTargetAtTime(196 * (1 + p * .9), now, .06);
+    if (now >= holdV.next){ S.beat(now, .1 + p * .08); holdV.next = now + (.95 - .5 * p); }
+  }
+  function holdEnd(res){
+    if (holdV){
+      const now = ctx.currentTime, v = holdV; holdV = null;
+      v.g.gain.cancelScheduledValues(now); v.g.gain.setTargetAtTime(0.0001, now, .05);
+      setTimeout(() => { try { v.osc.stop(); } catch(e){} }, 400);
+    }
+    if (res === true) play('win'); else if (res === false) play('sigh');
+  }
+
+  return {
+    sfx: play,
+    blip: hz => play('blip', hz),
+    mood(name){ want = name; syncTrack(); },
+    holdTick, holdEnd
+  };
+})();
 
 const POOL = {
   m: ['阿哲','子軒','承翰','宇辰','柏翔','Leo','Ethan','Ryan','Kevin','Owen','Jay','Daniel'],
@@ -2953,7 +3325,15 @@ function pickFresh(all){
 /* =========================================================
    畫面元件
    ========================================================= */
-function setBg(name){ curBg = BG[name] ? name : 'campus'; $('#bg').style.background = BG[curBg]; edgeFromBg(BG[curBg]); }
+/* 背景音樂跟著章節和場景走：前半段看場景，第四章以後轉成不安的曲子，第八章以後安靜下來 */
+function moodFor(){
+  const n = chNo(chapName);
+  if (n === 99) return curBg;
+  if (n >= 8) return 'night';
+  if (n >= 4) return curBg === 'rain' ? 'rain' : 'tense';
+  return curBg;
+}
+function setBg(name){ curBg = BG[name] ? name : 'campus'; $('#bg').style.background = BG[curBg]; edgeFromBg(BG[curBg]); Snd.mood(moodFor()); }
 /* 手機上下延伸：讓瀏覽器頂部、底部和回彈區的顏色跟著畫面走 */
 function setEdges(top, bottom){
   const r = document.documentElement.style;
@@ -2987,6 +3367,7 @@ function showDelta(fx){
   const parts = Object.keys(fx || {}).filter(k => fx[k]).map(k =>
     `<span class="${fx[k] > 0 ? 'up' : 'dn'}">${label[k]} ${fx[k] > 0 ? '+' : ''}${fx[k]}</span>`);
   if (!parts.length) return;
+  Snd.sfx(Object.keys(fx).filter(k => k !== 'h').reduce((n, k) => n + (fx[k] || 0), 0) >= 0 ? 'up' : 'down');
   const el = $('#delta');
   el.innerHTML = parts.join('　');
   el.classList.add('show');
@@ -2994,6 +3375,7 @@ function showDelta(fx){
   deltaTimer = setTimeout(() => el.classList.remove('show'), 1400);
 }
 function showChapter(name){
+  Snd.sfx('chapter');
   const card = $('#chapCard');
   $('#chapText').textContent = name;
   card.classList.remove('run'); void card.offsetWidth; card.classList.add('run');
@@ -3024,6 +3406,7 @@ function speakerOf(sp){
 }
 
 /* 打字機 */
+let blipHz = 230;
 function typeText(list, done){
   clearInterval(typeTimer);
   segs = list; typeLen = list.reduce((n, s) => n + s.t.length, 0);
@@ -3033,6 +3416,7 @@ function typeText(list, done){
   if (modeSkip){ finishTyping(); return; }
   typeTimer = setInterval(() => {
     typeIdx++;
+    if (typeIdx % 2 === 0) Snd.blip(blipHz);
     $('#text').innerHTML = segsHTML(segs, typeIdx);
     if (typeIdx >= typeLen) finishTyping();
   }, TYPE_MS);
@@ -3062,6 +3446,7 @@ function showChoices(list, sc){
     wrap.appendChild(b);
   });
   wrap.classList.add('show');
+  Snd.sfx('open');
   $('#chara').classList.add('dim');
   $('#chara').classList.remove('talk');
 }
@@ -3078,6 +3463,7 @@ function applyChoice(c){
   if (c.flag) state.flags[c.flag] = true;
 }
 function choose(c, html){
+  Snd.sfx('pick');
   trackChoice(c);
   hideChoices();
   applyChoice(c);
@@ -3090,6 +3476,7 @@ function choose(c, html){
 
 /* 心動大漲：畫面飄出小愛心 */
 function hearts(n = 6, big){
+  Snd.sfx('sparkle');
   for (let i = 0; i < n; i++){
     const h = document.createElement('canvas');
     h.width = 9; h.height = 8; h.className = 'fheart';
@@ -3132,7 +3519,8 @@ function openChat(sc){
   $('#phMsgs').innerHTML = `<div class="phTime">今天 ${d.getHours() < 21 ? 23 : d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}</div>`;
   $('#phFoot').innerHTML = '';
   $('#phoneOv').classList.add('show');
-  setTimeout(chatRun, 500);
+  Snd.sfx(sc.call ? 'ring' : 'open');
+  setTimeout(chatRun, sc.call ? 1500 : 500);
 }
 function chatRun(){
   clearTimeout(chatTimer);
@@ -3141,6 +3529,7 @@ function chatRun(){
     foot.innerHTML = `<button class="btn main sm" id="phDone">${chatSc.call ? '掛斷電話' : '放下手機'} ›</button>`;
     $('#phDone').addEventListener('click', () => {
       $('#phoneOv').classList.remove('show');
+      if (chatSc && chatSc.call) Snd.sfx('hang');
       clearInterval(callTimer);
       const next = chatNext || chatSc.next; chatSc = null; chatNext = null;
       show(next);
@@ -3156,6 +3545,7 @@ function chatRun(){
     const wait = modeSkip ? 150 : st.fast ? 380 : Math.min(1700, 550 + fillText(raw).length * 45);
     chatTimer = setTimeout(() => {
       t.className = 'bub them' + (st.fast ? ' shake' : ''); t.innerHTML = html; chatScroll();
+      Snd.sfx('recv');
       if (st.fast && navigator.vibrate) navigator.vibrate(15);
       log.push({name: who('P').name, cls: gCls(who('P').g), html});
       chatTimer = setTimeout(chatRun, modeSkip ? 120 : st.fast ? 260 : 650);
@@ -3167,12 +3557,13 @@ function chatRun(){
     d.className = 'phSys' + (st.alert ? ' alert' : '');
     d.innerHTML = fillHTML(V(st.sys, PSC));
     $('#phMsgs').appendChild(d); chatScroll();
+    if (st.alert) Snd.sfx('alert');
     chatTimer = setTimeout(chatRun, modeSkip ? 120 : (st.wait || 900));
     return;
   }
   if (st.mine != null){
     const html = fillHTML(V(st.mine, PSC));
-    bubble(html, 'me'); log.push({pick: true, html});
+    bubble(html, 'me'); Snd.sfx('send'); log.push({pick: true, html});
     chatTimer = setTimeout(chatRun, modeSkip ? 120 : (st.wait || 800));
     return;
   }
@@ -3184,7 +3575,7 @@ function chatRun(){
     const typer = setInterval(() => { n++; box.textContent = text.slice(0, n); if (n >= text.length) clearInterval(typer); }, modeSkip ? 5 : 90);
     const go = (opt, sent) => {
       clearInterval(typer); foot.innerHTML = '';
-      if (sent){ bubble(esc(text), 'me'); log.push({pick: true, html: esc(text)}); }
+      if (sent){ bubble(esc(text), 'me'); Snd.sfx('send'); log.push({pick: true, html: esc(text)}); }
       else { log.push({pick: true, html: '（刪掉沒傳）'}); }
       applyChoice(opt); updateHud(); showDelta(opt.fx);
       if (opt.flag) state.flags[opt.flag] = true;
@@ -3266,6 +3657,7 @@ function showTiming(tm, sc){
     if (stopped) return;
     const x = pos(), ok = x >= zx && x <= zx + zw;
     if (!ok && --tries > 0){
+      Snd.sfx('miss');
       $('#tmHint').textContent = tm.retry || '差一點！再一次';
       speed *= 1.15; bar.classList.remove('miss'); void bar.offsetWidth; bar.classList.add('miss');
       return;
@@ -3273,11 +3665,11 @@ function showTiming(tm, sc){
     stopped = true; cancelAnimationFrame(raf);
     const c = ok ? {fx: tm.fx, to: tm.ok} : {fx: tm.failFx || {}, to: tm.fail};
     $('#tmHint').textContent = ok ? (tm.win || '喀嚓！') : (tm.lose || '啊……');
-    if (ok){ hearts(8, true); flash(); }
+    if (ok){ hearts(8, true); flash(); Snd.sfx('win'); } else Snd.sfx('lose');
     setTimeout(() => { hideChoices(); applyChoice(c); log.push({pick: true, html: ok ? '（成功了）' : '（沒抓到時機）'}); updateHud(); showDelta(c.fx); show(c.to); }, 650);
   });
 }
-function flash(){ const f = document.createElement('div'); f.className = 'flash'; document.body.appendChild(f); setTimeout(() => f.remove(), 500); }
+function flash(){ Snd.sfx('shutter'); const f = document.createElement('div'); f.className = 'flash'; document.body.appendChild(f); setTimeout(() => f.remove(), 500); }
 
 /* =========================================================
    互動：整理相簿（逐張選要留下還是刪掉）
@@ -3297,12 +3689,14 @@ function showAlbum(al, sc){
     ev.stopPropagation();
     const i = +b.dataset.i; keep[i] = !keep[i];
     b.classList.toggle('del', !keep[i]);
+    Snd.sfx(keep[i] ? 'keep' : 'del');
     b.querySelector('.albTag').textContent = keep[i] ? '留下' : '刪掉';
   }));
   ok.addEventListener('click', ev => {
     ev.stopPropagation();
     const k = keep.filter(Boolean).length, n = keep.length;
     const opt = k === n ? al.all : k === 0 ? al.none : al.some;
+    Snd.sfx('pick');
     hideChoices(); applyChoice(opt);
     log.push({pick: true, html: `（留下 ${k} 張，刪掉 ${n - k} 張）`});
     updateHud(); showDelta(opt.fx); show(opt.to);
@@ -3335,6 +3729,7 @@ function showHold(h, sc){
   const tick = () => {
     const p = Math.min(1, (performance.now() - t0) / HOLD_MS);
     btn.style.setProperty('--p', p);
+    Snd.holdTick(p);
     hint.textContent = hints[Math.min(3, Math.floor(p * 4))];
     if (navigator.vibrate && p > .3 && Math.random() < .06) navigator.vibrate(8);
     if (p >= 1){ finish(true); return; }
@@ -3346,11 +3741,11 @@ function showHold(h, sc){
     e && e.stopPropagation();
     cancelAnimationFrame(raf); btn.classList.remove('on');
     const p = (performance.now() - t0) / HOLD_MS; t0 = 0;
-    if (p < .12){ btn.style.setProperty('--p', 0); hint.textContent = '要按住喔，不要放開'; return; }
+    if (p < .12){ btn.style.setProperty('--p', 0); hint.textContent = '要按住喔，不要放開'; Snd.holdEnd(null); return; }
     finish(false);
   };
   const finish = ok => {
-    done = true; cancelAnimationFrame(raf);
+    done = true; cancelAnimationFrame(raf); Snd.holdEnd(ok);
     const c = ok ? {fx: h.fx, to: h.ok} : {fx: h.failFx || {a: 1}, to: h.fail};
     if (ok){ btn.classList.add('win'); hint.textContent = h.win || '牽到了。'; if (!h.noHearts) hearts(12, true); if (navigator.vibrate) navigator.vibrate([20, 40, 20]); }
     setTimeout(() => { hideChoices(); applyChoice(c); log.push({pick: true, html: ok ? (h.okLog || '（牽起了手）') : (h.failLog || '（手縮了回來）')}); updateHud(); showDelta(c.fx); show(c.to); }, ok ? 700 : 200);
@@ -3371,6 +3766,8 @@ function showTip(key, cb){
   $('#tipSrc').textContent = tip.src ? '研究出處：' + tip.src : '';
   tipCb = cb;
   $('#tip').classList.add('show');
+  Snd.sfx('tip');
+  if (!$('#tipNew').hidden) setTimeout(() => Snd.sfx('sparkle'), 350);
 }
 $('#tipOk').addEventListener('click', () => {
   $('#tip').classList.remove('show');
@@ -3405,7 +3802,7 @@ function show(id){
   if (sc.end) return showEnding(sc.end);
   if (sc.chap && sc.chap !== chapName){
     const newCh = sc.chap.slice(0, 3) !== chapName.slice(0, 3);
-    chapName = sc.chap; showChapter(sc.chap);
+    chapName = sc.chap; showChapter(sc.chap); Snd.mood(moodFor());
     if (newCh) track('chapter');
   }
   if (sc.bg) setBg(sc.bg);
@@ -3433,6 +3830,7 @@ function show(id){
   nameEl.textContent = info ? info.name : '';
   nameEl.className = info ? info.cls : '';
   nameEl.hidden = !info;
+  blipHz = info ? (info.cls === 'male' ? 330 : 520) : 230;
 
   hideChoices(); hideNext(); pendingNext = null; cancelAuto();
   updateHud();
@@ -3448,6 +3846,7 @@ function advance(){
     const n = pendingNext;
     pendingNext = null;
     cancelAuto(); hideNext();
+    if (!modeSkip) Snd.sfx('tap');
     show(n);
   }
 }
@@ -3462,6 +3861,12 @@ document.addEventListener('keydown', e => {
   if (!document.body.classList.contains('playing') || anyOverlay()) return;
   if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); advance(); }
 });
+
+/* 一般按鈕的點擊聲（選項、互動按鈕、音量開關有自己的聲音，不在這裡） */
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('.btn, .cbtn, .pill, .chip, .gbtn, .sbtn');
+  if (b && !b.hasAttribute('data-snd')) Snd.sfx(b.id === 'btnStart' || b.id === 'btnSetupStart' ? 'start' : 'tap');
+}, true);
 
 /* 上方按鈕 */
 function setMode(){
@@ -3509,6 +3914,9 @@ function showEnding(id){
   $('#endStats').textContent = `心動 ${state.a}　信任 ${state.t}　自我 ${state.s}　友情 ${state.p}`;
   $('#endCount').textContent = `結局之書收集進度 ${loadUnlocked().length} / ${ORDER.length}　心理學圖鑑 ${loadTips().length} / ${Object.keys(TIPS).length}`;
   $('#end').classList.add('show');
+  const kind = ETYPE[id] === '在一起' ? 'happy' : ETYPE[id] === '沒開始' ? 'wistful' : 'sad';
+  Snd.mood(kind === 'happy' ? 'endHappy' : kind === 'wistful' ? 'night' : 'endSad');
+  Snd.sfx('end', kind, isNew, !!e.secret);
 }
 
 /* =========================================================
@@ -3623,13 +4031,14 @@ function openBook(mode){
   $('#cvProg').textContent = `收集 ${n} / ${tip ? TIP_ORDER.length : ORDER.length}`;
   $('#book').className = '';
   $('#bookOv').classList.add('show');
+  Snd.sfx('page');
 }
-function openPages(){ $('#book').className = 'open'; bookIdx = 0; renderBook(0); }
+function openPages(){ $('#book').className = 'open'; bookIdx = 0; renderBook(0); Snd.sfx('page'); }
 function closeBook(){ $('#bookOv').classList.remove('show'); }
 function turn(d){
   if (!$('#book').classList.contains('open')){ if (d > 0) openPages(); return; }
   if (d < 0 && bookIdx === 0){ $('#book').className = ''; return; }
-  bookIdx += d; renderBook(d);
+  bookIdx += d; renderBook(d); Snd.sfx('page');
 }
 $('#cover').addEventListener('click', openPages);
 $('#pgPrev').addEventListener('click', () => turn(-1));
@@ -3907,6 +4316,7 @@ function openTitle(){
   $('#title').classList.remove('hide');
   document.body.classList.remove('playing');
   setEdges('#9a6840', '#6e4426');
+  Snd.mood('title');
   refreshProgress();
 }
 function openSetup(){ $('#setup').classList.add('show'); setSetupGender(setupGender); }
@@ -4025,6 +4435,7 @@ if (FORTUNE_URL){
   $('#boardDate').textContent = `${d.getMonth() + 1} 月 ${d.getDate()} 日（${wk}）`;
 })();
 
+Snd.mood('title');
 updateHud();
 refreshProgress();
 if (STATS_URL) $('#statNote').hidden = false;
